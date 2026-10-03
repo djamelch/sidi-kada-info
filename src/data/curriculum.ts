@@ -47,7 +47,7 @@ export const ACADEMIC_INFO = {
   subject: 'المعلوماتية (التعليم الثانوي)',
   teacher: 'الأستاذ: شلابي جمال الدين',
   schoolYear: '2026 - 2027',
-  siteUrl: 'https://sidi-kada-info.pages.dev'
+  siteUrl: 'https://maerifatech.pages.dev'
 };
 
 export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {

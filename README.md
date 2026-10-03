@@ -10,7 +10,7 @@
 ## 🌐 روابط النشر المباشر
 
 - **مستودع الكود (GitHub):** [https://github.com/djamelch/sidi-kada-info](https://github.com/djamelch/sidi-kada-info)
-- **الموقع على Cloudflare Pages:** [https://sidi-kada-info.pages.dev](https://sidi-kada-info.pages.dev)
+- **الموقع على Cloudflare Pages:** [https://maerifatech.pages.dev](https://maerifatech.pages.dev) (أو [https://sidi-kada-info.pages.dev](https://sidi-kada-info.pages.dev))
 
 ---
 
