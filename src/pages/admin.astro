@@ -1449,8 +1449,14 @@ const CLASSES_CONFIG = [
     </div>
 
     <!-- 24-Sticker A4 Grid (4 cols x 6 rows) -->
-    <div class="a4-sheet a4-sheet-stickers bg-white p-2.5 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0">
+    <div class="a4-sheet a4-sheet-stickers bg-white mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0">
       <div id="stickers-container" class="grid grid-cols-4 gap-2"></div>
+    </div>
+
+    <div class="no-print max-w-5xl mx-auto px-6 mt-4 mb-10 text-center">
+      <button id="btn-hide-stickers-bottom" class="px-6 py-2.5 rounded-xl bg-white hover:bg-[#ffe95c] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-xs shadow-xs transition-all cursor-pointer">
+        ↑ إغلاق المعاينة والرجوع للوحة التحكم
+      </button>
     </div>
   </div>
 
@@ -1489,6 +1495,12 @@ const CLASSES_CONFIG = [
         <!-- Rendered dynamically -->
       </div>
     </div>
+
+    <div class="no-print max-w-5xl mx-auto px-6 mt-4 mb-10 text-center">
+      <button id="btn-hide-poster-bottom" class="px-6 py-2.5 rounded-xl bg-white hover:bg-[#ffe95c] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-xs shadow-xs transition-all cursor-pointer">
+        ↑ إغلاق المعاينة والرجوع للوحة التحكم
+      </button>
+    </div>
   </div>
 
   <!-- Printable Template 3: Team Cards CS Unplugged -->
@@ -1525,6 +1537,12 @@ const CLASSES_CONFIG = [
       <div id="team-cards-container" class="grid grid-cols-2 gap-3">
         <!-- Rendered dynamically -->
       </div>
+    </div>
+
+    <div class="no-print max-w-5xl mx-auto px-6 mt-4 mb-10 text-center">
+      <button id="btn-hide-teams-bottom" class="px-6 py-2.5 rounded-xl bg-white hover:bg-[#ffe95c] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-xs shadow-xs transition-all cursor-pointer">
+        ↑ إغلاق المعاينة والرجوع للوحة التحكم
+      </button>
     </div>
   </div>
 
@@ -1723,6 +1741,11 @@ const CLASSES_CONFIG = [
           btn.classList.remove('text-[#1a3300]/80');
 
           tabPanels.forEach(p => p.classList.add('hidden'));
+          // Hide any open print previews so the user sees the active tab content cleanly
+          document.getElementById('sticker-sheet-section')?.classList.add('hidden');
+          document.getElementById('wall-poster-section')?.classList.add('hidden');
+          document.getElementById('team-cards-section')?.classList.add('hidden');
+
           if (btn.id === 'tab-btn-dash') document.getElementById('tab-content-dash')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-units') document.getElementById('tab-content-units')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-classes') document.getElementById('tab-content-classes')?.classList.remove('hidden');
@@ -1731,6 +1754,8 @@ const CLASSES_CONFIG = [
           if (btn.id === 'tab-btn-grades') document.getElementById('tab-content-grades')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-docs') document.getElementById('tab-content-docs')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-settings') document.getElementById('tab-content-settings')?.classList.remove('hidden');
+
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         });
       });
     }
@@ -2421,6 +2446,16 @@ const CLASSES_CONFIG = [
         });
       }
 
+      function refreshActivePrintPreview() {
+        if (stickerSection && !stickerSection.classList.contains('hidden')) {
+          generateStickerSheet(false);
+        } else if (posterSection && !posterSection.classList.contains('hidden')) {
+          generateWallPoster(false);
+        } else if (teamCardsSection && !teamCardsSection.classList.contains('hidden')) {
+          generateTeamCards(false);
+        }
+      }
+
       async function renderQRCode() {
         let activeUrl = '';
         let displayTitle = '';
@@ -2448,6 +2483,7 @@ const CLASSES_CONFIG = [
               margin: 1.5,
               color: { dark: '#1a3300', light: '#ffffff' }
             });
+            refreshActivePrintPreview();
           } catch (err) {
             console.error(err);
           }
@@ -2521,8 +2557,8 @@ const CLASSES_CONFIG = [
         }
       });
 
-      // 1. Generate 24-Sticker Sheet A4
-      function generateStickerSheet() {
+      // 1. Generate 24-Sticker Sheet A4 (Exact Full-Page Calibration)
+      function generateStickerSheet(shouldScroll = true) {
         if (!qrCanvas || !stickersContainer || !stickerSection) return;
         const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
         const dataUrl = qrCanvas.toDataURL('image/png');
@@ -2530,25 +2566,25 @@ const CLASSES_CONFIG = [
         stickersContainer.innerHTML = '';
         for (let i = 0; i < 24; i++) {
           const item = document.createElement('div');
-          item.className = 'sticker-cell border border-dashed border-[#1a3300]/40 rounded-xl p-1.5 text-center bg-white flex flex-col items-center justify-between text-[9px] h-[42mm] box-border relative overflow-hidden';
+          item.className = 'sticker-cell border-2 border-dashed border-[#1a3300]/45 rounded-xl p-2 text-center bg-white flex flex-col items-center justify-between box-border relative overflow-hidden';
           item.innerHTML = `
-            <div class="w-full border-b border-[#1a3300]/15 pb-0.5">
-              <div class="font-bold text-[8.5px] text-[#1a3300] leading-tight">
+            <div class="w-full border-b border-[#1a3300]/20 pb-1">
+              <div class="font-extrabold text-[10px] text-[#1a3300] leading-tight">
                 ${ACADEMIC_INFO.highSchool}
               </div>
-              <div class="font-mono text-[7.5px] text-[#1a3300]/70">
+              <div class="font-mono text-[8.5px] font-bold text-[#1a3300]/75">
                 ${unit.streamShort} • مادة المعلوماتية
               </div>
             </div>
             
-            <div class="my-0.5 text-center flex flex-col items-center">
-              <div class="font-bold text-[8.5px] text-[#1a3300] leading-tight line-clamp-1">
+            <div class="my-auto py-1 text-center flex flex-col items-center justify-center">
+              <div class="font-black text-[10px] text-[#1a3300] leading-tight line-clamp-1 mb-1">
                 الوحدة ${unit.unitNumber}: ${unit.title}
               </div>
-              <img src="${dataUrl}" class="w-16 h-16 mx-auto my-0.5" alt="QR" />
+              <img src="${dataUrl}" class="w-20 h-20 mx-auto" alt="QR" />
             </div>
 
-            <div class="w-full pt-0.5 border-t border-[#1a3300]/15 font-mono text-[7px] text-[#1a3300]/60">
+            <div class="w-full pt-1 border-t border-[#1a3300]/20 font-mono text-[8px] font-bold text-[#1a3300]/70">
               امسح بالهاتف لمطالعة الدرس والمحاكي
             </div>
           `;
@@ -2558,11 +2594,13 @@ const CLASSES_CONFIG = [
         stickerSection.classList.remove('hidden');
         posterSection?.classList.add('hidden');
         teamCardsSection?.classList.add('hidden');
-        stickerSection.scrollIntoView({ behavior: 'smooth' });
+        if (shouldScroll) {
+          stickerSection.scrollIntoView({ behavior: 'smooth' });
+        }
       }
 
       // 2. Generate Wall Poster A4
-      function generateWallPoster() {
+      function generateWallPoster(shouldScroll = true) {
         if (!qrCanvas || !posterContent || !posterSection) return;
         const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
         const dataUrl = qrCanvas.toDataURL('image/png');
@@ -2608,11 +2646,13 @@ const CLASSES_CONFIG = [
         posterSection.classList.remove('hidden');
         stickerSection?.classList.add('hidden');
         teamCardsSection?.classList.add('hidden');
-        posterSection.scrollIntoView({ behavior: 'smooth' });
+        if (shouldScroll) {
+          posterSection.scrollIntoView({ behavior: 'smooth' });
+        }
       }
 
       // 3. Generate Team Cards CS Unplugged
-      function generateTeamCards() {
+      function generateTeamCards(shouldScroll = true) {
         if (!qrCanvas || !teamCardsContainer || !teamCardsSection) return;
         const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
         const dataUrl = qrCanvas.toDataURL('image/png');
@@ -2655,7 +2695,9 @@ const CLASSES_CONFIG = [
         teamCardsSection.classList.remove('hidden');
         stickerSection?.classList.add('hidden');
         posterSection?.classList.add('hidden');
-        teamCardsSection.scrollIntoView({ behavior: 'smooth' });
+        if (shouldScroll) {
+          teamCardsSection.scrollIntoView({ behavior: 'smooth' });
+        }
       }
 
       function executeCleanPrint() {
@@ -2667,18 +2709,28 @@ const CLASSES_CONFIG = [
         }, 1000);
       }
 
-      document.getElementById('btn-show-stickers-24')?.addEventListener('click', generateStickerSheet);
-      document.getElementById('btn-show-wall-poster')?.addEventListener('click', generateWallPoster);
-      document.getElementById('btn-show-team-cards')?.addEventListener('click', generateTeamCards);
-      document.getElementById('btn-print-current-view')?.addEventListener('click', generateStickerSheet);
+      function hideActivePreviews() {
+        stickerSection?.classList.add('hidden');
+        posterSection?.classList.add('hidden');
+        teamCardsSection?.classList.add('hidden');
+        document.getElementById('tab-content-qr')?.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      document.getElementById('btn-show-stickers-24')?.addEventListener('click', () => generateStickerSheet(true));
+      document.getElementById('btn-show-wall-poster')?.addEventListener('click', () => generateWallPoster(true));
+      document.getElementById('btn-show-team-cards')?.addEventListener('click', () => generateTeamCards(true));
+      document.getElementById('btn-print-current-view')?.addEventListener('click', () => generateStickerSheet(true));
 
       document.getElementById('btn-do-print')?.addEventListener('click', executeCleanPrint);
       document.getElementById('btn-do-print-poster')?.addEventListener('click', executeCleanPrint);
       document.getElementById('btn-do-print-teams')?.addEventListener('click', executeCleanPrint);
 
-      document.getElementById('btn-hide-stickers')?.addEventListener('click', () => stickerSection?.classList.add('hidden'));
-      document.getElementById('btn-hide-poster')?.addEventListener('click', () => posterSection?.classList.add('hidden'));
-      document.getElementById('btn-hide-teams')?.addEventListener('click', () => teamCardsSection?.classList.add('hidden'));
+      document.getElementById('btn-hide-stickers')?.addEventListener('click', hideActivePreviews);
+      document.getElementById('btn-hide-stickers-bottom')?.addEventListener('click', hideActivePreviews);
+      document.getElementById('btn-hide-poster')?.addEventListener('click', hideActivePreviews);
+      document.getElementById('btn-hide-poster-bottom')?.addEventListener('click', hideActivePreviews);
+      document.getElementById('btn-hide-teams')?.addEventListener('click', hideActivePreviews);
+      document.getElementById('btn-hide-teams-bottom')?.addEventListener('click', hideActivePreviews);
 
       populateDropdown(currentStream);
       renderQRCode();
@@ -2978,7 +3030,7 @@ const CLASSES_CONFIG = [
     @media print {
       @page {
         size: A4 portrait;
-        margin: 0mm; /* Suppresses browser URL, title, date, and page count */
+        margin: 4mm 5mm; /* Safe print margins: 4mm top/bottom, 5mm left/right */
       }
 
       html, body {
@@ -2986,8 +3038,8 @@ const CLASSES_CONFIG = [
         color: #000000 !important;
         margin: 0 !important;
         padding: 0 !important;
-        width: 210mm !important;
-        max-width: 210mm !important;
+        width: 200mm !important;
+        max-width: 200mm !important;
         min-height: 0 !important;
         height: auto !important;
         overflow: visible !important;
@@ -3047,38 +3099,81 @@ const CLASSES_CONFIG = [
       }
 
       .a4-sheet-stickers {
-        width: 210mm !important;
-        max-width: 210mm !important;
-        height: 295mm !important;
-        max-height: 295mm !important;
-        padding: 5mm 6mm !important;
+        width: 200mm !important;
+        max-width: 200mm !important;
+        height: 289mm !important;
+        max-height: 289mm !important;
+        padding: 0 !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
       }
 
+      #stickers-container {
+        display: grid !important;
+        grid-template-columns: repeat(4, 48mm) !important;
+        grid-template-rows: repeat(6, 46.5mm) !important;
+        gap: 2mm 2.5mm !important;
+        justify-content: center !important;
+        align-content: space-between !important;
+        height: 289mm !important;
+        width: 200mm !important;
+        box-sizing: border-box !important;
+      }
+
+      .sticker-cell {
+        width: 48mm !important;
+        height: 46.5mm !important;
+        max-height: 46.5mm !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        padding: 2mm 1.5mm !important;
+      }
+
       .a4-sheet-poster {
-        width: 210mm !important;
-        max-width: 210mm !important;
-        height: 295mm !important;
-        max-height: 295mm !important;
+        width: 200mm !important;
+        max-width: 200mm !important;
+        height: 289mm !important;
+        max-height: 289mm !important;
         padding: 10mm 12mm !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
       }
 
       .a4-sheet-teams {
-        width: 210mm !important;
-        max-width: 210mm !important;
-        height: 295mm !important;
-        max-height: 295mm !important;
-        padding: 7mm 7mm !important;
+        width: 200mm !important;
+        max-width: 200mm !important;
+        height: 289mm !important;
+        max-height: 289mm !important;
+        padding: 4mm 4mm !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
       }
 
+      #team-cards-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 96mm) !important;
+        grid-template-rows: repeat(3, 91mm) !important;
+        gap: 4mm 6mm !important;
+        justify-content: center !important;
+        align-content: space-between !important;
+        height: 281mm !important;
+        width: 198mm !important;
+      }
+    }
+
+    @media screen {
+      .a4-sheet-stickers {
+        max-width: 210mm;
+        padding: 12px;
+        background: #ffffff;
+      }
       .sticker-cell {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        min-height: 46.5mm;
       }
     }
   </style>
