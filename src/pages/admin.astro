@@ -11,10 +11,12 @@ const allUnits: Array<{
   domainTitle: string;
   unitNumber: number;
   title: string;
+  shortDesc: string;
   slug: string;
   term: number;
   fullUrl: string;
   defaultStatus: 'available' | 'in_progress' | 'planned';
+  hasSimulator: boolean;
 }> = [];
 
 Object.values(STREAMS_DATA).forEach((stream) => {
@@ -28,10 +30,12 @@ Object.values(STREAMS_DATA).forEach((stream) => {
         domainTitle: domain.title,
         unitNumber: unit.unitNumber,
         title: unit.title,
+        shortDesc: unit.shortDesc || '',
         slug: unit.slug,
         term: unit.term,
         fullUrl: `${ACADEMIC_INFO.siteUrl}${unit.slug}`,
-        defaultStatus: unit.status
+        defaultStatus: unit.status,
+        hasSimulator: Boolean(unit.hasSimulator)
       });
     });
   });
@@ -69,38 +73,48 @@ const CURRICULUM_WEEKS = [
   // Term 3 (8 weeks)
   { week: 24, term: 3, tcst: 'المجال 03 / الوحدة 01: مدخل إلى شبكة الويب ولغة HTML', tcl: 'المجال 03 / الوحدة 01: مدخل إلى شبكة الإنترنت والبحث المتقدم' },
   { week: 25, term: 3, tcst: 'المجال 03 / الوحدة 01: الوسوم الأساسية وهيكلة صفحة الويب', tcl: 'المجال 03 / الوحدة 01: البريد الإلكتروني وأخلاقيات استخدام الويب' },
-  { week: 26, term: 3, tcst: 'المجال 03 / الوحدة 02: إدراج الوسائط والروابط التشعبية', tcl: 'المجال 03 / الوحدة 02: إنشاء صفحات وبسيطة أو مدونات' },
+  { week: 26, term: 3, tcst: 'المجال 03 / الوحدة 02: إدراج الوسائط والروابط التشعبية', tcl: 'المجال 03 / الوحدة 02: إنشاء صفحات وب بسيطة أو مدونات' },
   { week: 27, term: 3, tcst: 'المجال 04 / الوحدة 01: معالجة النصوص المتقدمة وتنسيق المذكرات', tcl: 'المجال 03: مشروع ختامي تطبيقي' },
   { week: 28, term: 3, tcst: 'فرض الفصل الثالث في مادة المعلوماتية', tcl: 'فرض الفصل الثالث في مادة المعلوماتية' },
   { week: 29, term: 3, tcst: 'المجال 04 / الوحدة 02: الجداول وتوليد الفهارس التلقائية', tcl: 'مراجعة ختامية ومعالجة بيداغوجية' },
   { week: 30, term: 3, tcst: 'مشروع إدماجي ختامي للمادة', tcl: 'مشروع إدماجي ختامي للمادة' },
   { week: 31, term: 3, tcst: 'اختبارات الفصل الثالث ومجالس الأقسام', tcl: 'اختبارات الفصل الثالث ومجالس الأقسام' }
 ];
+
+// The 6 assigned classes details based on official reference document
+const CLASSES_CONFIG = [
+  { id: '1as-c8', name: '1ع8', stream: 'جذع مشترك علوم', room: 'قاعة 8', timing: 'الأحد 08:00 - 09:00', streamId: 'tcst' },
+  { id: '1as-c9', name: '1ع9', stream: 'جذع مشترك علوم', room: 'قاعة 23', timing: 'الأحد 10:00 - 11:00', streamId: 'tcst' },
+  { id: '1as-l5', name: '1آ5', stream: 'جذع مشترك آداب', room: 'قاعة 28', timing: 'الأحد 11-12 والأربعاء 08-09', streamId: 'tcl' },
+  { id: '1as-c7', name: '1ع7', stream: 'جذع مشترك علوم', room: 'قاعة 7', timing: 'الأحد 14:00 - 15:00', streamId: 'tcst' },
+  { id: '1as-c5', name: '1ع5', stream: 'جذع مشترك علوم', room: 'قاعة 5', timing: 'الأحد 15:00 - 16:00', streamId: 'tcst' },
+  { id: '1as-c6', name: '1ع6', stream: 'جذع مشترك علوم', room: 'قاعة 6', timing: 'الأربعاء 10:00 - 11:00', streamId: 'tcst' }
+];
 ---
 
-<Layout title="فضاء الأستاذ — لوحة القيادة البيداغوجية" currentStream="admin">
+<Layout title="فضاء الأستاذ — لوحة القيادة البيداغوجية الشاملة" currentStream="all">
 
   <!-- ============================================================ -->
   <!-- 1. EDITORIAL SECURITY GATE (Unauthenticated View)            -->
   <!-- ============================================================ -->
-  <div id="admin-login-gate" class="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 py-12 sketch-grid-bg relative overflow-hidden">
+  <div id="admin-login-gate" class="min-h-[78vh] flex items-center justify-center px-4 sm:px-6 py-12 sketch-grid-bg relative overflow-hidden">
     
-    <div class="w-full max-w-sm border border-[#1a3300]/20 bg-[#fcfaf5] rounded-[12px] p-7 shadow-sm relative z-10 space-y-6">
+    <div class="w-full max-w-sm border-2 border-[#1a3300]/20 bg-[#fcfaf5] rounded-3xl p-7 sm:p-8 shadow-sm relative z-10 space-y-6 tactile-card">
       
       <div>
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#ffe95c] border border-[#1a3300]/20 text-[#1a3300] font-mono text-[10px] font-bold uppercase tracking-wider mb-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ffe95c] border border-[#1a3300]/25 text-[#1a3300] font-mono text-[11px] font-bold uppercase tracking-wider mb-3 shadow-2xs">
           <span>🔒</span>
           <span>ADMIN ACCESS GATE</span>
         </div>
-        <h1 class="font-display text-2xl font-bold text-[#1a3300] tracking-tight">فضاء الأستاذ</h1>
-        <p class="text-xs text-[#1a3300]/70 mt-1 leading-relaxed">
+        <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-[#1a3300] tracking-tight">فضاء الأستاذ</h1>
+        <p class="text-xs text-[#1a3300]/75 mt-1 leading-relaxed">
           {ACADEMIC_INFO.highSchool} • {ACADEMIC_INFO.teacher}
         </p>
       </div>
 
       <form id="admin-auth-form" class="space-y-4" onsubmit="return false;">
         <div>
-          <label for="admin-pin-input" class="block text-xs text-[#1a3300]/80 mb-1.5 font-bold">
+          <label for="admin-pin-input" class="block text-xs text-[#1a3300]/90 mb-1.5 font-bold">
             رمز المرور السري (<span class="font-mono">PIN</span>):
           </label>
           <div class="relative">
@@ -111,42 +125,42 @@ const CURRICULUM_WEEKS = [
               maxlength="20"
               placeholder="••••" 
               autocomplete="current-password"
-              class="w-full bg-[#f2eee3] border border-[#1a3300]/20 focus:border-[#1a3300] rounded-[6px] py-2.5 px-3.5 font-mono text-center text-lg font-bold text-[#1a3300] tracking-widest outline-hidden transition-all"
+              class="w-full bg-[#f2eee3] border-2 border-[#1a3300]/20 focus:border-[#1a3300] rounded-xl py-3 px-4 font-mono text-center text-xl font-black text-[#1a3300] tracking-widest outline-hidden transition-all shadow-inner"
               required
             />
             <button 
               type="button" 
               id="btn-toggle-pin-visibility" 
-              class="absolute inset-y-0 left-3 flex items-center text-[#1a3300]/60 hover:text-[#1a3300] text-xs font-mono font-bold"
+              class="absolute inset-y-0 left-3 flex items-center text-[#1a3300]/60 hover:text-[#1a3300] text-xs font-mono font-bold cursor-pointer"
               tabindex="-1"
             >
               عرض
             </button>
           </div>
-          <div id="login-error-msg" class="hidden text-[#cb5521] text-[11px] font-mono mt-2 text-center bg-[#f6d0ff]/50 border border-[#cb5521]/30 py-1.5 px-2.5 rounded-[6px] font-bold">
+          <div id="login-error-msg" class="hidden text-[#cb5521] text-[11px] font-mono mt-2 text-center bg-[#f6d0ff]/50 border border-[#cb5521]/30 py-1.5 px-2.5 rounded-xl font-bold">
           </div>
         </div>
 
-        <!-- Sleek Minimal Keypad -->
-        <div class="border border-[#1a3300]/15 rounded-[8px] p-2 bg-[#f2eee3]">
+        <!-- Sleek Tactile Keypad -->
+        <div class="border-2 border-[#1a3300]/15 rounded-2xl p-2.5 bg-[#f2eee3]">
           <div class="grid grid-cols-3 gap-1.5 text-xs font-mono font-bold text-[#1a3300]">
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="1">1</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="2">2</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="3">3</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="4">4</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="5">5</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="6">6</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="7">7</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="8">8</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="9">9</button>
-            <button type="button" id="pin-clear-btn" class="py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#f6d0ff] hover:text-[#cb5521] text-[#1a3300]/60 text-[10px] border border-[#1a3300]/15 transition-colors font-bold">مسح</button>
-            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="0">0</button>
-            <button type="button" id="pin-backspace-btn" class="py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] text-[#1a3300]/70 text-[10px] border border-[#1a3300]/15 transition-colors font-bold">⌫</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="1">1</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="2">2</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="3">3</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="4">4</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="5">5</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="6">6</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="7">7</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="8">8</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="9">9</button>
+            <button type="button" id="pin-clear-btn" class="py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#f6d0ff] hover:text-[#cb5521] text-[#1a3300]/60 text-[10px] border border-[#1a3300]/15 transition-all active:scale-95 font-bold">مسح</button>
+            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="0">0</button>
+            <button type="button" id="pin-backspace-btn" class="py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] text-[#1a3300]/70 text-[10px] border border-[#1a3300]/15 transition-all active:scale-95 font-bold">⌫</button>
           </div>
         </div>
 
-        <div class="flex items-center text-[11px] text-[#1a3300]/70 font-medium">
-          <label class="flex items-center gap-2 cursor-pointer">
+        <div class="flex items-center text-[11px] text-[#1a3300]/80 font-medium">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
             <input type="checkbox" id="remember-device-check" class="rounded border-[#1a3300]/30 text-[#1a3300] focus:ring-[#1a3300]" checked />
             <span>حفظ الجلسة على هذا المتصفح</span>
           </label>
@@ -155,15 +169,15 @@ const CURRICULUM_WEEKS = [
         <button 
           type="submit" 
           id="btn-submit-auth" 
-          class="btn-primary-cta w-full justify-center text-xs"
+          class="w-full py-3.5 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm hover-lift cursor-pointer"
         >
           <span>دخول لوحة القيادة</span>
-          <span class="font-mono">→</span>
+          <span class="font-mono text-sm">←</span>
         </button>
       </form>
 
       <div class="pt-4 border-t border-[#1a3300]/15 text-center font-mono text-[11px] text-[#1a3300]/70">
-        الرمز الافتراضي: <span class="font-bold text-[#1a3300] bg-[#ffe95c] px-1.5 py-0.5 rounded-[4px]">2027</span>
+        الرمز الافتراضي: <span class="font-bold text-[#1a3300] bg-[#ffe95c] px-2 py-0.5 rounded-md border border-[#1a3300]/20">2027</span>
       </div>
 
     </div>
@@ -175,210 +189,751 @@ const CURRICULUM_WEEKS = [
   <!-- ============================================================ -->
   <div id="admin-dashboard-container" class="hidden">
     
-    <!-- Top Dashboard Header -->
-    <section class="border-b border-zinc-200 bg-white py-6 px-6 no-print">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <!-- Top Executive Header -->
+    <section class="border-b-2 border-[#1a3300]/15 bg-[#fcfaf5] py-6 px-4 sm:px-6 no-print sketch-grid-bg relative z-20">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
         
         <div>
-          <div class="flex items-center gap-2 mb-1">
-            <div class="font-mono text-xs text-zinc-400 uppercase tracking-widest">CONTROL PANEL</div>
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span class="font-mono text-[11px] text-emerald-700">SESSION ACTIVE</span>
+          <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
+            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] font-mono text-[10px] font-bold uppercase tracking-wider">
+              <span>🎛️ CONTROL CENTER</span>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#d5f5c2] border border-[#1a3300]/20 text-[#1a3300] font-mono text-[10px] font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              SESSION ACTIVE
+            </span>
+            <span id="header-exam-pill" class="hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#ffe95c] border border-[#1a3300]/20 text-[#1a3300] font-mono text-[10px] font-black">
+              🔒 EXAM MODE ON
+            </span>
           </div>
-          <h1 class="text-xl font-bold text-zinc-950 tracking-tight">
-            لوحة قيادة معرفة تك
+
+          <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-[#1a3300] tracking-tight">
+            لوحة قيادة معرفة تك الشاملة
           </h1>
-          <p class="text-xs text-zinc-500 mt-0.5">
-            {ACADEMIC_INFO.highSchool} — {ACADEMIC_INFO.city} • الأستاذ: {ACADEMIC_INFO.teacher}
+          <p class="text-xs text-[#1a3300]/75 mt-1 flex items-center gap-2 flex-wrap">
+            <span class="font-bold">{ACADEMIC_INFO.highSchool}</span>
+            <span>•</span>
+            <span>{ACADEMIC_INFO.city}</span>
+            <span>•</span>
+            <span class="bg-[#ffe95c]/60 px-2 py-0.5 rounded-md border border-[#1a3300]/15 font-bold">{ACADEMIC_INFO.teacher}</span>
           </p>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5 flex-wrap">
           <a 
             href="/" 
             target="_blank"
-            class="px-3 py-1.5 rounded-md border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:text-zinc-950 text-xs font-medium transition-colors"
+            class="px-4 py-2 rounded-xl bg-white hover:bg-[#ffe95c] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold transition-all shadow-2xs hover-lift inline-flex items-center gap-1.5"
           >
-            معاينة واجهة التلاميذ ↗
+            <span>معاينة واجهة التلاميذ</span>
+            <span class="font-mono">↗</span>
           </a>
+
+          <button 
+            id="btn-toggle-exam-mode-top"
+            class="px-4 py-2 rounded-xl bg-[#ffe95c] hover:bg-[#ffd93d] border-2 border-[#1a3300]/25 text-[#1a3300] text-xs font-bold transition-all shadow-2xs hover-lift cursor-pointer inline-flex items-center gap-1.5"
+            title="حجب الحلول النموذجية للمساعدة على التركيز أثناء الحصة أو الفرض"
+          >
+            <span id="top-exam-icon">🔒</span>
+            <span id="top-exam-text">وضع الامتحان</span>
+          </button>
+
+          <button 
+            id="btn-quick-export"
+            class="px-3.5 py-2 rounded-xl bg-white hover:bg-[#d5f5c2] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold transition-all shadow-2xs hover-lift cursor-pointer inline-flex items-center gap-1"
+            title="تصدير نسخة احتياطية من كل الإعدادات والبيانات"
+          >
+            <span>💾</span>
+            <span class="hidden sm:inline">نسخ احتياطي</span>
+          </button>
+
           <button 
             id="btn-admin-logout"
-            class="px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium transition-colors"
+            class="px-4 py-2 rounded-xl bg-[#1a3300] hover:bg-[#cb5521] text-[#fcfaf5] text-xs font-bold transition-all shadow-2xs hover-lift cursor-pointer inline-flex items-center gap-1.5"
           >
-            قفل الجلسة (خروج)
+            <span>🚪</span>
+            <span>قفل الجلسة</span>
           </button>
         </div>
 
       </div>
+
+      <!-- KPI Summary Cards Strip -->
+      <div class="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[#1a3300]/10">
+        
+        <!-- KPI 1: Units Status -->
+        <div class="rounded-2xl p-3.5 bg-white border-2 border-[#1a3300]/15 shadow-2xs">
+          <div class="flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60 mb-1">
+            <span>CURRICULUM UNITS</span>
+            <span class="text-xs">📚</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-display text-2xl font-black text-[#1a3300]">25</span>
+            <span class="text-[11px] font-bold text-[#1a3300]/70">وحدة مقررة</span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-2 text-[10px] font-mono font-bold flex-wrap">
+            <span id="kpi-units-available" class="px-1.5 py-0.5 rounded bg-[#d5f5c2] text-[#1a3300]">0 متاح</span>
+            <span id="kpi-units-progress" class="px-1.5 py-0.5 rounded bg-[#ffe95c] text-[#1a3300]">0 تحضير</span>
+            <span id="kpi-units-planned" class="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-600">0 مجدول</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: Classes Matrix -->
+        <div class="rounded-2xl p-3.5 bg-white border-2 border-[#1a3300]/15 shadow-2xs">
+          <div class="flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60 mb-1">
+            <span>ASSIGNED CLASSES</span>
+            <span class="text-xs">👥</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-display text-2xl font-black text-[#1a3300]">6</span>
+            <span class="text-[11px] font-bold text-[#1a3300]/70">أقسام (5ع + 1آ)</span>
+          </div>
+          <div class="flex items-center gap-1 mt-2 text-[10px] font-mono text-[#1a3300]/80">
+            <span>الحجم الساعي: </span>
+            <span class="font-black">7 سا/أسبوع</span>
+          </div>
+        </div>
+
+        <!-- KPI 3: Progression Tracker -->
+        <div class="rounded-2xl p-3.5 bg-white border-2 border-[#1a3300]/15 shadow-2xs">
+          <div class="flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60 mb-1">
+            <span>ANNUAL PROGRESS</span>
+            <span class="text-xs">📅</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="kpi-tracker-percent" class="font-display text-2xl font-black text-[#1a3300]">0%</span>
+            <span class="text-[11px] font-bold text-[#1a3300]/70">من 31 أسبوعاً</span>
+          </div>
+          <div class="w-full bg-[#f2eee3] rounded-full h-1.5 mt-2.5 overflow-hidden">
+            <div id="kpi-tracker-bar" class="bg-[#1a3300] h-1.5 rounded-full transition-all duration-300" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- KPI 4: Alert Status -->
+        <div class="rounded-2xl p-3.5 bg-white border-2 border-[#1a3300]/15 shadow-2xs">
+          <div class="flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60 mb-1">
+            <span>GLOBAL ALERT</span>
+            <span class="text-xs">🔔</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="kpi-alert-status-text" class="font-display text-base sm:text-lg font-black text-[#1a3300]">لا يوجد إعلان</span>
+          </div>
+          <div class="mt-2 text-[10px] text-[#1a3300]/70 truncate font-mono" id="kpi-alert-preview-text">
+            شريط التنبيهات متوقف
+          </div>
+        </div>
+
+      </div>
+
     </section>
 
-    <!-- Navigation Tabs -->
-    <div class="bg-white border-b border-zinc-200 sticky top-15 z-40 no-print">
-      <div class="max-w-6xl mx-auto px-6 flex gap-1 overflow-x-auto py-2 text-xs font-medium scrollbar-none">
-        <button id="tab-btn-units" class="admin-tab-btn px-3 py-1.5 rounded-md bg-zinc-900 text-white shrink-0">
-          إدارة حالة الدروس
+    <!-- Navigation Tabs Bar -->
+    <div class="bg-[#fcfaf5] border-b-2 border-[#1a3300]/15 sticky top-0 z-40 no-print shadow-xs">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex gap-1.5 overflow-x-auto py-2.5 text-xs font-bold scrollbar-none">
+        
+        <button id="tab-btn-dash" class="admin-tab-btn px-4 py-2 rounded-xl bg-[#1a3300] text-[#fcfaf5] shadow-xs shrink-0 flex items-center gap-1.5 cursor-pointer">
+          <span>🎛️</span>
+          <span>الإعلانات والتحكم العام</span>
         </button>
-        <button id="tab-btn-qr" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
-          استوديو الـ QR والملصقات A4
+
+        <button id="tab-btn-units" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>📚</span>
+          <span>إدارة ونشر الوحدات</span>
         </button>
-        <button id="tab-btn-tracker" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
-          تتبع التدرج السنوي (31 أسبوعاً)
+
+        <button id="tab-btn-classes" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>👥</span>
+          <span>مصفوفة الأقسام الستة</span>
         </button>
-        <button id="tab-btn-docs" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
-          الحقيبة البيداغوجية
+
+        <button id="tab-btn-qr" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>🖨️</span>
+          <span>استوديو الـ QR والطباعة A4</span>
         </button>
-        <button id="tab-btn-settings" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
-          الأمان والرمز السري
+
+        <button id="tab-btn-tracker" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>📅</span>
+          <span>التدرج السنوي (31 أسبوعاً)</span>
         </button>
+
+        <button id="tab-btn-grades" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>🧮</span>
+          <span>حاسبة التقويم والمعدلات</span>
+        </button>
+
+        <button id="tab-btn-docs" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>📂</span>
+          <span>الحقيبة والمستودعات الرقمية</span>
+        </button>
+
+        <button id="tab-btn-settings" class="admin-tab-btn px-4 py-2 rounded-xl text-[#1a3300]/80 hover:bg-[#ffe95c]/50 hover:text-[#1a3300] shrink-0 flex items-center gap-1.5 cursor-pointer transition-all">
+          <span>🔐</span>
+          <span>الأمان والمزامنة</span>
+        </button>
+
       </div>
     </div>
 
 
     <!-- ============================================================ -->
-    <!-- TAB 1: CURRICULUM STATUS MANAGER                              -->
+    <!-- TAB 1: QUICK CONTROL & GLOBAL ANNOUNCEMENT                    -->
     <!-- ============================================================ -->
-    <div id="tab-content-units" class="admin-tab-panel max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
-      <div class="border border-zinc-200 rounded-xl bg-white p-6">
+    <div id="tab-content-dash" class="admin-tab-panel max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-4 border-b border-zinc-100">
+        <!-- Left: Global Announcement Editor (2 Cols) -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-[#1a3300]/10 mb-6">
+              <div>
+                <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">LIVE STUDENT TICKER</div>
+                <h2 class="font-display text-xl sm:text-2xl font-extrabold text-[#1a3300]">
+                  شريط الإعلانات والتنبيهات المباشر
+                </h2>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-announcement-enabled" class="sr-only peer" />
+                <div class="w-11 h-6 bg-[#f2eee3] peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1a3300]"></div>
+                <span class="mr-3 text-xs font-bold text-[#1a3300]" id="announcement-toggle-label">معطل</span>
+              </label>
+            </div>
+
+            <!-- Form -->
+            <div class="space-y-4">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">
+                    تصنيف الإعلان:
+                  </label>
+                  <select id="announcement-type-select" class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]">
+                    <option value="info">🔔 إعلان عام ومعلومات (أزرق سماوي)</option>
+                    <option value="warning">⚠️ تنبيه بيداغوجي هام (أصفر مميز)</option>
+                    <option value="exam">📝 موعد فرض أو تقويم (برتقالي دافئ)</option>
+                    <option value="success">🏆 تشجيع وتهنئة بالتميز (أخضر نعناعي)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">
+                    شارة التنبيه المخصصة:
+                  </label>
+                  <input 
+                    type="text" 
+                    id="announcement-badge-input" 
+                    placeholder="مثال: تنبيه لجميع الأقسام" 
+                    class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">
+                  نص الإعلان الذي سيظهر للتلاميذ في رأس الصفحة:
+                </label>
+                <textarea 
+                  id="announcement-text-input" 
+                  rows="3" 
+                  placeholder="اكتب التنبيه أو التوجيه هنا..." 
+                  class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl p-3.5 text-xs font-medium text-[#1a3300] outline-hidden focus:border-[#1a3300] leading-relaxed"
+                ></textarea>
+              </div>
+
+              <!-- Quick Template Snippets -->
+              <div>
+                <div class="text-[11px] font-mono text-[#1a3300]/60 mb-2 font-bold">قوالب جاهزة سريعة بنقرة واحدة:</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تذكير: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لكل أقسام الجذع المشترك.">
+                    📝 تذكير بالفرض الأول
+                  </button>
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="يرجى إحضار كراس المادة وأقلام التظليل لإنجاز النشاط التفاعلي خلال الحصة القادمة.">
+                    📓 إحضار الكراس
+                  </button>
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تم رفع بطاقة الأنشطة الخاصة بالدرس الجديد، يمكنكم مطالعتها ومحاولة حل الوضعية.">
+                    📄 رفع بطاقة الأنشطة
+                  </button>
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تحية تقدير وتشجيع للتلاميذ المتميزين في حل أنشطة وتطبيقات الوحدة السابقة!">
+                    🏆 تشجيع المتفوقين
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">
+                  رابط زر التوجيه (اختياري):
+                </label>
+                <input 
+                  type="text" 
+                  id="announcement-link-input" 
+                  placeholder="مثال: /tcst/m1-u1 أو رابط خارجي" 
+                  class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-mono text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                />
+              </div>
+
+              <!-- Live Preview Widget -->
+              <div class="mt-4 pt-4 border-t border-[#1a3300]/10">
+                <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 mb-2">معاينة حية للإعلان كما يظهر للتلاميذ:</div>
+                <div id="announcement-live-preview" class="rounded-2xl border border-[#1a3300]/20 p-3.5 bg-[#a8e5e5] text-xs font-bold text-[#1a3300] shadow-xs">
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                      <span id="preview-badge-icon">🔔</span>
+                      <span id="preview-badge-text" class="px-2 py-0.5 rounded-full bg-white/70 text-[10px] font-black">إعلان من الأستاذ</span>
+                      <span id="preview-message-text" class="font-bold">أدخل نص الإعلان للمعاينة...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Save Actions -->
+              <div class="flex items-center gap-3 pt-2">
+                <button 
+                  type="button" 
+                  id="btn-save-announcement" 
+                  class="flex-1 py-3 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs shadow-sm hover-lift active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>💾</span>
+                  <span>حفظ ونشر الإعلان فوراً للطلاب</span>
+                </button>
+                <button 
+                  type="button" 
+                  id="btn-clear-announcement" 
+                  class="px-4 py-3 rounded-2xl bg-[#fcfaf5] hover:bg-[#f6d0ff] border-2 border-[#1a3300]/20 text-[#cb5521] font-bold text-xs transition-colors cursor-pointer"
+                >
+                  إيقاف الإعلان
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Batch Operations Card -->
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 shadow-sm tactile-card">
+            <h3 class="font-display text-lg font-bold text-[#1a3300] mb-2">إجراءات النشر السريعة بالدفعة</h3>
+            <p class="text-xs text-[#1a3300]/70 mb-4 leading-relaxed">
+              التحكم في إتاحة ونشر مجالات وفصول المنهاج دفعة واحدة بنقرة واحدة لربح الوقت:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <button id="btn-batch-publish-t1" class="p-3.5 rounded-2xl bg-[#d5f5c2] hover:bg-[#c2edab] border-2 border-[#1a3300]/15 text-[#1a3300] font-bold text-right transition-all flex items-center justify-between cursor-pointer shadow-2xs hover-lift">
+                <div>
+                  <div class="font-black">نشر كل وحدات الفصل الأول (T1)</div>
+                  <div class="text-[10px] text-[#1a3300]/70 font-mono mt-0.5">8 وحدات (علمي + أدبي)</div>
+                </div>
+                <span>🚀</span>
+              </button>
+
+              <button id="btn-batch-publish-t2" class="p-3.5 rounded-2xl bg-[#ffe95c] hover:bg-[#ffd93d] border-2 border-[#1a3300]/15 text-[#1a3300] font-bold text-right transition-all flex items-center justify-between cursor-pointer shadow-2xs hover-lift">
+                <div>
+                  <div class="font-black">نشر كل وحدات الفصل الثاني (T2)</div>
+                  <div class="text-[10px] text-[#1a3300]/70 font-mono mt-0.5">11 وحدة (الخوارزميات والمكتبية)</div>
+                </div>
+                <span>⚡</span>
+              </button>
+
+              <button id="btn-batch-lock-all" class="p-3.5 rounded-2xl bg-[#f2eee3] hover:bg-[#e2dcce] border-2 border-[#1a3300]/15 text-[#1a3300] font-bold text-right transition-all flex items-center justify-between cursor-pointer shadow-2xs">
+                <div>
+                  <div class="font-black">قفل الوحدات غير المنجزة</div>
+                  <div class="text-[10px] text-[#1a3300]/70 font-mono mt-0.5">تحويلها إلى حالة "مجدول"</div>
+                </div>
+                <span>🔒</span>
+              </button>
+
+              <button id="btn-batch-reset" class="p-3.5 rounded-2xl bg-white hover:bg-rose-50 border-2 border-rose-300 text-rose-800 font-bold text-right transition-all flex items-center justify-between cursor-pointer shadow-2xs">
+                <div>
+                  <div class="font-black">استعادة ضبط المنهاج الوزاري</div>
+                  <div class="text-[10px] text-rose-600 font-mono mt-0.5">إلغاء كافة التعديلات الفردية</div>
+                </div>
+                <span>🔄</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Official Timetable & Exam Mode Quick Switch (1 Col) -->
+        <div class="space-y-6">
+          
+          <!-- Exam Mode Card -->
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-[#ffe95c]/30 p-6 shadow-sm tactile-card">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1a3300] text-[#fcfaf5] font-mono text-[10px] font-black uppercase">
+                EXAM / PROCTOR
+              </span>
+              <span id="exam-card-status-badge" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-[#1a3300] border border-[#1a3300]/20">معطل</span>
+            </div>
+
+            <h3 class="font-display text-xl font-bold text-[#1a3300] mb-2">وضع الفروض والامتحانات</h3>
+            <p class="text-xs text-[#1a3300]/80 leading-relaxed mb-4">
+              عند تفعيل هذا الوضع، تقوم المنصة تلقائياً بحجب حلول الأنشطة والتطبيقات النموذجية من جميع صفحات الدروس، وإظهار شارة مراقبة لتلاميذ القسم في القاعة.
+            </p>
+
+            <button 
+              id="btn-toggle-exam-mode-card"
+              class="w-full py-3 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs transition-all shadow-sm active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span id="exam-card-btn-icon">🔒</span>
+              <span id="exam-card-btn-text">تفعيل وضع الامتحان الآن</span>
+            </button>
+          </div>
+
+          <!-- Official Timetable Card -->
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 shadow-sm tactile-card space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-[#1a3300]/10">
+              <h3 class="font-display text-lg font-bold text-[#1a3300]">جدول الحصص الميداني</h3>
+              <span class="font-mono text-[11px] font-bold text-[#1a3300] bg-[#a8e5e5] px-2 py-0.5 rounded-full border border-[#1a3300]/15">7 سا/أسبوع</span>
+            </div>
+
+            <!-- Sunday Marathon -->
+            <div class="space-y-2">
+              <div class="font-mono text-[11px] font-bold text-[#cb5521] uppercase flex items-center gap-1.5">
+                <span>📍</span>
+                <span>الأحد (ماراثون الأقسام العلمية والأدبية):</span>
+              </div>
+              <ul class="text-xs space-y-1.5 text-[#1a3300] font-medium">
+                <li class="p-2 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 flex items-center justify-between">
+                  <span><strong>1ع8</strong> (قاعة 8)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">08:00 - 09:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#ffe95c]/30 border border-[#1a3300]/15 flex items-center justify-between">
+                  <span><strong>استقبال الأولياء</strong> (مكتب الاستقبال)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]">09:00 - 10:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 flex items-center justify-between">
+                  <span><strong>1ع9</strong> (قاعة 23)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">10:00 - 11:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 flex items-center justify-between">
+                  <span><strong>1آ5</strong> (قاعة 28 - أدبي)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">11:00 - 12:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 flex items-center justify-between">
+                  <span><strong>1ع7</strong> (قاعة 7)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">14:00 - 15:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 flex items-center justify-between">
+                  <span><strong>1ع5</strong> (قاعة 5)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">15:00 - 16:00</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Wednesday -->
+            <div class="space-y-2 pt-2 border-t border-[#1a3300]/10">
+              <div class="font-mono text-[11px] font-bold text-[#cb5521] uppercase flex items-center gap-1.5">
+                <span>📍</span>
+                <span>الأربعاء:</span>
+              </div>
+              <ul class="text-xs space-y-1.5 text-[#1a3300] font-medium">
+                <li class="p-2 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 flex items-center justify-between">
+                  <span><strong>1آ5</strong> (قاعة 28 - الحصة 2)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">08:00 - 09:00</span>
+                </li>
+                <li class="p-2 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 flex items-center justify-between">
+                  <span><strong>1ع6</strong> (قاعة 6 - ختام الأسبوع)</span>
+                  <span class="font-mono text-[11px] text-[#1a3300]/70">10:00 - 11:00</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: COMPREHENSIVE UNITS PUBLICATION MANAGER                -->
+    <!-- ============================================================ -->
+    <div id="tab-content-units" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-5 border-b border-[#1a3300]/10">
           <div>
-            <h2 class="text-base font-bold text-zinc-950">حالة نشر الوحدات التعليمية</h2>
-            <p class="text-xs text-zinc-500 mt-0.5">
-              تحديد حالة الوحدات للتلاميذ (متاح / قيد التحضير / مخفي). التعديلات تُحفظ محلياً وتظهر فوراً للتلاميذ.
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">CONTENT REPOSITORY</div>
+            <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+              إدارة ونشر الوحدات التعليمية ({allUnits.length} وحدة)
+            </h2>
+            <p class="text-xs text-[#1a3300]/70 mt-1">
+              تحكم كامل في نشر كل وحدة، إضافة توجيهات الأستاذ، ربط وثائق إضافية، وتفعيل المحاكيات التفاعلية.
             </p>
           </div>
-          <button 
-            id="btn-reset-unit-statuses"
-            class="font-mono text-[11px] text-zinc-500 hover:text-zinc-900 underline"
-          >
-            استعادة الضبط الافتراضي
-          </button>
+
+          <div class="flex items-center gap-3">
+            <button 
+              id="btn-reset-unit-statuses"
+              class="font-mono text-xs text-[#cb5521] hover:text-[#a03d12] underline font-bold cursor-pointer"
+            >
+              استعادة ضبط المنهاج الافتراضي
+            </button>
+          </div>
         </div>
 
-        <!-- Stream Filter -->
-        <div class="flex items-center gap-2 mb-4 text-xs">
-          <span class="text-zinc-400 font-mono text-[11px]">FILTER:</span>
-          <button id="filter-all" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-900 text-white text-[11px]">الكل (25 وحدة)</button>
-          <button id="filter-tcst" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-100 text-zinc-700 text-[11px]">علمي (14)</button>
-          <button id="filter-tcl" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-100 text-zinc-700 text-[11px]">أدبي (11)</button>
+        <!-- Search & Filter Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          
+          <!-- Search Box -->
+          <div class="relative md:col-span-1">
+            <input 
+              type="text" 
+              id="unit-search-input" 
+              placeholder="ابحث بالاسم، الرقم، أو الرابط..." 
+              class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-2xl py-2.5 px-4 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+            />
+            <span class="absolute left-3.5 top-3 text-xs text-[#1a3300]/50">🔍</span>
+          </div>
+
+          <!-- Stream Filters -->
+          <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-bold md:col-span-2">
+            <button id="filter-stream-all" class="filter-stream-btn px-3 py-2 rounded-xl bg-[#1a3300] text-[#fcfaf5] text-xs shrink-0 cursor-pointer shadow-2xs">الكل (25)</button>
+            <button id="filter-stream-tcst" class="filter-stream-btn px-3 py-2 rounded-xl bg-[#f2eee3] text-[#1a3300] text-xs shrink-0 cursor-pointer hover:bg-[#ffe95c]">علمي (14)</button>
+            <button id="filter-stream-tcl" class="filter-stream-btn px-3 py-2 rounded-xl bg-[#f2eee3] text-[#1a3300] text-xs shrink-0 cursor-pointer hover:bg-[#ffe95c]">أدبي (11)</button>
+            <span class="text-[#1a3300]/30 mx-1">|</span>
+            <button id="filter-term-1" class="filter-term-btn px-2.5 py-1.5 rounded-lg bg-[#f2eee3] text-[#1a3300] text-[11px] shrink-0 hover:bg-[#ffe95c]">فصل 1</button>
+            <button id="filter-term-2" class="filter-term-btn px-2.5 py-1.5 rounded-lg bg-[#f2eee3] text-[#1a3300] text-[11px] shrink-0 hover:bg-[#ffe95c]">فصل 2</button>
+            <button id="filter-term-3" class="filter-term-btn px-2.5 py-1.5 rounded-lg bg-[#f2eee3] text-[#1a3300] text-[11px] shrink-0 hover:bg-[#ffe95c]">فصل 3</button>
+          </div>
+
         </div>
 
-        <!-- Table -->
-        <div class="border border-zinc-200 rounded-lg overflow-x-auto">
+        <!-- Interactive Units Table -->
+        <div class="border-2 border-[#1a3300]/15 rounded-2xl overflow-x-auto bg-white">
           <table class="w-full text-right text-xs">
-            <thead class="bg-zinc-50 text-zinc-500 font-mono text-[11px] border-b border-zinc-200">
+            <thead class="bg-[#f2eee3] text-[#1a3300] font-mono text-[11px] font-bold border-b-2 border-[#1a3300]/15">
               <tr>
-                <th class="p-3">STREAM</th>
-                <th class="p-3">TERM</th>
-                <th class="p-3">UNIT</th>
-                <th class="p-3">DOMAIN</th>
-                <th class="p-3 text-center">STATUS</th>
-                <th class="p-3 text-center">VIEW</th>
+                <th class="p-3.5">الشعبة / الفصل</th>
+                <th class="p-3.5">الوحدة والمجال التعلمي</th>
+                <th class="p-3.5 text-center">حالة النشر للتلاميذ</th>
+                <th class="p-3.5">توجيه الأستاذ / ملاحظة الواجب</th>
+                <th class="p-3.5">ملف إضافي (Drive / PDF)</th>
+                <th class="p-3.5 text-center">معاينة</th>
               </tr>
             </thead>
-            <tbody id="units-table-body" class="divide-y divide-zinc-100">
+            <tbody id="units-table-body" class="divide-y divide-[#1a3300]/10">
             </tbody>
           </table>
         </div>
 
+        <div class="mt-4 flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60">
+          <span>يتم الحفظ تلقائياً في ذاكرة المتصفح بمجرد تعديل أي خانة.</span>
+          <span id="units-counter-summary">عرض 25 من 25 وحدة</span>
+        </div>
+
       </div>
+
     </div>
 
 
     <!-- ============================================================ -->
-    <!-- TAB 2: QR & 24-STICKER STUDIO                                 -->
+    <!-- TAB 3: CLASS PROGRESS MATRIX & PEDAGOGICAL LOG               -->
     <!-- ============================================================ -->
-    <div id="tab-content-qr" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print">
+    <div id="tab-content-classes" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-[#1a3300]/10">
+          <div>
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">FIELD PEDAGOGY LOG</div>
+            <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+              سجل ومصفوفة تقدم الأقسام الستة
+            </h2>
+            <p class="text-xs text-[#1a3300]/70 mt-1">
+              متابعة دقيقة لكل قسم لتفادي تفاوت الدروس بسبب العطل أو جداول التوقيت، مع تدوين الملاحظات الفورية.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button 
+              id="btn-sync-all-tcst-classes"
+              class="px-3.5 py-2 rounded-xl bg-[#ffe95c] hover:bg-[#ffd93d] border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs transition-all shadow-2xs hover-lift cursor-pointer"
+            >
+              🔄 مزامنة الأقسام العلمية على نفس الدرس
+            </button>
+          </div>
+        </div>
+
+        <!-- 6 Classes Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="classes-cards-container">
+          <!-- Rendered dynamically by script -->
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: ADVANCED QR & PRINT STUDIO (A4 Multi-format)          -->
+    <!-- ============================================================ -->
+    <div id="tab-content-qr" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
       
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- Controls Column -->
+        <!-- Controls Column (2 Cols) -->
         <div class="lg:col-span-2 space-y-6">
-          <div class="border border-zinc-200 rounded-xl bg-white p-6">
-            <h2 class="text-base font-bold text-zinc-950 mb-4">اختيار الوحدة لتوليد الكود والملصقات</h2>
+          
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card space-y-6">
+            
+            <div>
+              <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">A4 PRINT & QR ENGINE</div>
+              <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+                اختيار الوحدة والنمط الطباعي
+              </h2>
+              <p class="text-xs text-[#1a3300]/70 mt-1">
+                توليد ملصقات الكراريس للقسم، البوسترات الجدارية للقاعات، وبطاقات المجموعات بدقة عالية.
+              </p>
+            </div>
 
-            <div class="space-y-4">
+            <!-- Mode Selector: Unit or Custom URL -->
+            <div class="flex rounded-2xl border-2 border-[#1a3300]/15 p-1 bg-[#f2eee3] text-xs font-bold">
+              <button id="btn-qr-mode-unit" class="flex-1 py-2 rounded-xl bg-white text-[#1a3300] shadow-2xs transition-all cursor-pointer">
+                📌 وحدة تعليمية من المنهاج
+              </button>
+              <button id="btn-qr-mode-custom" class="flex-1 py-2 rounded-xl text-[#1a3300]/70 hover:text-[#1a3300] transition-all cursor-pointer">
+                🔗 رابط حر مخصص (Google Drive / فيديو / استمارة)
+              </button>
+            </div>
+
+            <!-- Unit Selector Section -->
+            <div id="qr-unit-picker-section" class="space-y-4">
               <!-- Stream switch -->
-              <div class="flex rounded-lg border border-zinc-200 p-1 bg-zinc-50 text-xs font-medium">
-                <button id="btn-stream-tcst" class="flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all">
-                  جذع مشترك علوم (TCST)
+              <div class="flex rounded-2xl border-2 border-[#1a3300]/15 p-1 bg-[#f2eee3] text-xs font-bold">
+                <button id="btn-stream-tcst" class="flex-1 py-2 rounded-xl bg-[#1a3300] text-[#fcfaf5] shadow-2xs transition-all cursor-pointer">
+                  🔬 جذع مشترك علوم وتكنولوجيا (TCST)
                 </button>
-                <button id="btn-stream-tcl" class="flex-1 py-1.5 rounded text-zinc-500 hover:text-zinc-900 transition-all">
-                  جذع مشترك آداب (TCL)
+                <button id="btn-stream-tcl" class="flex-1 py-2 rounded-xl text-[#1a3300]/70 hover:text-[#1a3300] transition-all cursor-pointer">
+                  📚 جذع مشترك آداب (TCL)
                 </button>
               </div>
 
               <!-- Unit select -->
               <div>
-                <label for="unit-select" class="block font-mono text-[11px] text-zinc-500 mb-1">
-                  TARGET UNIT:
+                <label for="unit-select" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1.5">
+                  الوحدة التعليمية المستهدفة:
                 </label>
                 <select 
                   id="unit-select"
-                  class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-medium text-zinc-900 outline-hidden focus:border-zinc-900 transition-all"
+                  class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-2xl px-4 py-3 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300] transition-all"
                 >
                 </select>
               </div>
+            </div>
 
-              <!-- Permanent URL input -->
-              <div class="border border-zinc-200 rounded-lg p-3 bg-zinc-50">
-                <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-1">
-                  <span>STUDENT URL</span>
-                  <span class="text-emerald-700">PERMANENT</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <input 
-                    id="target-url-input" 
-                    type="text" 
-                    readonly 
-                    class="flex-grow bg-white border border-zinc-200 rounded px-2.5 py-1 text-xs font-mono text-zinc-700 select-all"
-                  />
-                  <button 
-                    id="btn-copy-url"
-                    class="px-3 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors"
-                  >
-                    نسخ
-                  </button>
-                </div>
+            <!-- Custom URL Section (Hidden by default) -->
+            <div id="qr-custom-picker-section" class="hidden space-y-4">
+              <div>
+                <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1.5">
+                  عنوان الرابط أو النشاط:
+                </label>
+                <input 
+                  type="text" 
+                  id="custom-qr-title" 
+                  placeholder="مثال: استمارة التقويم التشخيصي / مجلد المستودع الذهبي" 
+                  class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-2xl px-4 py-2.5 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                />
               </div>
 
+              <div>
+                <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1.5">
+                  الرابط الكامل (URL):
+                </label>
+                <input 
+                  type="url" 
+                  id="custom-qr-url" 
+                  placeholder="https://drive.google.com/..." 
+                  class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-2xl px-4 py-2.5 text-xs font-mono text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                />
+              </div>
             </div>
+
+            <!-- Target URL Box -->
+            <div class="border-2 border-[#1a3300]/15 rounded-2xl p-4 bg-[#fcfaf5]">
+              <div class="flex items-center justify-between text-[11px] font-mono text-[#1a3300]/60 mb-1.5">
+                <span>TARGET WEB ADDRESS</span>
+                <span class="text-emerald-700 font-bold">PERMANENT DIRECT LINK</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input 
+                  id="target-url-input" 
+                  type="text" 
+                  readonly 
+                  class="flex-grow bg-white border border-[#1a3300]/20 rounded-xl px-3 py-2 text-xs font-mono text-[#1a3300] select-all font-bold"
+                />
+                <button 
+                  id="btn-copy-url"
+                  class="px-4 py-2 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-colors cursor-pointer"
+                >
+                  نسخ الرابط
+                </button>
+              </div>
+            </div>
+
+            <!-- Print Actions Grid -->
+            <div>
+              <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest mb-3">نماذج الطباعة A4 الجاهزة:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                
+                <button id="btn-show-stickers-24" class="p-3.5 rounded-2xl bg-[#ffe95c] hover:bg-[#ffd93d] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-center transition-all cursor-pointer shadow-2xs hover-lift flex flex-col items-center justify-center gap-1.5">
+                  <span class="text-xl">🏷️</span>
+                  <span>ورقة 24 ملصق للكراس</span>
+                  <span class="text-[10px] font-mono text-[#1a3300]/70">شبكة 4x6 A4</span>
+                </button>
+
+                <button id="btn-show-wall-poster" class="p-3.5 rounded-2xl bg-[#a8e5e5] hover:bg-[#92dada] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-center transition-all cursor-pointer shadow-2xs hover-lift flex flex-col items-center justify-center gap-1.5">
+                  <span class="text-xl">🖼️</span>
+                  <span>ملصق جداري للحجرة</span>
+                  <span class="text-[10px] font-mono text-[#1a3300]/70">بوستر A4 مكبر</span>
+                </button>
+
+                <button id="btn-show-team-cards" class="p-3.5 rounded-2xl bg-[#f6d0ff] hover:bg-[#f1baff] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-center transition-all cursor-pointer shadow-2xs hover-lift flex flex-col items-center justify-center gap-1.5">
+                  <span class="text-xl">👥</span>
+                  <span>بطاقات العمل الجماعي</span>
+                  <span class="text-[10px] font-mono text-[#1a3300]/70">6 أفواج CS Unplugged</span>
+                </button>
+
+              </div>
+            </div>
+
           </div>
 
-          <!-- Note -->
-          <div class="border border-zinc-200 rounded-xl p-5 bg-zinc-50 text-xs text-zinc-600 leading-relaxed">
-            <span class="font-bold text-zinc-900">ملاحظة تنظيمية:</span>
-            ورقة الملصقات A4 تحتوي على 24 ملصق متطابق مصمم خصيصاً لمقاييس ورق الملصقات اللاصقة (Avery / Standard 4x6). يتم قصها وتوزيعها على التلاميذ للصقها في أعلى صفحة الدرس في كراس المادة.
-          </div>
         </div>
 
-        <!-- Preview Column -->
+        <!-- Preview Column (1 Col) -->
         <div class="space-y-6">
-          <div class="border border-zinc-200 rounded-xl bg-white p-6 text-center flex flex-col items-center">
-            <div class="font-mono text-[11px] text-zinc-400 mb-3">QR CODE PREVIEW</div>
+          <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 text-center flex flex-col items-center shadow-sm tactile-card">
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 mb-4">QR CODE ULTRA HD</div>
 
-            <div class="p-3 bg-white border border-zinc-200 rounded-lg mb-4 inline-block">
-              <canvas id="qr-canvas" class="w-44 h-44 block mx-auto"></canvas>
+            <div class="p-4 bg-white border-2 border-[#1a3300]/20 rounded-2xl mb-4 inline-block shadow-2xs">
+              <canvas id="qr-canvas" class="w-48 h-48 block mx-auto"></canvas>
             </div>
 
-            <div class="mb-5">
-              <div id="preview-unit-title" class="font-bold text-zinc-900 text-xs mb-0.5">تقنية المعلومات</div>
-              <div id="preview-stream-name" class="font-mono text-[11px] text-zinc-400">{ACADEMIC_INFO.highSchool}</div>
+            <div class="mb-5 text-center">
+              <div id="preview-unit-title" class="font-bold text-[#1a3300] text-sm mb-1 leading-snug">تقنية المعلومات</div>
+              <div id="preview-stream-name" class="font-mono text-[11px] text-[#1a3300]/70">{ACADEMIC_INFO.highSchool}</div>
             </div>
 
-            <div class="w-full space-y-2">
+            <div class="w-full space-y-2.5">
               <button 
                 id="btn-download-qr"
-                class="w-full py-2 rounded-lg border border-zinc-300 hover:border-zinc-400 text-zinc-900 text-xs font-medium transition-all"
+                class="w-full py-2.5 rounded-xl border-2 border-[#1a3300]/25 hover:bg-[#ffe95c] text-[#1a3300] text-xs font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center gap-2"
               >
-                تحميل صورة QR (PNG)
+                <span>📥</span>
+                <span>تحميل صورة QR عالية الدقة (PNG)</span>
               </button>
 
               <button 
-                id="btn-show-stickers"
-                class="w-full py-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-medium transition-all"
+                id="btn-print-current-view"
+                class="w-full py-3 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
               >
-                توليد ورقة ملصقات A4 للقسم (24 ملصق)
+                <span>🖨️</span>
+                <span>معاينة وطباعة ورقة القسم (Ctrl + P)</span>
               </button>
             </div>
           </div>
@@ -390,24 +945,39 @@ const CURRICULUM_WEEKS = [
 
 
     <!-- ============================================================ -->
-    <!-- TAB 3: CURRICULUM TIMELINE TRACKER (31 WEEKS)                 -->
+    <!-- TAB 5: OFFICIAL 31-WEEK CURRICULUM TRACKER                    -->
     <!-- ============================================================ -->
-    <div id="tab-content-tracker" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
-      <div class="border border-zinc-200 rounded-xl bg-white p-6">
+    <div id="tab-content-tracker" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card">
         
-        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-4 border-b border-zinc-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-[#1a3300]/10">
           <div>
-            <h2 class="text-base font-bold text-zinc-950">متابعة التدرج السنوي (31 أسبوعاً)</h2>
-            <p class="text-xs text-zinc-500 mt-0.5">التوزيع الوزاري الرسمي 2026-2027 مع التتبع التفاعلي الأسبوعي</p>
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">MINISTERIAL TIMELINE 2026-2027</div>
+            <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+              تتبع التدرج السنوي الرسمي (31 أسبوعاً)
+            </h2>
+            <p class="text-xs text-[#1a3300]/70 mt-1">
+              متابعة وتوثيق إنجاز الحصص أسبوعياً وفق التوزيع البيداغوجي المعتمد لوزارة التربية الوطنية.
+            </p>
           </div>
-          <div class="font-mono text-xs text-zinc-700">
-            الإنجاز: <span id="tracker-percentage" class="font-bold text-zinc-950">0%</span>
+
+          <div class="flex items-center gap-3">
+            <div class="font-mono text-sm text-[#1a3300] bg-[#ffe95c] border border-[#1a3300]/20 px-3.5 py-1.5 rounded-full font-bold shadow-2xs">
+              الإنجاز العام: <span id="tracker-percentage" class="font-black text-base">0%</span>
+            </div>
+            <button 
+              id="btn-print-tracker-report"
+              class="px-3.5 py-1.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-xs font-bold hover:bg-[#254700] transition-colors cursor-pointer"
+            >
+              🖨️ كشف التدرج
+            </button>
           </div>
         </div>
 
         <!-- Progress Bar -->
-        <div class="w-full bg-zinc-100 rounded-full h-1.5 mb-8 overflow-hidden">
-          <div id="tracker-progress-bar" class="bg-zinc-950 h-1.5 rounded-full transition-all duration-300" style="width: 0%;"></div>
+        <div class="w-full bg-[#f2eee3] rounded-full h-2 mb-8 overflow-hidden">
+          <div id="tracker-progress-bar" class="bg-[#1a3300] h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
         </div>
 
         <!-- Weeks List by Term -->
@@ -415,27 +985,38 @@ const CURRICULUM_WEEKS = [
           
           <!-- Term 1 -->
           <div>
-            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 1 • 12 WEEKS</div>
-            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+            <div class="flex items-center justify-between font-mono text-xs font-bold text-[#1a3300] uppercase tracking-wider mb-3 pb-2 border-b border-[#1a3300]/15">
+              <span>الفصل الأول (12 أسبوعاً) • بيئة التعامل مع الحاسوب والفروض</span>
+              <span id="term1-progress-badge" class="px-2 py-0.5 rounded bg-[#d5f5c2] text-[#1a3300]">0 / 12 أسبوع</span>
+            </div>
+            <div class="border-2 border-[#1a3300]/15 rounded-2xl divide-y divide-[#1a3300]/10 text-xs overflow-hidden">
               {CURRICULUM_WEEKS.filter(w => w.term === 1).map(item => (
-                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                <div class="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#fcfaf5] transition-colors">
                   <div class="flex items-center gap-3">
                     <input 
                       type="checkbox" 
                       id={`week-${item.week}`} 
-                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      class="week-tracker-check w-4 h-4 rounded border-2 border-[#1a3300]/30 text-[#1a3300] focus:ring-[#1a3300] cursor-pointer" 
                       data-week={item.week}
                     />
-                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                    <label for={`week-${item.week}`} class="font-mono font-bold text-[#1a3300]/60 cursor-pointer">
                       W{String(item.week).padStart(2, '0')}
                     </label>
-                    <span class="text-zinc-800">
+                    <span class="font-bold text-[#1a3300]">
                       {item.tcst}
                     </span>
                   </div>
-                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
-                    أدبي: {item.tcl}
-                  </span>
+                  <div class="flex items-center gap-3 self-end sm:self-center">
+                    <span class="font-mono text-[11px] text-[#1a3300]/60 hidden md:inline">
+                      أدبي: {item.tcl}
+                    </span>
+                    <input 
+                      type="text" 
+                      class="week-note-input bg-[#fcfaf5] border border-[#1a3300]/20 rounded-lg px-2.5 py-1 text-[11px] font-mono text-[#1a3300] w-36 sm:w-48 placeholder-[#1a3300]/40 outline-hidden" 
+                      placeholder="تاريخ الإنجاز / ملاحظة..." 
+                      data-week={item.week}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -443,27 +1024,38 @@ const CURRICULUM_WEEKS = [
 
           <!-- Term 2 -->
           <div>
-            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 2 • 11 WEEKS</div>
-            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+            <div class="flex items-center justify-between font-mono text-xs font-bold text-[#1a3300] uppercase tracking-wider mb-3 pb-2 border-b border-[#1a3300]/15">
+              <span>الفصل الثاني (11 أسبوعاً) • الخوارزميات (علمي) والمكتبية (أدبي)</span>
+              <span id="term2-progress-badge" class="px-2 py-0.5 rounded bg-[#ffe95c] text-[#1a3300]">0 / 11 أسبوع</span>
+            </div>
+            <div class="border-2 border-[#1a3300]/15 rounded-2xl divide-y divide-[#1a3300]/10 text-xs overflow-hidden">
               {CURRICULUM_WEEKS.filter(w => w.term === 2).map(item => (
-                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                <div class="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#fcfaf5] transition-colors">
                   <div class="flex items-center gap-3">
                     <input 
                       type="checkbox" 
                       id={`week-${item.week}`} 
-                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      class="week-tracker-check w-4 h-4 rounded border-2 border-[#1a3300]/30 text-[#1a3300] focus:ring-[#1a3300] cursor-pointer" 
                       data-week={item.week}
                     />
-                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                    <label for={`week-${item.week}`} class="font-mono font-bold text-[#1a3300]/60 cursor-pointer">
                       W{String(item.week).padStart(2, '0')}
                     </label>
-                    <span class="text-zinc-800">
+                    <span class="font-bold text-[#1a3300]">
                       {item.tcst}
                     </span>
                   </div>
-                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
-                    أدبي: {item.tcl}
-                  </span>
+                  <div class="flex items-center gap-3 self-end sm:self-center">
+                    <span class="font-mono text-[11px] text-[#1a3300]/60 hidden md:inline">
+                      أدبي: {item.tcl}
+                    </span>
+                    <input 
+                      type="text" 
+                      class="week-note-input bg-[#fcfaf5] border border-[#1a3300]/20 rounded-lg px-2.5 py-1 text-[11px] font-mono text-[#1a3300] w-36 sm:w-48 placeholder-[#1a3300]/40 outline-hidden" 
+                      placeholder="تاريخ الإنجاز / ملاحظة..." 
+                      data-week={item.week}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -471,27 +1063,38 @@ const CURRICULUM_WEEKS = [
 
           <!-- Term 3 -->
           <div>
-            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 3 • 8 WEEKS</div>
-            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+            <div class="flex items-center justify-between font-mono text-xs font-bold text-[#1a3300] uppercase tracking-wider mb-3 pb-2 border-b border-[#1a3300]/15">
+              <span>الفصل الثالث (8 أسابيع) • تقنيات الويب HTML والمشاريع الختامية</span>
+              <span id="term3-progress-badge" class="px-2 py-0.5 rounded bg-[#f6d0ff] text-[#1a3300]">0 / 8 أسابيع</span>
+            </div>
+            <div class="border-2 border-[#1a3300]/15 rounded-2xl divide-y divide-[#1a3300]/10 text-xs overflow-hidden">
               {CURRICULUM_WEEKS.filter(w => w.term === 3).map(item => (
-                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                <div class="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#fcfaf5] transition-colors">
                   <div class="flex items-center gap-3">
                     <input 
                       type="checkbox" 
                       id={`week-${item.week}`} 
-                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      class="week-tracker-check w-4 h-4 rounded border-2 border-[#1a3300]/30 text-[#1a3300] focus:ring-[#1a3300] cursor-pointer" 
                       data-week={item.week}
                     />
-                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                    <label for={`week-${item.week}`} class="font-mono font-bold text-[#1a3300]/60 cursor-pointer">
                       W{String(item.week).padStart(2, '0')}
                     </label>
-                    <span class="text-zinc-800">
+                    <span class="font-bold text-[#1a3300]">
                       {item.tcst}
                     </span>
                   </div>
-                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
-                    أدبي: {item.tcl}
-                  </span>
+                  <div class="flex items-center gap-3 self-end sm:self-center">
+                    <span class="font-mono text-[11px] text-[#1a3300]/60 hidden md:inline">
+                      أدبي: {item.tcl}
+                    </span>
+                    <input 
+                      type="text" 
+                      class="week-note-input bg-[#fcfaf5] border border-[#1a3300]/20 rounded-lg px-2.5 py-1 text-[11px] font-mono text-[#1a3300] w-36 sm:w-48 placeholder-[#1a3300]/40 outline-hidden" 
+                      placeholder="تاريخ الإنجاز / ملاحظة..." 
+                      data-week={item.week}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -500,152 +1103,358 @@ const CURRICULUM_WEEKS = [
         </div>
 
       </div>
+
     </div>
 
 
     <!-- ============================================================ -->
-    <!-- TAB 4: TEACHER DOCUMENTS CABINET                              -->
+    <!-- TAB 6: PEDAGOGICAL ASSESSMENT & GRADING HUB                   -->
     <!-- ============================================================ -->
-    <div id="tab-content-docs" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
-      <div class="border border-zinc-200 rounded-xl bg-white p-6">
-        <h2 class="text-base font-bold text-zinc-950 mb-1">الحقيبة الرقمية للأستاذ</h2>
-        <p class="text-xs text-zinc-500 mb-6">فهرس الوثائق والمذكرات والمطبوعات المحفوظة محلياً في مجلد العمل</p>
+    <div id="tab-content-grades" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card space-y-8">
+        
+        <div>
+          <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">OFFICIAL ALGERIAN SECONDARY GRADING</div>
+          <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+            حاسبة التقويم والمعدلات البيداغوجية
+          </h2>
+          <p class="text-xs text-[#1a3300]/70 mt-1">
+            أداة فورية لحساب نقطة التقويم المستمر (المراقبة المستمرة) والمعدل الفصلي الموزون وفق المنشور الوزاري المعتمد.
+          </p>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          <div class="border border-zinc-200 rounded-lg p-4 space-y-3">
-            <div class="font-bold text-zinc-900">المذكرات البيداغوجية والتحضير</div>
-            <ul class="space-y-2 text-zinc-600 font-mono text-[11px]">
-              <li class="flex items-center justify-between">
-                <span>المذكرة البيداغوجية 01: تقنية المعلومات</span>
-                <span class="text-zinc-400">DOCX / PDF</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>المذكرة البيداغوجية 02: تجميع الحاسوب</span>
-                <span class="text-zinc-400">DOCX</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>دليل تحضير درس تقنية المعلومات الشامل</span>
-                <span class="text-zinc-400">MD</span>
-              </li>
-            </ul>
+          <!-- Tool 1: Continuous Assessment Calculator -->
+          <div class="border-2 border-[#1a3300]/15 rounded-2xl p-5 bg-[#fcfaf5] space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-[#1a3300]/10">
+              <h3 class="font-display text-lg font-bold text-[#1a3300]">حاسبة التقويم المستمر (المراقبة /20)</h3>
+              <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-[#ffe95c] border border-[#1a3300]/20 text-[#1a3300]">وزاري</span>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">الانضباط والمواظبة السلوكية (من 0 إلى 4):</label>
+                <input type="number" min="0" max="4" step="0.5" id="grade-discipline" value="4" class="grade-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">النشاط والمشاركة داخل الحجرة (من 0 إلى 6):</label>
+                <input type="number" min="0" max="6" step="0.5" id="grade-activity" value="5" class="grade-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">إنجاز الواجبات والاعتناء بالكراس (من 0 إلى 5):</label>
+                <input type="number" min="0" max="5" step="0.5" id="grade-notebook" value="4.5" class="grade-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">الأعمال التطبيقية والمشاريع (من 0 إلى 5):</label>
+                <input type="number" min="0" max="5" step="0.5" id="grade-project" value="4.5" class="grade-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-[#1a3300]/10 flex items-center justify-between">
+              <span class="font-bold text-xs text-[#1a3300]">نقطة التقويم المستمر المحسوبة:</span>
+              <span id="calculated-continuous-grade" class="font-display text-2xl font-black text-[#1a3300] bg-[#d5f5c2] px-3 py-1 rounded-xl border border-[#1a3300]/20">18.00</span>
+            </div>
           </div>
 
-          <div class="border border-zinc-200 rounded-lg p-4 space-y-3">
-            <div class="font-bold text-zinc-900">مطبوعات ووثائق التلميذ الميدانية</div>
-            <ul class="space-y-2 text-zinc-600 font-mono text-[11px]">
-              <li class="flex items-center justify-between">
-                <span>مطبوعة درس تقنية المعلومات A4</span>
-                <span class="text-zinc-400">A4 HTML / PNG</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>بطاقة ملخص الدرس 01 البصرية</span>
-                <span class="text-zinc-400">PNG</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>ملحق المذكرة: ما يكتبه التلميذ على الكراس</span>
-                <span class="text-zinc-400">DOCX / PDF</span>
-              </li>
-            </ul>
+          <!-- Tool 2: Term Average Calculator -->
+          <div class="border-2 border-[#1a3300]/15 rounded-2xl p-5 bg-[#fcfaf5] space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-[#1a3300]/10">
+              <h3 class="font-display text-lg font-bold text-[#1a3300]">حاسبة المعدل الفصلي للمادة</h3>
+              <div class="flex items-center gap-1.5 text-xs">
+                <label class="cursor-pointer font-bold flex items-center gap-1">
+                  <input type="radio" name="term-stream-choice" value="tcst" checked class="text-[#1a3300]" />
+                  <span>علمي (معامل 2)</span>
+                </label>
+                <label class="cursor-pointer font-bold flex items-center gap-1">
+                  <input type="radio" name="term-stream-choice" value="tcl" class="text-[#1a3300]" />
+                  <span>أدبي (معامل 1)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">نقطة التقويم المستمر (من 20):</label>
+                <input type="number" min="0" max="20" step="0.25" id="term-grade-cont" value="18" class="grade-term-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">نقطة الفرض المحروس (من 20):</label>
+                <input type="number" min="0" max="20" step="0.25" id="term-grade-quiz" value="16.5" class="grade-term-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <label class="font-bold text-[#1a3300]">نقطة الاختبار الفصلي (من 20):</label>
+                <input type="number" min="0" max="20" step="0.25" id="term-grade-exam" value="15" class="grade-term-input w-20 bg-white border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-center font-mono font-bold text-[#1a3300]" />
+              </div>
+
+              <div class="text-[11px] font-mono text-[#1a3300]/70 pt-1">
+                الصيغة الوزارية الرسمية: (المراقبة + الفرض + الاختبار × 2) / 4
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-[#1a3300]/10 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-[#1a3300]">المعدل الفصلي للمادة:</span>
+                <span id="calculated-term-grade" class="font-display text-2xl font-black text-[#1a3300] bg-[#ffe95c] px-3.5 py-1 rounded-xl border border-[#1a3300]/20">16.12</span>
+              </div>
+              
+              <div id="term-grade-remark" class="text-xs font-bold text-emerald-800 bg-[#d5f5c2] p-2.5 rounded-xl border border-emerald-300 text-center">
+                ✨ ممتاز — عمل جاد ومردود ممتاز، يشجع ويهنأ على مواصلة الجهد.
+              </div>
+            </div>
+
           </div>
 
         </div>
+
       </div>
+
     </div>
 
 
     <!-- ============================================================ -->
-    <!-- TAB 5: SECURITY & PASSCODE SETTINGS                           -->
+    <!-- TAB 7: TEACHER MASTER REPOSITORIES & DOCUMENTS CABINET        -->
     <!-- ============================================================ -->
-    <div id="tab-content-settings" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
-      <div class="border border-zinc-200 rounded-xl bg-white p-6 max-w-md">
-        <h2 class="text-base font-bold text-zinc-950 mb-1">الأمان ورمز المرور</h2>
-        <p class="text-xs text-zinc-500 mb-6">
-          تغيير رمز المرور السري. التشفير يتم محلياً بتقنية SHA-256.
-        </p>
-
-        <form id="change-pwd-form" class="space-y-4" onsubmit="return false;">
+    <div id="tab-content-docs" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card space-y-8">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#1a3300]/10">
           <div>
-            <label for="old-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">CURRENT PIN:</label>
-            <input 
-              id="old-pin-input" 
-              type="password" 
-              placeholder="الرمز الحالي (الافتراضي: 2027)" 
-              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
-              required 
-            />
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">PEDAGOGICAL ARCHIVE & DRIVE</div>
+            <h2 class="font-display text-2xl font-extrabold text-[#1a3300]">
+              الحقيبة الرقمية والمستودعات الشاملة
+            </h2>
+            <p class="text-xs text-[#1a3300]/70 mt-1">
+              دليل الوصول السريع إلى المذكرات المعتمدة، بنوك الفروض، ودفاتر التنقيط الرسمية المحفوظة محلياً وسحابياً.
+            </p>
           </div>
 
-          <div>
-            <label for="new-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">NEW PIN:</label>
-            <input 
-              id="new-pin-input" 
-              type="password" 
-              placeholder="الرمز الجديد..." 
-              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
-              required 
-            />
-          </div>
-
-          <div>
-            <label for="confirm-new-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">CONFIRM NEW PIN:</label>
-            <input 
-              id="confirm-new-pin-input" 
-              type="password" 
-              placeholder="تأكيد الرمز الجديد..." 
-              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
-              required 
-            />
-          </div>
-
-          <div id="pwd-change-msg" class="hidden text-xs font-mono p-2 rounded"></div>
-
-          <div class="flex items-center gap-2 pt-2">
-            <button 
-              type="submit" 
-              id="btn-save-new-pwd" 
-              class="flex-1 py-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-medium transition-all"
-            >
-              حفظ الرمز الجديد
-            </button>
-            <button 
-              type="button" 
-              id="btn-reset-default-pwd" 
-              class="py-2 px-3 rounded-lg border border-zinc-300 text-zinc-700 text-xs font-medium hover:bg-zinc-50 transition-all"
-            >
-              استرجاع 2027
-            </button>
-          </div>
-        </form>
-
-        <div class="mt-8 pt-6 border-t border-zinc-100">
-          <button 
-            id="btn-clear-all-storage"
-            class="text-[11px] text-rose-600 hover:text-rose-800 underline font-mono"
+          <a 
+            href="https://drive.google.com/drive/folders/1ai2G0VPFh4cN6zbrumnUi6nOGixXXUQk?usp=drive_link" 
+            target="_blank"
+            class="px-4 py-2 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all shadow-2xs hover-lift inline-flex items-center gap-2 cursor-pointer self-start sm:self-auto"
           >
-            مسح الذاكرة المؤقتة وإعادة ضبط المصنع
-          </button>
+            <span>☁️</span>
+            <span>فتح المستودع الشامل Google Drive</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
+          
+          <!-- Section 1 -->
+          <div class="border-2 border-[#1a3300]/15 rounded-2xl p-4 bg-[#fcfaf5] space-y-3 tactile-card">
+            <div class="font-black text-sm text-[#1a3300] flex items-center gap-2">
+              <span>📘</span>
+              <span>المذكرات والتحضير البيداغوجي</span>
+            </div>
+            <ul class="space-y-2 text-[#1a3300]/80 font-mono text-[11px]">
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>مذكرة 01: تقنية المعلومات</span>
+                <span class="text-emerald-700 font-bold">DOCX / PDF</span>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>مذكرة 02: تجميع الحاسوب والعتاد</span>
+                <span class="text-emerald-700 font-bold">DOCX</span>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>حقيبة مذكرات الأستاذة إيمان (2026)</span>
+                <a href="https://drive.google.com/drive/folders/1ZQZJagp8LY4zZDE_aOnXbrGDzTtw3RjD?usp=sharing" target="_blank" class="text-blue-700 underline font-bold">Drive ↗</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="border-2 border-[#1a3300]/15 rounded-2xl p-4 bg-[#fcfaf5] space-y-3 tactile-card">
+            <div class="font-black text-sm text-[#1a3300] flex items-center gap-2">
+              <span>📊</span>
+              <span>دفاتر التنقيط والمتابعة الرسمية</span>
+            </div>
+            <ul class="space-y-2 text-[#1a3300]/80 font-mono text-[11px]">
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>دفتر التنقيط (الأستاذ بن يوسف 2027)</span>
+                <a href="https://drive.google.com/file/d/1-y45jBIsHmbKtfMjkTeDUA9lDC0ro_9m/view?usp=sharing" target="_blank" class="text-blue-700 underline font-bold">تحميل PDF ↗</a>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>الدفتر اليومي الرسمي عالي الدقة</span>
+                <a href="https://drive.google.com/file/d/1t0WZeoC_0k60lCGy0QM8K9FKeX1ayCgO/view?usp=sharing" target="_blank" class="text-blue-700 underline font-bold">WinRAR ↗</a>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>دفتر التقييم الرقمي (الأستاذ زعرور)</span>
+                <a href="https://drive.google.com/file/d/12d4Q_GMrGhQxF3LFc3MG4jqSRWPgBAQu/view?usp=drive_link" target="_blank" class="text-blue-700 underline font-bold">Drive ↗</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section 3 -->
+          <div class="border-2 border-[#1a3300]/15 rounded-2xl p-4 bg-[#fcfaf5] space-y-3 tactile-card">
+            <div class="font-black text-sm text-[#1a3300] flex items-center gap-2">
+              <span>🏛️</span>
+              <span>الشبكات والمجموعات الرسمية</span>
+            </div>
+            <ul class="space-y-2 text-[#1a3300]/80 font-mono text-[11px]">
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>مجموعة مفتش مادة المعلوماتية</span>
+                <a href="https://web.facebook.com/groups/2612360005649938/" target="_blank" class="text-blue-700 underline font-bold">Facebook ↗</a>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>مجموعة الأستاذ بن يوسف البيداغوجية</span>
+                <a href="https://web.facebook.com/groups/993482820751954/" target="_blank" class="text-blue-700 underline font-bold">Facebook ↗</a>
+              </li>
+              <li class="p-2 rounded-xl bg-white border border-[#1a3300]/10 flex items-center justify-between">
+                <span>دليل التدرجات الوزارية والوثائق</span>
+                <span class="text-[#1a3300]/60">مجلد محلي</span>
+              </li>
+            </ul>
+          </div>
+
         </div>
 
       </div>
+
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 8: SECURITY, BACKUP & DATA SYNC                           -->
+    <!-- ============================================================ -->
+    <div id="tab-content-settings" class="admin-tab-panel hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 no-print space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Password Settings -->
+        <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card">
+          <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">SECURITY GATEWAY</div>
+          <h2 class="font-display text-xl font-bold text-[#1a3300] mb-1">الأمان ورمز المرور السري</h2>
+          <p class="text-xs text-[#1a3300]/70 mb-6">
+            تغيير رمز المرور السري للدخول إلى فضاء الأستاذ. التشفير يتم محلياً بتقنية SHA-256.
+          </p>
+
+          <form id="change-pwd-form" class="space-y-4" onsubmit="return false;">
+            <div>
+              <label for="old-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CURRENT PIN:</label>
+              <input 
+                id="old-pin-input" 
+                type="password" 
+                placeholder="الرمز الحالي (الافتراضي: 2027)" 
+                class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                required 
+              />
+            </div>
+
+            <div>
+              <label for="new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">NEW PIN:</label>
+              <input 
+                id="new-pin-input" 
+                type="password" 
+                placeholder="الرمز الجديد..." 
+                class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                required 
+              />
+            </div>
+
+            <div>
+              <label for="confirm-new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CONFIRM NEW PIN:</label>
+              <input 
+                id="confirm-new-pin-input" 
+                type="password" 
+                placeholder="تأكيد الرمز الجديد..." 
+                class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                required 
+              />
+            </div>
+
+            <div id="pwd-change-msg" class="hidden text-xs font-mono p-2.5 rounded-xl"></div>
+
+            <div class="flex items-center gap-2 pt-2">
+              <button 
+                type="submit" 
+                id="btn-save-new-pwd" 
+                class="flex-1 py-2.5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all cursor-pointer shadow-sm"
+              >
+                حفظ الرمز الجديد
+              </button>
+              <button 
+                type="button" 
+                id="btn-reset-default-pwd" 
+                class="py-2.5 px-3.5 rounded-xl border border-[#1a3300]/25 text-[#1a3300] text-xs font-bold hover:bg-[#ffe95c] transition-all cursor-pointer"
+              >
+                استرجاع 2027
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Backup & Restore -->
+        <div class="border-2 border-[#1a3300]/15 rounded-3xl bg-white p-6 sm:p-7 shadow-sm tactile-card flex flex-col justify-between">
+          <div>
+            <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 uppercase tracking-widest">DATA SYNC & PORTABILITY</div>
+            <h2 class="font-display text-xl font-bold text-[#1a3300] mb-1">النسخ الاحتياطي والمزامنة</h2>
+            <p class="text-xs text-[#1a3300]/70 mb-6 leading-relaxed">
+              تصدير كامل إعدادات المنصة، سجل تقدم الأقسام، التدرج، والملاحظات كملف JSON آمن لنقله بسهولة بين الحاسوب والهاتف.
+            </p>
+
+            <div class="space-y-3">
+              <button 
+                id="btn-export-backup-json" 
+                class="w-full py-3 rounded-2xl bg-[#d5f5c2] hover:bg-[#c2edab] border-2 border-[#1a3300]/15 text-[#1a3300] font-bold text-xs transition-all shadow-2xs hover-lift flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>💾</span>
+                <span>تصدير ملف النسخ الاحتياطي (JSON)</span>
+              </button>
+
+              <div class="relative">
+                <input type="file" id="import-backup-file-input" accept=".json" class="hidden" />
+                <button 
+                  id="btn-trigger-import" 
+                  class="w-full py-3 rounded-2xl bg-white hover:bg-[#ffe95c] border-2 border-[#1a3300]/20 text-[#1a3300] font-bold text-xs transition-all shadow-2xs hover-lift flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>📥</span>
+                  <span>استيراد ملف نسخ احتياطي من جهاز آخر</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-[#1a3300]/10">
+            <button 
+              id="btn-clear-all-storage"
+              class="text-xs text-[#cb5521] hover:text-[#9e3a0e] underline font-mono font-bold cursor-pointer"
+            >
+              ⚠️ مسح الذاكرة المؤقتة وإعادة ضبط المصنع
+            </button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
 
   <!-- ============================================================ -->
-  <!-- PRINTABLE 24-STICKER SHEET VIEW (A4 High Resolution)          -->
+  <!-- 3. PRINTABLE TEMPLATES CONTAINER                             -->
   <!-- ============================================================ -->
+  
+  <!-- Printable Template 1: 24-Sticker Sheet A4 -->
   <div id="sticker-sheet-section" class="hidden no-print-override">
-    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-zinc-100 border border-zinc-300 p-4 rounded-xl">
-      <div class="text-xs text-zinc-900 font-medium">
-        ورقة ملصقات A4 للقسم (24 ملصق) جاهزة للطباعة والتوزيع
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+        <span>🏷️</span>
+        <span>ورقة ملصقات A4 للقسم (24 ملصق) جاهزة للطباعة والتوزيع</span>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btn-do-print" class="px-4 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-medium text-xs rounded-lg transition-colors">
+        <button id="btn-do-print" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
           طباعة فورية A4 (Ctrl + P)
         </button>
-        <button id="btn-hide-stickers" class="px-3 py-2 bg-white border border-zinc-300 text-zinc-700 font-medium text-xs rounded-lg hover:bg-zinc-50">
+        <button id="btn-hide-stickers" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
           إغلاق المعاينة
         </button>
       </div>
@@ -657,9 +1466,58 @@ const CURRICULUM_WEEKS = [
     </div>
   </div>
 
+  <!-- Printable Template 2: Wall Poster A4 -->
+  <div id="wall-poster-section" class="hidden no-print-override">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+        <span>🖼️</span>
+        <span>ملصق جداري مكبر A4 مخصص لتعليقه في الحجرة أو المخبر</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-do-print-poster" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
+          طباعة البوستر A4
+        </button>
+        <button id="btn-hide-poster" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
+          إغلاق المعاينة
+        </button>
+      </div>
+    </div>
 
-  <!-- Minimal Toast -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-950 text-white font-mono text-xs px-4 py-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none transition-all duration-200 z-50">
+    <div class="a4-sheet bg-white p-8 max-w-[210mm] min-h-[297mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-6 flex flex-col justify-between text-center box-border">
+      <div id="poster-content" class="space-y-6 flex flex-col items-center">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Template 3: Team Cards CS Unplugged -->
+  <div id="team-cards-section" class="hidden no-print-override">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+        <span>👥</span>
+        <span>بطاقات المجموعات والأفواج للأنشطة غير الموصولة بحاسوب (CS Unplugged)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-do-print-teams" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
+          طباعة البطاقات A4
+        </button>
+        <button id="btn-hide-teams" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
+          إغلاق المعاينة
+        </button>
+      </div>
+    </div>
+
+    <div class="a4-sheet bg-white p-4 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-2">
+      <div id="team-cards-container" class="grid grid-cols-2 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#1a3300] text-[#fcfaf5] font-mono text-xs px-5 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-200 z-50 flex items-center gap-2 border border-[#ffe95c]/30">
+    <span class="text-base">✨</span>
     <span id="toast-text"></span>
   </div>
 
@@ -669,11 +1527,12 @@ const CURRICULUM_WEEKS = [
     class="hidden" 
     data-units={JSON.stringify(allUnits)} 
     data-info={JSON.stringify(ACADEMIC_INFO)}
+    data-classes={JSON.stringify(CLASSES_CONFIG)}
   ></div>
 
 
   <!-- ============================================================ -->
-  <!-- CLIENT LOGIC & SECURITY SCRIPT                                -->
+  <!-- 4. CLIENT LOGIC & SECURITY SCRIPT                            -->
   <!-- ============================================================ -->
   <script>
     import QRCode from 'qrcode';
@@ -681,14 +1540,19 @@ const CURRICULUM_WEEKS = [
     const bootstrapEl = document.getElementById('admin-bootstrap-data');
     const allUnits: any[] = bootstrapEl ? JSON.parse(bootstrapEl.dataset.units || '[]') : [];
     const ACADEMIC_INFO: any = bootstrapEl ? JSON.parse(bootstrapEl.dataset.info || '{}') : {};
+    const CLASSES_CONFIG: any[] = bootstrapEl ? JSON.parse(bootstrapEl.dataset.classes || '[]') : [];
 
-    // SHA-256 of "2027"
-    const DEFAULT_HASH = '5313e5bf17148de844ff74be3663d47c6e361ca469b30a36337701233c89a15e';
+    // Storage Keys
+    const DEFAULT_HASH = '5313e5bf17148de844ff74be3663d47c6e361ca469b30a36337701233c89a15e'; // SHA-256 of "2027"
     const HASH_KEY = 'maerifa_admin_pwd_hash';
     const SESSION_KEY = 'maerifa_admin_session_active';
     const PERSISTENT_KEY = 'maerifa_admin_persistent_auth';
     const STATUS_OVERRIDE_KEY = 'maerifa_units_status_v1';
     const TRACKER_KEY = 'maerifa_curriculum_tracker_v1';
+    const TRACKER_NOTES_KEY = 'maerifa_curriculum_tracker_notes_v1';
+    const ALERT_KEY = 'maerifa_global_alert';
+    const EXAM_MODE_KEY = 'maerifa_exam_mode';
+    const CLASSES_PROGRESS_KEY = 'maerifa_classes_progress_v1';
 
     async function sha256(message: string): Promise<string> {
       const msgBuffer = new TextEncoder().encode(message);
@@ -715,8 +1579,12 @@ const CURRICULUM_WEEKS = [
     function showToast(msg: string) {
       if (toast && toastText) {
         toastText.textContent = msg;
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+        toast.classList.remove('opacity-0', 'translate-y-2');
+        toast.classList.add('translate-y-0');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-2');
+          toast.classList.remove('translate-y-0');
+        }, 2200);
       }
     }
 
@@ -747,7 +1615,7 @@ const CURRICULUM_WEEKS = [
 
     logoutBtn?.addEventListener('click', () => {
       lockDashboard();
-      showToast('تم قفل الجلسة.');
+      showToast('تم قفل الجلسة بنجاح.');
     });
 
     togglePinBtn?.addEventListener('click', () => {
@@ -789,7 +1657,7 @@ const CURRICULUM_WEEKS = [
         }
         if (loginError) loginError.classList.add('hidden');
         unlockDashboard();
-        showToast('تم تسجيل الدخول بنجاح');
+        showToast('مرحباً بك أستاذ، تم فتح لوحة التحكم');
       } else {
         if (loginError) {
           loginError.textContent = 'رمز المرور غير صحيح.';
@@ -806,7 +1674,9 @@ const CURRICULUM_WEEKS = [
       setTimeout(() => pinInput?.focus(), 200);
     }
 
-    // Dashboard Internal Logic
+    // ==========================================
+    // DASHBOARD INITIALIZATION
+    // ==========================================
     let isInitialized = false;
 
     function initDashboard() {
@@ -814,12 +1684,17 @@ const CURRICULUM_WEEKS = [
       isInitialized = true;
 
       initTabs();
+      initKPIs();
+      initAnnouncementAndExamModule();
       initUnitsManager();
+      initClassesMatrix();
       initQRStudio();
       initTracker();
-      initSettings();
+      initGradingCalculator();
+      initSecurityAndBackup();
     }
 
+    // Tab Navigation
     function initTabs() {
       const tabBtns = document.querySelectorAll('.admin-tab-btn');
       const tabPanels = document.querySelectorAll('.admin-tab-panel');
@@ -827,87 +1702,405 @@ const CURRICULUM_WEEKS = [
       tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           tabBtns.forEach(b => {
-            b.classList.remove('bg-zinc-900', 'text-white');
-            b.classList.add('text-zinc-600');
+            b.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-xs');
+            b.classList.add('text-[#1a3300]/80');
           });
-          btn.classList.add('bg-zinc-900', 'text-white');
-          btn.classList.remove('text-zinc-600');
+          btn.classList.add('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-xs');
+          btn.classList.remove('text-[#1a3300]/80');
 
           tabPanels.forEach(p => p.classList.add('hidden'));
+          if (btn.id === 'tab-btn-dash') document.getElementById('tab-content-dash')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-units') document.getElementById('tab-content-units')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-classes') document.getElementById('tab-content-classes')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-qr') document.getElementById('tab-content-qr')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-tracker') document.getElementById('tab-content-tracker')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-grades') document.getElementById('tab-content-grades')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-docs') document.getElementById('tab-content-docs')?.classList.remove('hidden');
           if (btn.id === 'tab-btn-settings') document.getElementById('tab-content-settings')?.classList.remove('hidden');
         });
       });
     }
 
-    function getStatusOverrides(): Record<string, string> {
+    // KPI live refresh
+    function initKPIs() {
       try {
-        return JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
-      } catch {
-        return {};
+        const overrides = JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+        let avail = 0;
+        let prog = 0;
+        let plan = 0;
+
+        allUnits.forEach(u => {
+          const item = overrides[u.id];
+          const st = typeof item === 'object' && item !== null ? item.status : (item || u.defaultStatus);
+          if (st === 'available') avail++;
+          else if (st === 'in_progress') prog++;
+          else plan++;
+        });
+
+        const elAvail = document.getElementById('kpi-units-available');
+        const elProg = document.getElementById('kpi-units-progress');
+        const elPlan = document.getElementById('kpi-units-planned');
+        if (elAvail) elAvail.textContent = `${avail} متاح`;
+        if (elProg) elProg.textContent = `${prog} تحضير`;
+        if (elPlan) elPlan.textContent = `${plan} مجدول`;
+
+        // Tracker KPI
+        const completedWeeks = JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]');
+        const pct = Math.round((completedWeeks.length / 31) * 100);
+        const trackerPctEl = document.getElementById('kpi-tracker-percent');
+        const trackerBarEl = document.getElementById('kpi-tracker-bar');
+        if (trackerPctEl) trackerPctEl.textContent = `${pct}%`;
+        if (trackerBarEl) trackerBarEl.style.width = `${pct}%`;
+
+        // Alert KPI
+        const rawAlert = localStorage.getItem(ALERT_KEY);
+        const alertStatusText = document.getElementById('kpi-alert-status-text');
+        const alertPreview = document.getElementById('kpi-alert-preview-text');
+        if (rawAlert) {
+          const alertObj = JSON.parse(rawAlert);
+          if (alertObj.enabled) {
+            if (alertStatusText) alertStatusText.textContent = 'إعلان نشط 🟢';
+            if (alertPreview) alertPreview.textContent = alertObj.message || 'نشط للطلاب';
+          } else {
+            if (alertStatusText) alertStatusText.textContent = 'متوقف';
+            if (alertPreview) alertPreview.textContent = 'شريط التنبيهات متوقف';
+          }
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
 
-    function saveStatusOverride(unitId: string, status: string) {
-      const current = getStatusOverrides();
-      current[unitId] = status;
-      localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(current));
+    // ==========================================
+    // MODULE 1: ANNOUNCEMENT & EXAM MODE
+    // ==========================================
+    function initAnnouncementAndExamModule() {
+      const toggleCheck = document.getElementById('toggle-announcement-enabled') as HTMLInputElement;
+      const toggleLabel = document.getElementById('announcement-toggle-label');
+      const typeSelect = document.getElementById('announcement-type-select') as HTMLSelectElement;
+      const badgeInput = document.getElementById('announcement-badge-input') as HTMLInputElement;
+      const textInput = document.getElementById('announcement-text-input') as HTMLTextAreaElement;
+      const linkInput = document.getElementById('announcement-link-input') as HTMLInputElement;
+      const saveBtn = document.getElementById('btn-save-announcement');
+      const clearBtn = document.getElementById('btn-clear-announcement');
+
+      // Live Preview Elements
+      const previewBox = document.getElementById('announcement-live-preview');
+      const previewIcon = document.getElementById('preview-badge-icon');
+      const previewBadge = document.getElementById('preview-badge-text');
+      const previewMsg = document.getElementById('preview-message-text');
+
+      const snippetBtns = document.querySelectorAll('.btn-snippet');
+
+      // Load saved state
+      try {
+        const saved = JSON.parse(localStorage.getItem(ALERT_KEY) || 'null');
+        if (saved) {
+          if (toggleCheck) toggleCheck.checked = Boolean(saved.enabled);
+          if (toggleLabel) toggleLabel.textContent = saved.enabled ? 'مفعّل ونشط' : 'معطل';
+          if (typeSelect) typeSelect.value = saved.type || 'info';
+          if (badgeInput) badgeInput.value = saved.badgeLabel || '';
+          if (textInput) textInput.value = saved.message || '';
+          if (linkInput) linkInput.value = saved.link || '';
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      function updatePreview() {
+        const type = typeSelect ? typeSelect.value : 'info';
+        const msg = textInput ? textInput.value.trim() : '';
+        const badge = badgeInput ? badgeInput.value.trim() : '';
+
+        const typeMap: Record<string, { bg: string; icon: string; defaultLabel: string }> = {
+          info: { bg: 'bg-[#a8e5e5]', icon: '🔔', defaultLabel: 'إعلان من الأستاذ' },
+          warning: { bg: 'bg-[#ffe95c]', icon: '⚠️', defaultLabel: 'تنبيه بيداغوجي' },
+          exam: { bg: 'bg-[#ffc09f]', icon: '📝', defaultLabel: 'موعد فرض أو اختبار' },
+          success: { bg: 'bg-[#d5f5c2]', icon: '🏆', defaultLabel: 'تشجيع وتكريم' }
+        };
+
+        const config = typeMap[type] || typeMap.info;
+        if (previewBox) {
+          previewBox.className = `rounded-2xl border-2 border-[#1a3300]/20 p-3.5 ${config.bg} text-xs font-bold text-[#1a3300] shadow-xs`;
+        }
+        if (previewIcon) previewIcon.textContent = config.icon;
+        if (previewBadge) previewBadge.textContent = badge || config.defaultLabel;
+        if (previewMsg) previewMsg.textContent = msg || 'أدخل نص الإعلان للمعاينة الحية...';
+      }
+
+      toggleCheck?.addEventListener('change', () => {
+        if (toggleLabel) toggleLabel.textContent = toggleCheck.checked ? 'مفعّل ونشط' : 'معطل';
+      });
+
+      typeSelect?.addEventListener('change', updatePreview);
+      badgeInput?.addEventListener('input', updatePreview);
+      textInput?.addEventListener('input', updatePreview);
+
+      snippetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const text = (btn as HTMLElement).dataset.snippet;
+          if (textInput && text) {
+            textInput.value = text;
+            updatePreview();
+            showToast('تم إدراج القالب الجاهز');
+          }
+        });
+      });
+
+      saveBtn?.addEventListener('click', () => {
+        const alertData = {
+          enabled: toggleCheck ? toggleCheck.checked : true,
+          type: typeSelect ? typeSelect.value : 'info',
+          badgeLabel: badgeInput ? badgeInput.value.trim() : '',
+          message: textInput ? textInput.value.trim() : '',
+          link: linkInput ? linkInput.value.trim() : ''
+        };
+
+        if (toggleCheck) toggleCheck.checked = true;
+        if (toggleLabel) toggleLabel.textContent = 'مفعّل ونشط';
+        alertData.enabled = true;
+
+        localStorage.setItem(ALERT_KEY, JSON.stringify(alertData));
+        initKPIs();
+        showToast('تم حفظ ونشر الإعلان العام فوراً للطلاب');
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        if (toggleCheck) toggleCheck.checked = false;
+        if (toggleLabel) toggleLabel.textContent = 'معطل';
+        const saved = JSON.parse(localStorage.getItem(ALERT_KEY) || '{}');
+        saved.enabled = false;
+        localStorage.setItem(ALERT_KEY, JSON.stringify(saved));
+        initKPIs();
+        showToast('تم إيقاف الإعلان');
+      });
+
+      updatePreview();
+
+      // Exam Mode Toggle Logic
+      const topExamBtn = document.getElementById('btn-toggle-exam-mode-top');
+      const topExamText = document.getElementById('top-exam-text');
+      const cardExamBtn = document.getElementById('btn-toggle-exam-mode-card');
+      const cardExamText = document.getElementById('exam-card-btn-text');
+      const cardExamBadge = document.getElementById('exam-card-status-badge');
+      const headerExamPill = document.getElementById('header-exam-pill');
+
+      function syncExamModeUI() {
+        const isExam = localStorage.getItem(EXAM_MODE_KEY) === 'true';
+        if (isExam) {
+          if (topExamText) topExamText.textContent = 'إيقاف وضع الامتحان';
+          if (cardExamText) cardExamText.textContent = 'إلغاء وضع الامتحان والعودة للوضع العادي';
+          if (cardExamBadge) {
+            cardExamBadge.textContent = 'نشط الآن 🔒';
+            cardExamBadge.className = 'px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#ffe95c] text-[#1a3300] border border-[#1a3300]/25';
+          }
+          if (headerExamPill) headerExamPill.classList.remove('hidden');
+        } else {
+          if (topExamText) topExamText.textContent = 'وضع الامتحان';
+          if (cardExamText) cardExamText.textContent = 'تفعيل وضع الامتحان الآن';
+          if (cardExamBadge) {
+            cardExamBadge.textContent = 'معطل';
+            cardExamBadge.className = 'px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-[#1a3300] border border-[#1a3300]/20';
+          }
+          if (headerExamPill) headerExamPill.classList.add('hidden');
+        }
+      }
+
+      function toggleExamMode() {
+        const current = localStorage.getItem(EXAM_MODE_KEY) === 'true';
+        const next = !current;
+        localStorage.setItem(EXAM_MODE_KEY, String(next));
+        syncExamModeUI();
+        showToast(next ? 'تم تفعيل وضع الفروض والامتحانات 🔒' : 'تم العودة إلى الوضع العادي');
+      }
+
+      topExamBtn?.addEventListener('click', toggleExamMode);
+      cardExamBtn?.addEventListener('click', toggleExamMode);
+      syncExamModeUI();
+
+      // Batch publication buttons
+      document.getElementById('btn-batch-publish-t1')?.addEventListener('click', () => {
+        const overrides = JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+        allUnits.filter(u => u.term === 1).forEach(u => {
+          if (typeof overrides[u.id] === 'object' && overrides[u.id] !== null) {
+            overrides[u.id].status = 'available';
+          } else {
+            overrides[u.id] = { status: 'available' };
+          }
+        });
+        localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(overrides));
+        initKPIs();
+        initUnitsManager();
+        showToast('تم نشر كل وحدات الفصل الأول (T1)');
+      });
+
+      document.getElementById('btn-batch-publish-t2')?.addEventListener('click', () => {
+        const overrides = JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+        allUnits.filter(u => u.term === 2).forEach(u => {
+          if (typeof overrides[u.id] === 'object' && overrides[u.id] !== null) {
+            overrides[u.id].status = 'available';
+          } else {
+            overrides[u.id] = { status: 'available' };
+          }
+        });
+        localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(overrides));
+        initKPIs();
+        initUnitsManager();
+        showToast('تم نشر كل وحدات الفصل الثاني (T2)');
+      });
+
+      document.getElementById('btn-batch-lock-all')?.addEventListener('click', () => {
+        const overrides = JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+        allUnits.forEach(u => {
+          if (u.id !== 'tcst-m1-u1' && u.id !== 'tcl-m1-u1') {
+            if (typeof overrides[u.id] === 'object' && overrides[u.id] !== null) {
+              overrides[u.id].status = 'planned';
+            } else {
+              overrides[u.id] = { status: 'planned' };
+            }
+          }
+        });
+        localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(overrides));
+        initKPIs();
+        initUnitsManager();
+        showToast('تم قفل الوحدات غير المنجزة');
+      });
+
+      document.getElementById('btn-batch-reset')?.addEventListener('click', () => {
+        if (confirm('استعادة الضبط الوزاري الافتراضي لكافة الوحدات؟')) {
+          localStorage.removeItem(STATUS_OVERRIDE_KEY);
+          initKPIs();
+          initUnitsManager();
+          showToast('تمت استعادة الضبط الافتراضي للمنهاج');
+        }
+      });
     }
 
+    // ==========================================
+    // MODULE 2: UNITS MANAGER
+    // ==========================================
     function initUnitsManager() {
       const tbody = document.getElementById('units-table-body');
-      const filterAllBtn = document.getElementById('filter-all');
-      const filterTcstBtn = document.getElementById('filter-tcst');
-      const filterTclBtn = document.getElementById('filter-tcl');
-      const resetBtn = document.getElementById('btn-reset-unit-statuses');
+      const searchInput = document.getElementById('unit-search-input') as HTMLInputElement;
+      const counterEl = document.getElementById('units-counter-summary');
 
-      let currentFilter: 'all' | 'tcst' | 'tcl' = 'all';
+      let currentStreamFilter: 'all' | 'tcst' | 'tcl' = 'all';
+      let currentTermFilter: number | 'all' = 'all';
+      let searchQuery = '';
 
-      function renderTable() {
+      function getOverrides(): Record<string, any> {
+        try {
+          return JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+        } catch {
+          return {};
+        }
+      }
+
+      function saveUnitData(unitId: string, partial: any) {
+        const current = getOverrides();
+        const existing = typeof current[unitId] === 'object' && current[unitId] !== null ? current[unitId] : { status: current[unitId] || 'available' };
+        current[unitId] = { ...existing, ...partial };
+        localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(current));
+        initKPIs();
+        showToast('تم حفظ التعديل');
+      }
+
+      function renderUnitsTable() {
         if (!tbody) return;
         tbody.innerHTML = '';
-        const overrides = getStatusOverrides();
+        const overrides = getOverrides();
 
         const filtered = allUnits.filter(u => {
-          if (currentFilter === 'all') return true;
-          return u.streamId === currentFilter;
+          if (currentStreamFilter !== 'all' && u.streamId !== currentStreamFilter) return false;
+          if (currentTermFilter !== 'all' && u.term !== currentTermFilter) return false;
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            const matchTitle = u.title.toLowerCase().includes(q);
+            const matchDomain = u.domainTitle.toLowerCase().includes(q);
+            const matchSlug = u.slug.toLowerCase().includes(q);
+            const matchNum = String(u.unitNumber).includes(q);
+            if (!matchTitle && !matchDomain && !matchSlug && !matchNum) return false;
+          }
+          return true;
         });
 
+        if (counterEl) counterEl.textContent = `عرض ${filtered.length} من ${allUnits.length} وحدة`;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="p-8 text-center text-[#1a3300]/60 font-mono text-xs">
+                لا توجد وحدات تطابق معايير البحث والفلترة.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
         filtered.forEach(unit => {
-          const currentStatus = overrides[unit.id] || unit.defaultStatus;
+          const item = overrides[unit.id];
+          const currentStatus = typeof item === 'object' && item !== null ? item.status : (item || unit.defaultStatus);
+          const currentNotice = typeof item === 'object' && item !== null ? (item.notice || '') : '';
+          const currentExtraLink = typeof item === 'object' && item !== null ? (item.extraLink || '') : '';
+
           const tr = document.createElement('tr');
-          tr.className = 'hover:bg-zinc-50/50 transition-colors';
+          tr.className = 'hover:bg-[#fcfaf5] transition-colors';
 
           tr.innerHTML = `
-            <td class="p-3 font-mono text-[11px] text-zinc-500">
-              ${unit.streamShort}
+            <td class="p-3.5">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold ${unit.streamId === 'tcst' ? 'bg-[#a8e5e5] text-[#1a3300]' : 'bg-[#d5f5c2] text-[#1a3300]'}">
+                  ${unit.streamShort}
+                </span>
+                <span class="font-mono text-[11px] font-bold text-[#1a3300]/70">ف${unit.term}</span>
+              </div>
             </td>
-            <td class="p-3 font-mono text-[11px] text-zinc-400">T${unit.term}</td>
-            <td class="p-3">
-              <div class="font-medium text-zinc-900">الوحدة ${unit.unitNumber}: ${unit.title}</div>
-              <div class="text-[10px] font-mono text-zinc-400">${unit.slug}</div>
+
+            <td class="p-3.5">
+              <div class="font-bold text-[#1a3300] text-xs">الوحدة ${unit.unitNumber}: ${unit.title}</div>
+              <div class="text-[10px] font-mono text-[#1a3300]/60">${unit.domainTitle} • <span class="text-[#cb5521]">${unit.slug}</span></div>
             </td>
-            <td class="p-3 text-zinc-500">${unit.domainTitle}</td>
-            <td class="p-3 text-center">
+
+            <td class="p-3.5 text-center">
               <select 
-                class="unit-status-select bg-white border border-zinc-300 rounded px-2 py-1 text-[11px] font-medium text-zinc-800 outline-hidden"
+                class="unit-status-select bg-white border-2 border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300] cursor-pointer"
                 data-id="${unit.id}"
               >
-                <option value="available" ${currentStatus === 'available' ? 'selected' : ''}>متاح للطلاب</option>
-                <option value="in_progress" ${currentStatus === 'in_progress' ? 'selected' : ''}>قيد التحضير</option>
-                <option value="planned" ${currentStatus === 'planned' ? 'selected' : ''}>مخفي / مغلق</option>
+                <option value="available" ${currentStatus === 'available' ? 'selected' : ''}>🟢 متاح للطلاب</option>
+                <option value="in_progress" ${currentStatus === 'in_progress' ? 'selected' : ''}>🟡 قيد التحضير</option>
+                <option value="planned" ${currentStatus === 'planned' ? 'selected' : ''}>⚪ مجدول ومخفي</option>
               </select>
             </td>
-            <td class="p-3 text-center">
+
+            <td class="p-3.5">
+              <input 
+                type="text" 
+                placeholder="توجيه أو واجب يظهر للتلميذ..." 
+                value="${currentNotice}" 
+                class="unit-notice-input w-full bg-[#fcfaf5] border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-[11px] font-medium text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                data-id="${unit.id}"
+              />
+            </td>
+
+            <td class="p-3.5">
+              <input 
+                type="url" 
+                placeholder="رابط Drive أو PDF..." 
+                value="${currentExtraLink}" 
+                class="unit-extralink-input w-full bg-[#fcfaf5] border border-[#1a3300]/20 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-[#1a3300] outline-hidden focus:border-[#1a3300]"
+                data-id="${unit.id}"
+              />
+            </td>
+
+            <td class="p-3.5 text-center">
               <a 
                 href="${unit.slug}" 
                 target="_blank" 
-                class="font-mono text-[11px] text-zinc-500 hover:text-zinc-950 underline"
+                class="font-mono text-xs font-bold text-[#1a3300] hover:text-[#cb5521] hover:underline inline-flex items-center gap-1"
+                title="فتح ومعاينة صفحة الدرس"
               >
-                معاينة ↗
+                <span>معاينة</span>
+                <span>↗</span>
               </a>
             </td>
           `;
@@ -915,58 +2108,260 @@ const CURRICULUM_WEEKS = [
           tbody.appendChild(tr);
         });
 
+        // Event bindings
         document.querySelectorAll('.unit-status-select').forEach(sel => {
           sel.addEventListener('change', (e) => {
             const target = e.target as HTMLSelectElement;
             const unitId = target.dataset.id;
-            const newStatus = target.value;
-            if (unitId) {
-              saveStatusOverride(unitId, newStatus);
-              showToast('تم تحديث حالة الوحدة');
-            }
+            if (unitId) saveUnitData(unitId, { status: target.value });
+          });
+        });
+
+        document.querySelectorAll('.unit-notice-input').forEach(inp => {
+          inp.addEventListener('change', (e) => {
+            const target = e.target as HTMLInputElement;
+            const unitId = target.dataset.id;
+            if (unitId) saveUnitData(unitId, { notice: target.value.trim() });
+          });
+        });
+
+        document.querySelectorAll('.unit-extralink-input').forEach(inp => {
+          inp.addEventListener('change', (e) => {
+            const target = e.target as HTMLInputElement;
+            const unitId = target.dataset.id;
+            if (unitId) saveUnitData(unitId, { extraLink: target.value.trim() });
           });
         });
       }
 
-      filterAllBtn?.addEventListener('click', () => {
-        currentFilter = 'all';
-        setActiveFilter(filterAllBtn);
-        renderTable();
-      });
-      filterTcstBtn?.addEventListener('click', () => {
-        currentFilter = 'tcst';
-        setActiveFilter(filterTcstBtn);
-        renderTable();
-      });
-      filterTclBtn?.addEventListener('click', () => {
-        currentFilter = 'tcl';
-        setActiveFilter(filterTclBtn);
-        renderTable();
-      });
+      // Filter Handlers
+      const filterAll = document.getElementById('filter-stream-all');
+      const filterTcst = document.getElementById('filter-stream-tcst');
+      const filterTcl = document.getElementById('filter-stream-tcl');
 
-      function setActiveFilter(btn: HTMLElement) {
-        [filterAllBtn, filterTcstBtn, filterTclBtn].forEach(b => {
-          b?.classList.remove('bg-zinc-900', 'text-white');
-          b?.classList.add('bg-zinc-100', 'text-zinc-700');
+      function setActiveStreamBtn(active: HTMLElement) {
+        [filterAll, filterTcst, filterTcl].forEach(b => {
+          b?.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-2xs');
+          b?.classList.add('bg-[#f2eee3]', 'text-[#1a3300]');
         });
-        btn.classList.add('bg-zinc-900', 'text-white');
-        btn.classList.remove('bg-zinc-100', 'text-zinc-700');
+        active.classList.add('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-2xs');
+        active.classList.remove('bg-[#f2eee3]', 'text-[#1a3300]');
       }
 
-      resetBtn?.addEventListener('click', () => {
-        if (confirm('استعادة الحالة الافتراضية لجميع الوحدات؟')) {
+      filterAll?.addEventListener('click', () => {
+        currentStreamFilter = 'all';
+        setActiveStreamBtn(filterAll);
+        renderUnitsTable();
+      });
+      filterTcst?.addEventListener('click', () => {
+        currentStreamFilter = 'tcst';
+        setActiveStreamBtn(filterTcst);
+        renderUnitsTable();
+      });
+      filterTcl?.addEventListener('click', () => {
+        currentStreamFilter = 'tcl';
+        setActiveStreamBtn(filterTcl);
+        renderUnitsTable();
+      });
+
+      const term1Btn = document.getElementById('filter-term-1');
+      const term2Btn = document.getElementById('filter-term-2');
+      const term3Btn = document.getElementById('filter-term-3');
+
+      [term1Btn, term2Btn, term3Btn].forEach((btn, idx) => {
+        btn?.addEventListener('click', () => {
+          const t = idx + 1;
+          if (currentTermFilter === t) {
+            currentTermFilter = 'all';
+            btn.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]');
+            btn.classList.add('bg-[#f2eee3]', 'text-[#1a3300]');
+          } else {
+            currentTermFilter = t;
+            [term1Btn, term2Btn, term3Btn].forEach(b => {
+              b?.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]');
+              b?.classList.add('bg-[#f2eee3]', 'text-[#1a3300]');
+            });
+            btn.classList.add('bg-[#1a3300]', 'text-[#fcfaf5]');
+            btn.classList.remove('bg-[#f2eee3]', 'text-[#1a3300]');
+          }
+          renderUnitsTable();
+        });
+      });
+
+      searchInput?.addEventListener('input', () => {
+        searchQuery = searchInput.value.trim();
+        renderUnitsTable();
+      });
+
+      document.getElementById('btn-reset-unit-statuses')?.addEventListener('click', () => {
+        if (confirm('هل تريد بالتأكيد استعادة الحالة الافتراضية لجميع الوحدات؟')) {
           localStorage.removeItem(STATUS_OVERRIDE_KEY);
-          renderTable();
+          renderUnitsTable();
+          initKPIs();
           showToast('تمت استعادة الضبط الافتراضي');
         }
       });
 
-      renderTable();
+      renderUnitsTable();
     }
 
+    // ==========================================
+    // MODULE 3: CLASSES PROGRESS MATRIX
+    // ==========================================
+    function initClassesMatrix() {
+      const container = document.getElementById('classes-cards-container');
+      if (!container) return;
+
+      function loadClassesState(): Record<string, any> {
+        try {
+          return JSON.parse(localStorage.getItem(CLASSES_PROGRESS_KEY) || '{}');
+        } catch {
+          return {};
+        }
+      }
+
+      function saveClassData(classId: string, partial: any) {
+        const cur = loadClassesState();
+        cur[classId] = { ...(cur[classId] || {}), ...partial };
+        localStorage.setItem(CLASSES_PROGRESS_KEY, JSON.stringify(cur));
+        showToast('تم تحديث بيانات القسم');
+      }
+
+      function renderClasses() {
+        if (!container) return;
+        container.innerHTML = '';
+        const state = loadClassesState();
+
+        CLASSES_CONFIG.forEach(c => {
+          const cData = state[c.id] || {};
+          const currentUnitId = cData.unitId || (c.streamId === 'tcst' ? 'tcst-m1-u1' : 'tcl-m1-u1');
+          const lastDate = cData.lastDate || '';
+          const status = cData.status || 'ontime';
+          const notes = cData.notes || '';
+
+          const relevantUnits = allUnits.filter(u => u.streamId === c.streamId);
+
+          const card = document.createElement('div');
+          card.className = 'border-2 border-[#1a3300]/15 rounded-2xl p-5 bg-[#fcfaf5] shadow-xs flex flex-col justify-between space-y-4 hover:border-[#1a3300]/30 transition-all tactile-card';
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between pb-3 border-b border-[#1a3300]/10 mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-xl bg-[#1a3300] text-[#fcfaf5] font-display font-black text-sm flex items-center justify-center">
+                    ${c.name}
+                  </span>
+                  <div>
+                    <div class="font-bold text-xs text-[#1a3300]">${c.stream}</div>
+                    <div class="text-[10px] font-mono text-[#1a3300]/60">${c.room} • ${c.timing}</div>
+                  </div>
+                </div>
+
+                <select class="class-status-select text-[10px] font-bold rounded-lg border border-[#1a3300]/20 bg-white px-2 py-1 outline-hidden" data-cid="${c.id}">
+                  <option value="ontime" ${status === 'ontime' ? 'selected' : ''}>🟢 في الموعد</option>
+                  <option value="ahead" ${status === 'ahead' ? 'selected' : ''}>🔵 متقدم</option>
+                  <option value="behind" ${status === 'behind' ? 'selected' : ''}>🟠 متأخر</option>
+                </select>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block font-mono text-[10px] font-bold text-[#1a3300]/70 mb-1">الوحدة الحالية المنجزة:</label>
+                  <select class="class-unit-select w-full bg-white border border-[#1a3300]/20 rounded-xl px-3 py-2 text-xs font-bold text-[#1a3300] outline-hidden" data-cid="${c.id}">
+                    ${relevantUnits.map(u => `<option value="${u.id}" ${u.id === currentUnitId ? 'selected' : ''}>الوحدة ${u.unitNumber}: ${u.title}</option>`).join('')}
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-mono text-[10px] font-bold text-[#1a3300]/70 mb-1">تاريخ آخر حصة:</label>
+                    <input type="date" value="${lastDate}" class="class-date-input w-full bg-white border border-[#1a3300]/20 rounded-xl px-2 py-1.5 text-xs font-mono text-[#1a3300]" data-cid="${c.id}" />
+                  </div>
+                  <div>
+                    <label class="block font-mono text-[10px] font-bold text-[#1a3300]/70 mb-1">المعامل والحجم:</label>
+                    <div class="p-1.5 rounded-xl bg-white border border-[#1a3300]/15 text-center font-mono font-bold text-[11px] text-[#1a3300]">
+                      معامل ${c.streamId === 'tcst' ? '2 (1 سا)' : '1 (2 سا)'}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-mono text-[10px] font-bold text-[#1a3300]/70 mb-1">ملاحظات ومتابعة القسم:</label>
+                  <textarea rows="2" placeholder="ملاحظات الحصة، الغيابات، أو التوجيهات..." class="class-notes-input w-full bg-white border border-[#1a3300]/20 rounded-xl p-2.5 text-xs font-medium text-[#1a3300] outline-hidden leading-relaxed" data-cid="${c.id}">${notes}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 text-left">
+              <span class="text-[10px] font-mono text-[#1a3300]/60">حفظ فوري في السجل</span>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        // Event listeners for class cards
+        document.querySelectorAll('.class-status-select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const cid = (e.target as HTMLSelectElement).dataset.cid;
+            if (cid) saveClassData(cid, { status: (e.target as HTMLSelectElement).value });
+          });
+        });
+
+        document.querySelectorAll('.class-unit-select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const cid = (e.target as HTMLSelectElement).dataset.cid;
+            if (cid) saveClassData(cid, { unitId: (e.target as HTMLSelectElement).value });
+          });
+        });
+
+        document.querySelectorAll('.class-date-input').forEach(inp => {
+          inp.addEventListener('change', (e) => {
+            const cid = (e.target as HTMLInputElement).dataset.cid;
+            if (cid) saveClassData(cid, { lastDate: (e.target as HTMLInputElement).value });
+          });
+        });
+
+        document.querySelectorAll('.class-notes-input').forEach(inp => {
+          inp.addEventListener('change', (e) => {
+            const cid = (e.target as HTMLTextAreaElement).dataset.cid;
+            if (cid) saveClassData(cid, { notes: (e.target as HTMLTextAreaElement).value.trim() });
+          });
+        });
+      }
+
+      document.getElementById('btn-sync-all-tcst-classes')?.addEventListener('click', () => {
+        const targetUnit = prompt('أدخل رقم الوحدة لمزامنة جميع الأقسام العلمية (مثال: 1 أو 2 أو 3):', '1');
+        if (targetUnit) {
+          const num = parseInt(targetUnit, 10);
+          const u = allUnits.find(item => item.streamId === 'tcst' && item.unitNumber === num);
+          if (u) {
+            CLASSES_CONFIG.filter(c => c.streamId === 'tcst').forEach(c => {
+              saveClassData(c.id, { unitId: u.id });
+            });
+            renderClasses();
+            showToast(`تمت مزامنة الأقسام العلمية على الوحدة ${num}`);
+          } else {
+            alert('لم يتم العثور على وحدة بهذا الرقم');
+          }
+        }
+      });
+
+      renderClasses();
+    }
+
+    // ==========================================
+    // MODULE 4: ULTRA QR & PRINT STUDIO
+    // ==========================================
     function initQRStudio() {
       let currentStream = 'tcst';
       let currentUnitId = allUnits.find(u => u.streamId === 'tcst')?.id || allUnits[0].id;
+      let qrMode: 'unit' | 'custom' = 'unit';
+
+      const modeUnitBtn = document.getElementById('btn-qr-mode-unit');
+      const modeCustomBtn = document.getElementById('btn-qr-mode-custom');
+      const unitPickerSection = document.getElementById('qr-unit-picker-section');
+      const customPickerSection = document.getElementById('qr-custom-picker-section');
 
       const streamTcstBtn = document.getElementById('btn-stream-tcst');
       const streamTclBtn = document.getElementById('btn-stream-tcl');
@@ -974,14 +2369,21 @@ const CURRICULUM_WEEKS = [
       const targetUrlInput = document.getElementById('target-url-input') as HTMLInputElement;
       const copyUrlBtn = document.getElementById('btn-copy-url');
       const downloadQrBtn = document.getElementById('btn-download-qr');
-      const showStickersBtn = document.getElementById('btn-show-stickers');
-      const hideStickersBtn = document.getElementById('btn-hide-stickers');
-      const doPrintBtn = document.getElementById('btn-do-print');
-      const stickerSection = document.getElementById('sticker-sheet-section');
-      const stickersContainer = document.getElementById('stickers-container');
+
       const qrCanvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
       const previewUnitTitle = document.getElementById('preview-unit-title');
       const previewStreamName = document.getElementById('preview-stream-name');
+
+      const customTitleInput = document.getElementById('custom-qr-title') as HTMLInputElement;
+      const customUrlInput = document.getElementById('custom-qr-url') as HTMLInputElement;
+
+      // Print Sheet Elements
+      const stickerSection = document.getElementById('sticker-sheet-section');
+      const stickersContainer = document.getElementById('stickers-container');
+      const posterSection = document.getElementById('wall-poster-section');
+      const posterContent = document.getElementById('poster-content');
+      const teamCardsSection = document.getElementById('team-cards-section');
+      const teamCardsContainer = document.getElementById('team-cards-container');
 
       function populateDropdown(stream: string) {
         if (!unitSelect) return;
@@ -1006,17 +2408,31 @@ const CURRICULUM_WEEKS = [
       }
 
       async function renderQRCode() {
-        const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
-        if (targetUrlInput) targetUrlInput.value = unit.fullUrl;
-        if (previewUnitTitle) previewUnitTitle.textContent = `الوحدة ${unit.unitNumber}: ${unit.title}`;
-        if (previewStreamName) previewStreamName.textContent = `${unit.streamName} • ${ACADEMIC_INFO.highSchool}`;
+        let activeUrl = '';
+        let displayTitle = '';
+        let displaySub = '';
+
+        if (qrMode === 'unit') {
+          const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
+          activeUrl = unit.fullUrl;
+          displayTitle = `الوحدة ${unit.unitNumber}: ${unit.title}`;
+          displaySub = `${unit.streamName} • ${ACADEMIC_INFO.highSchool}`;
+        } else {
+          activeUrl = customUrlInput?.value.trim() || ACADEMIC_INFO.siteUrl;
+          displayTitle = customTitleInput?.value.trim() || 'رابط بيداغوجي مخصص';
+          displaySub = `${ACADEMIC_INFO.teacher} • ${ACADEMIC_INFO.highSchool}`;
+        }
+
+        if (targetUrlInput) targetUrlInput.value = activeUrl;
+        if (previewUnitTitle) previewUnitTitle.textContent = displayTitle;
+        if (previewStreamName) previewStreamName.textContent = displaySub;
 
         if (qrCanvas) {
           try {
-            await QRCode.toCanvas(qrCanvas, unit.fullUrl, {
-              width: 180,
+            await QRCode.toCanvas(qrCanvas, activeUrl, {
+              width: 220,
               margin: 1.5,
-              color: { dark: '#09090b', light: '#ffffff' }
+              color: { dark: '#1a3300', light: '#ffffff' }
             });
           } catch (err) {
             console.error(err);
@@ -1024,11 +2440,34 @@ const CURRICULUM_WEEKS = [
         }
       }
 
+      modeUnitBtn?.addEventListener('click', () => {
+        qrMode = 'unit';
+        modeUnitBtn.className = 'flex-1 py-2 rounded-xl bg-white text-[#1a3300] shadow-2xs transition-all cursor-pointer font-bold';
+        modeCustomBtn?.classList.remove('bg-white', 'text-[#1a3300]', 'shadow-2xs');
+        modeCustomBtn?.classList.add('text-[#1a3300]/70');
+        unitPickerSection?.classList.remove('hidden');
+        customPickerSection?.classList.add('hidden');
+        renderQRCode();
+      });
+
+      modeCustomBtn?.addEventListener('click', () => {
+        qrMode = 'custom';
+        modeCustomBtn.className = 'flex-1 py-2 rounded-xl bg-white text-[#1a3300] shadow-2xs transition-all cursor-pointer font-bold';
+        modeUnitBtn?.classList.remove('bg-white', 'text-[#1a3300]', 'shadow-2xs');
+        modeUnitBtn?.classList.add('text-[#1a3300]/70');
+        unitPickerSection?.classList.add('hidden');
+        customPickerSection?.classList.remove('hidden');
+        renderQRCode();
+      });
+
+      customTitleInput?.addEventListener('input', renderQRCode);
+      customUrlInput?.addEventListener('input', renderQRCode);
+
       streamTcstBtn?.addEventListener('click', () => {
         currentStream = 'tcst';
-        streamTcstBtn.className = 'flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all';
-        streamTclBtn?.classList.remove('bg-white', 'text-zinc-950', 'shadow-2xs');
-        streamTclBtn?.classList.add('text-zinc-500');
+        streamTcstBtn.className = 'flex-1 py-2 rounded-xl bg-[#1a3300] text-[#fcfaf5] shadow-2xs transition-all cursor-pointer font-bold';
+        streamTclBtn?.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-2xs');
+        streamTclBtn?.classList.add('text-[#1a3300]/70');
         const first = allUnits.find(u => u.streamId === 'tcst');
         if (first) currentUnitId = first.id;
         populateDropdown('tcst');
@@ -1037,9 +2476,9 @@ const CURRICULUM_WEEKS = [
 
       streamTclBtn?.addEventListener('click', () => {
         currentStream = 'tcl';
-        streamTclBtn.className = 'flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all';
-        streamTcstBtn?.classList.remove('bg-white', 'text-zinc-950', 'shadow-2xs');
-        streamTcstBtn?.classList.add('text-zinc-500');
+        streamTclBtn.className = 'flex-1 py-2 rounded-xl bg-[#1a3300] text-[#fcfaf5] shadow-2xs transition-all cursor-pointer font-bold';
+        streamTcstBtn?.classList.remove('bg-[#1a3300]', 'text-[#fcfaf5]', 'shadow-2xs');
+        streamTcstBtn?.classList.add('text-[#1a3300]/70');
         const first = allUnits.find(u => u.streamId === 'tcl');
         if (first) currentUnitId = first.id;
         populateDropdown('tcl');
@@ -1064,11 +2503,12 @@ const CURRICULUM_WEEKS = [
           link.download = `QR-${currentUnitId}.png`;
           link.href = qrCanvas.toDataURL('image/png');
           link.click();
-          showToast('جاري التحميل...');
+          showToast('تم تحميل صورة الـ QR');
         }
       });
 
-      showStickersBtn?.addEventListener('click', () => {
+      // 1. Generate 24-Sticker Sheet A4
+      function generateStickerSheet() {
         if (!qrCanvas || !stickersContainer || !stickerSection) return;
         const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
         const dataUrl = qrCanvas.toDataURL('image/png');
@@ -1076,53 +2516,165 @@ const CURRICULUM_WEEKS = [
         stickersContainer.innerHTML = '';
         for (let i = 0; i < 24; i++) {
           const item = document.createElement('div');
-          item.className = 'border border-dashed border-zinc-300 rounded p-2 text-center bg-white flex flex-col items-center justify-between text-[10px] h-[43mm] box-border relative overflow-hidden';
+          item.className = 'border border-dashed border-[#1a3300]/40 rounded-lg p-2 text-center bg-white flex flex-col items-center justify-between text-[10px] h-[43mm] box-border relative overflow-hidden';
           item.innerHTML = `
-            <div class="w-full border-b border-zinc-100 pb-1">
-              <div class="font-bold text-[9px] text-zinc-800 leading-tight">
+            <div class="w-full border-b border-[#1a3300]/15 pb-1">
+              <div class="font-bold text-[9px] text-[#1a3300] leading-tight">
                 ${ACADEMIC_INFO.highSchool}
               </div>
-              <div class="font-mono text-[8px] text-zinc-500">
+              <div class="font-mono text-[8px] text-[#1a3300]/70">
                 ${unit.streamShort} • مادة المعلوماتية
               </div>
             </div>
             
             <div class="my-0.5 text-center">
-              <div class="font-bold text-[9px] text-zinc-900 leading-tight line-clamp-1">
+              <div class="font-bold text-[9px] text-[#1a3300] leading-tight line-clamp-1">
                 الوحدة ${unit.unitNumber}: ${unit.title}
               </div>
               <img src="${dataUrl}" class="w-18 h-18 mx-auto my-0.5" alt="QR" />
             </div>
 
-            <div class="w-full pt-1 border-t border-zinc-100 font-mono text-[7px] text-zinc-400">
-              امسح بالهاتف لمطالعة الكبسولة
+            <div class="w-full pt-1 border-t border-[#1a3300]/15 font-mono text-[7px] text-[#1a3300]/60">
+              امسح بالهاتف لمطالعة الدرس والمحاكي
             </div>
           `;
           stickersContainer.appendChild(item);
         }
 
         stickerSection.classList.remove('hidden');
+        posterSection?.classList.add('hidden');
+        teamCardsSection?.classList.add('hidden');
         stickerSection.scrollIntoView({ behavior: 'smooth' });
-      });
+      }
 
-      hideStickersBtn?.addEventListener('click', () => {
+      // 2. Generate Wall Poster A4
+      function generateWallPoster() {
+        if (!qrCanvas || !posterContent || !posterSection) return;
+        const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
+        const dataUrl = qrCanvas.toDataURL('image/png');
+
+        posterContent.innerHTML = `
+          <div class="w-full border-b-4 border-[#1a3300] pb-4 text-center">
+            <div class="font-mono text-xs font-bold text-[#cb5521] uppercase tracking-widest mb-1">
+              الجمهورية الجزائرية الديمقراطية الشعبية — وزارة التربية الوطنية
+            </div>
+            <div class="font-display text-2xl font-black text-[#1a3300]">
+              ${ACADEMIC_INFO.highSchool} – ${ACADEMIC_INFO.city}
+            </div>
+            <div class="text-xs text-[#1a3300]/80 mt-1 font-bold">
+              ${ACADEMIC_INFO.teacher} • الموسم الدراسي: ${ACADEMIC_INFO.schoolYear}
+            </div>
+          </div>
+
+          <div class="py-6">
+            <span class="px-4 py-1.5 rounded-full bg-[#ffe95c] border-2 border-[#1a3300]/25 text-xs font-black text-[#1a3300] inline-block mb-3">
+              ${unit.streamName} • مادة المعلوماتية
+            </span>
+            <h1 class="font-display text-3xl font-black text-[#1a3300] mb-2">
+              الوحدة التعلمية ${unit.unitNumber}: ${unit.title}
+            </h1>
+            <p class="text-sm text-[#1a3300]/80 max-w-lg mx-auto font-medium leading-relaxed">
+              ${unit.shortDesc || unit.domainTitle}
+            </p>
+          </div>
+
+          <div class="p-6 border-4 border-[#1a3300] rounded-3xl bg-[#fcfaf5] inline-block shadow-sm">
+            <img src="${dataUrl}" class="w-64 h-64 mx-auto" alt="Poster QR" />
+            <div class="font-mono text-xs font-black text-[#1a3300] mt-3">
+              ${unit.fullUrl}
+            </div>
+          </div>
+
+          <div class="w-full pt-6 border-t-2 border-[#1a3300]/20 flex items-center justify-between text-xs font-bold text-[#1a3300]">
+            <span>منصة معرفة تك الرقمية للتعليم الثانوي</span>
+            <span class="font-mono">Scan to learn • Powered by Maerifa Tech</span>
+          </div>
+        `;
+
+        posterSection.classList.remove('hidden');
         stickerSection?.classList.add('hidden');
-      });
+        teamCardsSection?.classList.add('hidden');
+        posterSection.scrollIntoView({ behavior: 'smooth' });
+      }
 
-      doPrintBtn?.addEventListener('click', () => {
-        window.print();
-      });
+      // 3. Generate Team Cards CS Unplugged
+      function generateTeamCards() {
+        if (!qrCanvas || !teamCardsContainer || !teamCardsSection) return;
+        const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
+        const dataUrl = qrCanvas.toDataURL('image/png');
+
+        const teams = [
+          { name: 'فوج 01: وحدة المعالجة المركزية (CPU)', role: 'تنفيذ العمليات الحسابية والمنطقية وتنسيق الأوامر', color: 'bg-[#ffe95c]/40' },
+          { name: 'فوج 02: الذاكرة الحية (RAM)', role: 'تخزين البرامج والبيانات النشطة قيد التنفيذ المؤقت', color: 'bg-[#a8e5e5]/40' },
+          { name: 'فوج 03: وحدات الإدخال (Input Units)', role: 'إدخال البيانات والمخططات من المحيط الخارجي', color: 'bg-[#d5f5c2]/40' },
+          { name: 'فوج 04: وحدات الإخراج (Output Units)', role: 'عرض واستخراج المعلومات المعالجة للتلميذ', color: 'bg-[#f6d0ff]/40' },
+          { name: 'فوج 05: ناقل البيانات (System Bus)', role: 'نقل الإشارات والبيانات بين الذاكرة والمعالج', color: 'bg-[#ffc09f]/40' },
+          { name: 'فوج 06: التحكيم والتتبع (Trace Master)', role: 'تدوين نتائج التنفيذ ومراقبة صحة الخوارزمية', color: 'bg-white' }
+        ];
+
+        teamCardsContainer.innerHTML = '';
+        teams.forEach(t => {
+          const div = document.createElement('div');
+          div.className = `border-2 border-[#1a3300] rounded-2xl p-4 ${t.color} flex flex-col justify-between h-[85mm] box-border text-center`;
+          div.innerHTML = `
+            <div class="border-b border-[#1a3300]/20 pb-2">
+              <div class="font-mono text-[9px] font-bold text-[#1a3300]/60">${ACADEMIC_INFO.highSchool} • CS Unplugged</div>
+              <div class="font-display font-black text-sm text-[#1a3300] mt-0.5">${t.name}</div>
+            </div>
+            
+            <div class="my-2 flex items-center justify-center gap-3">
+              <img src="${dataUrl}" class="w-20 h-20" alt="QR" />
+              <div class="text-right text-[10px] text-[#1a3300] font-medium max-w-[130px]">
+                <div class="font-bold">المهمة الميدانية:</div>
+                <div class="leading-tight">${t.role}</div>
+              </div>
+            </div>
+
+            <div class="border-t border-[#1a3300]/20 pt-1 text-[8px] font-mono text-[#1a3300]/70 flex items-center justify-between">
+              <span>الوحدة ${unit.unitNumber}: ${unit.title}</span>
+              <span>${ACADEMIC_INFO.teacher}</span>
+            </div>
+          `;
+          teamCardsContainer.appendChild(div);
+        });
+
+        teamCardsSection.classList.remove('hidden');
+        stickerSection?.classList.add('hidden');
+        posterSection?.classList.add('hidden');
+        teamCardsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      document.getElementById('btn-show-stickers-24')?.addEventListener('click', generateStickerSheet);
+      document.getElementById('btn-show-wall-poster')?.addEventListener('click', generateWallPoster);
+      document.getElementById('btn-show-team-cards')?.addEventListener('click', generateTeamCards);
+      document.getElementById('btn-print-current-view')?.addEventListener('click', generateStickerSheet);
+
+      document.getElementById('btn-do-print')?.addEventListener('click', () => window.print());
+      document.getElementById('btn-do-print-poster')?.addEventListener('click', () => window.print());
+      document.getElementById('btn-do-print-teams')?.addEventListener('click', () => window.print());
+
+      document.getElementById('btn-hide-stickers')?.addEventListener('click', () => stickerSection?.classList.add('hidden'));
+      document.getElementById('btn-hide-poster')?.addEventListener('click', () => posterSection?.classList.add('hidden'));
+      document.getElementById('btn-hide-teams')?.addEventListener('click', () => teamCardsSection?.classList.add('hidden'));
 
       populateDropdown(currentStream);
       renderQRCode();
     }
 
+    // ==========================================
+    // MODULE 5: 31-WEEK TRACKER
+    // ==========================================
     function initTracker() {
       const checkboxes = document.querySelectorAll('.week-tracker-check') as NodeListOf<HTMLInputElement>;
+      const noteInputs = document.querySelectorAll('.week-note-input') as NodeListOf<HTMLInputElement>;
       const percentEl = document.getElementById('tracker-percentage');
       const progressBar = document.getElementById('tracker-progress-bar');
 
-      function loadTrackerState(): number[] {
+      const term1Badge = document.getElementById('term1-progress-badge');
+      const term2Badge = document.getElementById('term2-progress-badge');
+      const term3Badge = document.getElementById('term3-progress-badge');
+
+      function loadCompleted(): number[] {
         try {
           return JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]');
         } catch {
@@ -1130,41 +2682,157 @@ const CURRICULUM_WEEKS = [
         }
       }
 
-      function saveTrackerState(completedWeeks: number[]) {
-        localStorage.setItem(TRACKER_KEY, JSON.stringify(completedWeeks));
+      function loadNotes(): Record<string, string> {
+        try {
+          return JSON.parse(localStorage.getItem(TRACKER_NOTES_KEY) || '{}');
+        } catch {
+          return {};
+        }
       }
 
       function updateUI() {
-        const completed = loadTrackerState();
+        const completed = loadCompleted();
+        const notes = loadNotes();
+
         checkboxes.forEach(cb => {
           const w = parseInt(cb.dataset.week || '0', 10);
           cb.checked = completed.includes(w);
         });
 
+        noteInputs.forEach(inp => {
+          const w = inp.dataset.week || '0';
+          if (notes[w]) inp.value = notes[w];
+        });
+
         const pct = Math.round((completed.length / 31) * 100);
         if (percentEl) percentEl.textContent = `${pct}%`;
         if (progressBar) progressBar.style.width = `${pct}%`;
+
+        // Term breakdown
+        const t1 = completed.filter(w => w <= 12).length;
+        const t2 = completed.filter(w => w > 12 && w <= 23).length;
+        const t3 = completed.filter(w => w > 23).length;
+
+        if (term1Badge) term1Badge.textContent = `${t1} / 12 أسبوع (${Math.round((t1/12)*100)}%)`;
+        if (term2Badge) term2Badge.textContent = `${t2} / 11 أسبوع (${Math.round((t2/11)*100)}%)`;
+        if (term3Badge) term3Badge.textContent = `${t3} / 8 أسابيع (${Math.round((t3/8)*100)}%)`;
+
+        initKPIs();
       }
 
       checkboxes.forEach(cb => {
         cb.addEventListener('change', () => {
           const w = parseInt(cb.dataset.week || '0', 10);
-          let completed = loadTrackerState();
+          let completed = loadCompleted();
           if (cb.checked) {
             if (!completed.includes(w)) completed.push(w);
           } else {
             completed = completed.filter(item => item !== w);
           }
-          saveTrackerState(completed);
+          localStorage.setItem(TRACKER_KEY, JSON.stringify(completed));
           updateUI();
-          showToast('تم تحديث التدرج');
+          showToast('تم تحديث إنجاز الأسبوع');
         });
+      });
+
+      noteInputs.forEach(inp => {
+        inp.addEventListener('change', () => {
+          const w = inp.dataset.week || '0';
+          const notes = loadNotes();
+          notes[w] = inp.value.trim();
+          localStorage.setItem(TRACKER_NOTES_KEY, JSON.stringify(notes));
+          showToast('تم حفظ ملاحظة الأسبوع');
+        });
+      });
+
+      document.getElementById('btn-print-tracker-report')?.addEventListener('click', () => {
+        window.print();
       });
 
       updateUI();
     }
 
-    function initSettings() {
+    // ==========================================
+    // MODULE 6: GRADING & ASSESSMENT CALCULATOR
+    // ==========================================
+    function initGradingCalculator() {
+      // Tool 1: Continuous Assessment
+      const inDiscipline = document.getElementById('grade-discipline') as HTMLInputElement;
+      const inActivity = document.getElementById('grade-activity') as HTMLInputElement;
+      const inNotebook = document.getElementById('grade-notebook') as HTMLInputElement;
+      const inProject = document.getElementById('grade-project') as HTMLInputElement;
+      const outCont = document.getElementById('calculated-continuous-grade');
+
+      function calcContinuous() {
+        const d = parseFloat(inDiscipline?.value || '0') || 0;
+        const a = parseFloat(inActivity?.value || '0') || 0;
+        const n = parseFloat(inNotebook?.value || '0') || 0;
+        const p = parseFloat(inProject?.value || '0') || 0;
+        const total = Math.min(20, Math.max(0, d + a + n + p));
+        if (outCont) outCont.textContent = total.toFixed(2);
+
+        // Also autofill term grade cont
+        const termContInp = document.getElementById('term-grade-cont') as HTMLInputElement;
+        if (termContInp) {
+          termContInp.value = total.toFixed(2);
+          calcTerm();
+        }
+      }
+
+      document.querySelectorAll('.grade-input').forEach(inp => {
+        inp.addEventListener('input', calcContinuous);
+      });
+
+      // Tool 2: Term Average
+      const inTermCont = document.getElementById('term-grade-cont') as HTMLInputElement;
+      const inTermQuiz = document.getElementById('term-grade-quiz') as HTMLInputElement;
+      const inTermExam = document.getElementById('term-grade-exam') as HTMLInputElement;
+      const outTerm = document.getElementById('calculated-term-grade');
+      const outRemark = document.getElementById('term-grade-remark');
+
+      function calcTerm() {
+        const c = parseFloat(inTermCont?.value || '0') || 0;
+        const q = parseFloat(inTermQuiz?.value || '0') || 0;
+        const e = parseFloat(inTermExam?.value || '0') || 0;
+        const avg = ((c + q + (e * 2)) / 4);
+        if (outTerm) outTerm.textContent = avg.toFixed(2);
+
+        if (outRemark) {
+          if (avg >= 18) {
+            outRemark.textContent = '🌟 ممتاز — نتائج باهرة ولوحة شرف، واصل التألق والريادة.';
+            outRemark.className = 'text-xs font-bold text-emerald-800 bg-[#d5f5c2] p-2.5 rounded-xl border border-emerald-300 text-center';
+          } else if (avg >= 15) {
+            outRemark.textContent = '✨ جيد جداً — عمل جاد ومردود ممتاز، يشجع ويهنأ على مواصلة الجهد.';
+            outRemark.className = 'text-xs font-bold text-emerald-800 bg-[#d5f5c2] p-2.5 rounded-xl border border-emerald-300 text-center';
+          } else if (avg >= 12) {
+            outRemark.textContent = '👍 نتائج حسنة — مجهود طيب، باستطاعتك تحقيق الأفضل بمزيد من التركيز.';
+            outRemark.className = 'text-xs font-bold text-[#1a3300] bg-[#ffe95c] p-2.5 rounded-xl border border-[#1a3300]/20 text-center';
+          } else if (avg >= 10) {
+            outRemark.textContent = '⚠️ مقبول — كفاءات مكتسبة في الحدود الدنيا، ضاعف المجهود وحل التمارين.';
+            outRemark.className = 'text-xs font-bold text-[#cb5521] bg-[#ffc09f]/50 p-2.5 rounded-xl border border-[#cb5521]/30 text-center';
+          } else {
+            outRemark.textContent = '🚨 دون المتوسط — يستلزم تداركاً عاجلاً للمكتسبات والتركيز أكثر في الحصص.';
+            outRemark.className = 'text-xs font-bold text-rose-800 bg-rose-100 p-2.5 rounded-xl border border-rose-300 text-center';
+          }
+        }
+      }
+
+      document.querySelectorAll('.grade-term-input').forEach(inp => {
+        inp.addEventListener('input', calcTerm);
+      });
+
+      document.querySelectorAll('input[name="term-stream-choice"]').forEach(radio => {
+        radio.addEventListener('change', calcTerm);
+      });
+
+      calcContinuous();
+      calcTerm();
+    }
+
+    // ==========================================
+    // MODULE 7: SECURITY & BACKUP SYNC
+    // ==========================================
+    function initSecurityAndBackup() {
       const pwdForm = document.getElementById('change-pwd-form');
       const oldInput = document.getElementById('old-pin-input') as HTMLInputElement;
       const newInput = document.getElementById('new-pin-input') as HTMLInputElement;
@@ -1199,7 +2867,7 @@ const CURRICULUM_WEEKS = [
 
         const newHash = await sha256(newVal);
         localStorage.setItem(HASH_KEY, newHash);
-        showPwdMsg('تم تحديث الرمز بنجاح', 'emerald');
+        showPwdMsg('تم تحديث الرمز السري بنجاح', 'emerald');
         oldInput.value = '';
         newInput.value = '';
         confirmInput.value = '';
@@ -1210,12 +2878,12 @@ const CURRICULUM_WEEKS = [
         if (confirm('استرجاع الرمز السري الافتراضي (2027)؟')) {
           localStorage.setItem(HASH_KEY, DEFAULT_HASH);
           showPwdMsg('تم استرجاع الرمز الافتراضي (2027)', 'emerald');
-          showToast('الرمز: 2027');
+          showToast('الرمز الافتراضي: 2027');
         }
       });
 
       clearStorageBtn?.addEventListener('click', () => {
-        if (confirm('مسح الإعدادات المؤقتة وتسجيل الخروج؟')) {
+        if (confirm('تحذير: هل تريد مسح كافة الإعدادات والذاكرة المؤقتة وإعادة ضبط المصنع؟')) {
           localStorage.clear();
           sessionStorage.clear();
           location.reload();
@@ -1225,9 +2893,69 @@ const CURRICULUM_WEEKS = [
       function showPwdMsg(text: string, color: string) {
         if (!pwdMsg) return;
         pwdMsg.textContent = text;
-        pwdMsg.className = `text-xs font-mono p-2 rounded text-center bg-${color}-50 text-${color}-800 border border-${color}-200`;
+        pwdMsg.className = `text-xs font-mono p-2.5 rounded-xl text-center bg-${color}-50 text-${color}-800 border border-${color}-200 font-bold`;
         pwdMsg.classList.remove('hidden');
       }
+
+      // JSON Backup Export & Import
+      function exportFullBackup() {
+        const backupData = {
+          exportDate: new Date().toISOString(),
+          platform: ACADEMIC_INFO.platformName,
+          teacher: ACADEMIC_INFO.teacher,
+          schoolYear: ACADEMIC_INFO.schoolYear,
+          unitsStatus: JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}'),
+          curriculumTracker: JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]'),
+          trackerNotes: JSON.parse(localStorage.getItem(TRACKER_NOTES_KEY) || '{}'),
+          globalAlert: JSON.parse(localStorage.getItem(ALERT_KEY) || 'null'),
+          examMode: localStorage.getItem(EXAM_MODE_KEY) === 'true',
+          classesProgress: JSON.parse(localStorage.getItem(CLASSES_PROGRESS_KEY) || '{}')
+        };
+
+        const jsonStr = JSON.stringify(backupData, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `maerifa_admin_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('تم تصدير النسخة الاحتياطية بنجاح 💾');
+      }
+
+      document.getElementById('btn-export-backup-json')?.addEventListener('click', exportFullBackup);
+      document.getElementById('btn-quick-export')?.addEventListener('click', exportFullBackup);
+
+      const fileInput = document.getElementById('import-backup-file-input') as HTMLInputElement;
+      const triggerImportBtn = document.getElementById('btn-trigger-import');
+
+      triggerImportBtn?.addEventListener('click', () => {
+        fileInput?.click();
+      });
+
+      fileInput?.addEventListener('change', (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target?.result as string);
+            if (data.unitsStatus) localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(data.unitsStatus));
+            if (data.curriculumTracker) localStorage.setItem(TRACKER_KEY, JSON.stringify(data.curriculumTracker));
+            if (data.trackerNotes) localStorage.setItem(TRACKER_NOTES_KEY, JSON.stringify(data.trackerNotes));
+            if (data.globalAlert) localStorage.setItem(ALERT_KEY, JSON.stringify(data.globalAlert));
+            if (data.examMode !== undefined) localStorage.setItem(EXAM_MODE_KEY, String(data.examMode));
+            if (data.classesProgress) localStorage.setItem(CLASSES_PROGRESS_KEY, JSON.stringify(data.classesProgress));
+
+            showToast('تم استيراد النسخة الاحتياطية بنجاح! جاري التحديث...');
+            setTimeout(() => location.reload(), 1200);
+          } catch (err) {
+            alert('الملف غير صالح أو تالف.');
+          }
+        };
+        reader.readAsText(file);
+      });
     }
 
   </script>

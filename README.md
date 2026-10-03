@@ -9,8 +9,9 @@
 
 ## 🌐 روابط النشر المباشر
 
+- **الرابط الرسمي المعتمد للتلاميذ:** [https://chalabi-info.vercel.app](https://chalabi-info.vercel.app) ⚡ (سريع، سهل الحفظ، متوافق 100% مع شبكات الجزائر دون أي حجب)
 - **مستودع الكود (GitHub):** [https://github.com/djamelch/sidi-kada-info](https://github.com/djamelch/sidi-kada-info)
-- **الموقع على Cloudflare Pages:** [https://maerifatech.pages.dev](https://maerifatech.pages.dev) (أو [https://sidi-kada-info.pages.dev](https://sidi-kada-info.pages.dev))
+- **النسخة الاحتياطية (Cloudflare Pages):** [https://maerifatech.pages.dev](https://maerifatech.pages.dev)
 
 ---
 

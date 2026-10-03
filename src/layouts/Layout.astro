@@ -52,6 +52,9 @@ const {
     </div>
   </div>
 
+  <!-- Dynamic Teacher Global Alert / Exam Mode Bar (Controlled via Admin Dashboard) -->
+  <div id="student-global-alert" class="hidden no-print relative z-25 transition-all duration-300"></div>
+
   <!-- Say Briefly Floating Top Navigation Bar (Student-Safe: NO ADMIN BUTTONS) -->
   <header class="sticky top-3 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full no-print">
     <div class="floating-nav px-5 sm:px-7 h-16 flex items-center justify-between gap-4 rounded-full">
@@ -177,6 +180,65 @@ const {
     toggle?.addEventListener('click', () => {
       drawer?.classList.toggle('hidden');
     });
+
+    // Synchronize global teacher alert & exam mode across all student pages
+    function syncGlobalTeacherAlerts() {
+      const alertEl = document.getElementById('student-global-alert');
+      if (!alertEl) return;
+      try {
+        const examMode = localStorage.getItem('maerifa_exam_mode') === 'true';
+        if (examMode) {
+          document.body.classList.add('exam-mode-active');
+          alertEl.className = 'bg-[#ffe95c] border-b-2 border-[#1a3300]/25 text-[#1a3300] px-4 py-2.5 text-xs font-bold shadow-xs';
+          alertEl.innerHTML = `
+            <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-[#1a3300] text-[#fcfaf5] font-mono text-[10px] font-black uppercase tracking-wider">EXAM / PROCTOR MODE</span>
+                <span>🔒 <strong>وضع الفروض والامتحانات مفعّل:</strong> تم حجب الحلول النموذجية للمساعدة على التركيز والتقييم الفعلي داخل الحصة.</span>
+              </div>
+              <span class="text-[11px] text-[#1a3300]/70 font-mono hidden sm:inline">ثانوية الأمير عبد القادر</span>
+            </div>
+          `;
+          alertEl.classList.remove('hidden');
+          return;
+        } else {
+          document.body.classList.remove('exam-mode-active');
+        }
+
+        const rawAlert = localStorage.getItem('maerifa_global_alert');
+        if (rawAlert) {
+          const alertData = JSON.parse(rawAlert);
+          if (alertData && alertData.enabled && alertData.message) {
+            const typeThemes: Record<string, { bg: string; icon: string; label: string }> = {
+              info: { bg: 'bg-[#a8e5e5]', icon: '🔔', label: 'إعلان من الأستاذ' },
+              warning: { bg: 'bg-[#ffe95c]', icon: '⚠️', label: 'تنبيه بيداغوجي' },
+              exam: { bg: 'bg-[#ffc09f]', icon: '📝', label: 'موعد فرض أو اختبار' },
+              success: { bg: 'bg-[#d5f5c2]', icon: '🏆', label: 'تشجيع وتكريم' }
+            };
+            const theme = typeThemes[alertData.type] || typeThemes.info;
+            alertEl.className = `${theme.bg} border-b border-[#1a3300]/20 text-[#1a3300] px-4 py-2 text-xs font-bold shadow-xs`;
+            alertEl.innerHTML = `
+              <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-sm">${theme.icon}</span>
+                  <span class="inline-block px-2 py-0.5 rounded-full bg-white/70 border border-[#1a3300]/15 font-black text-[10px] text-[#1a3300]">
+                    ${alertData.badgeLabel || theme.label}
+                  </span>
+                  <span class="font-bold text-xs">${alertData.message}</span>
+                </div>
+                ${alertData.link ? `<a href="${alertData.link}" class="px-3 py-1 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-bold hover:bg-[#254700] transition-colors inline-flex items-center gap-1 shadow-2xs"><span>تفاصيل أكثر</span><span>←</span></a>` : ''}
+              </div>
+            `;
+            alertEl.classList.remove('hidden');
+            return;
+          }
+        }
+        alertEl.classList.add('hidden');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    syncGlobalTeacherAlerts();
   </script>
 </body>
 </html>

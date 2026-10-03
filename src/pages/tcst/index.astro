@@ -207,7 +207,11 @@ const stream = STREAMS_DATA.tcst;
           const unitId = (row as HTMLElement).dataset.unitId;
           const slug = (row as HTMLElement).dataset.defaultSlug;
           if (unitId && overrides[unitId]) {
-            const status = overrides[unitId];
+            const item = overrides[unitId];
+            const status = typeof item === 'object' && item !== null ? item.status : item;
+            const notice = typeof item === 'object' && item !== null ? item.notice : null;
+            const extraLink = typeof item === 'object' && item !== null ? item.extraLink : null;
+
             const badgeSlot = row.querySelector('.unit-status-badge');
             const actionSlot = row.querySelector('.unit-action-slot');
 
@@ -219,10 +223,20 @@ const stream = STREAMS_DATA.tcst;
                 </span>
               `;
               actionSlot.innerHTML = `
+                ${extraLink ? `<a href="${extraLink}" target="_blank" class="px-3.5 py-2 rounded-xl bg-white hover:bg-[#ffe95c] border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs transition-colors shadow-2xs">📎 ملف إضافي</a>` : ''}
                 <a href="${slug}" class="px-5 py-2.5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-black text-xs transition-transform active:scale-95 flex items-center gap-2 shadow-sm hover-lift">
                   <span>فتح الدرس والمحاكي</span>
                   <span>←</span>
                 </a>
+              `;
+            } else if (status === 'in_progress' && badgeSlot && actionSlot) {
+              badgeSlot.innerHTML = `
+                <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[11px] font-black bg-[#ffe95c] text-[#1a3300] border border-[#1a3300]/20 shadow-xs">
+                  قيد التحضير ⏳
+                </span>
+              `;
+              actionSlot.innerHTML = `
+                <span class="px-4 py-2 rounded-xl bg-white text-neutral-400 border border-[#1a3300]/15 text-[11px] font-mono">قريباً</span>
               `;
             } else if (status === 'planned' && badgeSlot && actionSlot) {
               badgeSlot.innerHTML = `
@@ -231,6 +245,17 @@ const stream = STREAMS_DATA.tcst;
               actionSlot.innerHTML = `
                 <span class="px-4 py-2 rounded-xl bg-white text-neutral-400 border border-[#1a3300]/15 text-[11px] font-mono">مغلق</span>
               `;
+            }
+
+            // Append notice if teacher added one
+            if (notice) {
+              let noticeEl = row.querySelector('.teacher-unit-notice');
+              if (!noticeEl) {
+                noticeEl = document.createElement('div');
+                noticeEl.className = 'teacher-unit-notice mt-2 text-[11px] font-bold text-[#cb5521] bg-[#ffe95c]/40 border border-[#cb5521]/30 px-3 py-1 rounded-xl inline-flex items-center gap-1.5 shadow-2xs';
+                row.querySelector('p')?.insertAdjacentElement('afterend', noticeEl);
+              }
+              noticeEl.innerHTML = `<span>📌</span><span>توجيه الأستاذ:</span> <span>${notice}</span>`;
             }
           }
         });

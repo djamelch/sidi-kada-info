@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sidi-kada-info.pages.dev',
+  site: 'https://chalabi-info.vercel.app',
   vite: {
     plugins: [tailwindcss()],
   },
