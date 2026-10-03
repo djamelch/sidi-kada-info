@@ -435,11 +435,16 @@ body {
 
 /* Print Utilities */
 @media print {
-  header, footer, nav, .no-print {
+  @page {
+    margin: 0;
+  }
+  header, footer, nav, aside, .no-print {
     display: none !important;
   }
   body {
     background: #ffffff !important;
     color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

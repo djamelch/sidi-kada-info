@@ -1418,46 +1418,73 @@ const CLASSES_CONFIG = [
   <!-- ============================================================ -->
   
   <!-- Printable Template 1: 24-Sticker Sheet A4 -->
-  <div id="sticker-sheet-section" class="hidden no-print-override">
-    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
-      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
-        <span>🏷️</span>
-        <span>ورقة ملصقات A4 للقسم (24 ملصق) جاهزة للطباعة والتوزيع</span>
+  <div id="sticker-sheet-section" class="hidden">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 space-y-3">
+      <div class="flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+        <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+          <span>🏷️</span>
+          <span>ورقة ملصقات A4 للقسم (24 ملصق) جاهزة للطباعة والتوزيع</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-do-print" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2">
+            <span>🖨️</span>
+            <span>طباعة فورية A4 (Ctrl + P)</span>
+          </button>
+          <button id="btn-hide-stickers" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
+            إغلاق المعاينة
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="btn-do-print" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
-          طباعة فورية A4 (Ctrl + P)
-        </button>
-        <button id="btn-hide-stickers" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
-          إغلاق المعاينة
-        </button>
+
+      <!-- User Instruction Tip for Clean Print -->
+      <div class="bg-[#ffe95c]/60 border-2 border-[#1a3300]/25 rounded-2xl p-3.5 flex items-start sm:items-center justify-between gap-3 text-xs text-[#1a3300] shadow-2xs">
+        <div class="flex items-start sm:items-center gap-2.5">
+          <span class="text-xl shrink-0">💡</span>
+          <div class="leading-relaxed">
+            <strong class="font-bold">لحذف رابط الموقع (admin) والتاريخ من الورقة نهائياً:</strong> في نافذة الطباعة المنبثقة، اضغط على <strong>«المزيد من الإعدادات / More settings»</strong> ثم أزِل علامة الصح عن <strong>«رؤوس وتذييلات الصفحات / Headers and footers»</strong>.
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-lg bg-white border border-[#1a3300]/20 font-mono text-[10px] font-bold shrink-0">A4 • ورقة واحدة</span>
       </div>
     </div>
 
     <!-- 24-Sticker A4 Grid (4 cols x 6 rows) -->
-    <div class="a4-sheet bg-white p-3 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-2">
+    <div class="a4-sheet a4-sheet-stickers bg-white p-2.5 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0">
       <div id="stickers-container" class="grid grid-cols-4 gap-2"></div>
     </div>
   </div>
 
   <!-- Printable Template 2: Wall Poster A4 -->
-  <div id="wall-poster-section" class="hidden no-print-override">
-    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
-      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
-        <span>🖼️</span>
-        <span>ملصق جداري مكبر A4 مخصص لتعليقه في الحجرة أو المخبر</span>
+  <div id="wall-poster-section" class="hidden">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 space-y-3">
+      <div class="flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+        <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+          <span>🖼️</span>
+          <span>ملصق جداري مكبر A4 مخصص لتعليقه في الحجرة أو المخبر</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-do-print-poster" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2">
+            <span>🖨️</span>
+            <span>طباعة البوستر A4</span>
+          </button>
+          <button id="btn-hide-poster" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
+            إغلاق المعاينة
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="btn-do-print-poster" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
-          طباعة البوستر A4
-        </button>
-        <button id="btn-hide-poster" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
-          إغلاق المعاينة
-        </button>
+
+      <div class="bg-[#ffe95c]/60 border-2 border-[#1a3300]/25 rounded-2xl p-3.5 flex items-start sm:items-center justify-between gap-3 text-xs text-[#1a3300] shadow-2xs">
+        <div class="flex items-start sm:items-center gap-2.5">
+          <span class="text-xl shrink-0">💡</span>
+          <div class="leading-relaxed">
+            <strong class="font-bold">لطباعة البوستر نظيفاً:</strong> في نافذة الطباعة اضغط <strong>«المزيد من الإعدادات / More settings»</strong> وألغِ تحديد <strong>«رؤوس وتذييلات الصفحات»</strong>.
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-lg bg-white border border-[#1a3300]/20 font-mono text-[10px] font-bold shrink-0">A4 • ورقة واحدة</span>
       </div>
     </div>
 
-    <div class="a4-sheet bg-white p-8 max-w-[210mm] min-h-[297mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-6 flex flex-col justify-between text-center box-border">
+    <div class="a4-sheet a4-sheet-poster bg-white p-8 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 flex flex-col justify-between text-center box-border">
       <div id="poster-content" class="space-y-6 flex flex-col items-center">
         <!-- Rendered dynamically -->
       </div>
@@ -1465,24 +1492,37 @@ const CLASSES_CONFIG = [
   </div>
 
   <!-- Printable Template 3: Team Cards CS Unplugged -->
-  <div id="team-cards-section" class="hidden no-print-override">
-    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
-      <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
-        <span>👥</span>
-        <span>بطاقات المجموعات والأفواج للأنشطة غير الموصولة بحاسوب (CS Unplugged)</span>
+  <div id="team-cards-section" class="hidden">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 space-y-3">
+      <div class="flex items-center justify-between bg-[#f2eee3] border-2 border-[#1a3300]/20 p-4 rounded-2xl shadow-sm">
+        <div class="text-xs text-[#1a3300] font-bold flex items-center gap-2">
+          <span>👥</span>
+          <span>بطاقات المجموعات والأفواج للأنشطة غير الموصولة بحاسوب (CS Unplugged)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-do-print-teams" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2">
+            <span>🖨️</span>
+            <span>طباعة البطاقات A4</span>
+          </button>
+          <button id="btn-hide-teams" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
+            إغلاق المعاينة
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="btn-do-print-teams" class="px-5 py-2.5 bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer">
-          طباعة البطاقات A4
-        </button>
-        <button id="btn-hide-teams" class="px-4 py-2.5 bg-white border border-[#1a3300]/20 text-[#1a3300] font-bold text-xs rounded-xl hover:bg-[#ffe95c] cursor-pointer">
-          إغلاق المعاينة
-        </button>
+
+      <div class="bg-[#ffe95c]/60 border-2 border-[#1a3300]/25 rounded-2xl p-3.5 flex items-start sm:items-center justify-between gap-3 text-xs text-[#1a3300] shadow-2xs">
+        <div class="flex items-start sm:items-center gap-2.5">
+          <span class="text-xl shrink-0">💡</span>
+          <div class="leading-relaxed">
+            <strong class="font-bold">لطباعة البطاقات نظيفة:</strong> في نافذة الطباعة اضغط <strong>«المزيد من الإعدادات / More settings»</strong> وألغِ تحديد <strong>«رؤوس وتذييلات الصفحات»</strong>.
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-lg bg-white border border-[#1a3300]/20 font-mono text-[10px] font-bold shrink-0">A4 • ورقة واحدة</span>
       </div>
     </div>
 
-    <div class="a4-sheet bg-white p-4 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-2">
-      <div id="team-cards-container" class="grid grid-cols-2 gap-4">
+    <div class="a4-sheet a4-sheet-teams bg-white p-3 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0">
+      <div id="team-cards-container" class="grid grid-cols-2 gap-3">
         <!-- Rendered dynamically -->
       </div>
     </div>
@@ -2490,25 +2530,25 @@ const CLASSES_CONFIG = [
         stickersContainer.innerHTML = '';
         for (let i = 0; i < 24; i++) {
           const item = document.createElement('div');
-          item.className = 'border border-dashed border-[#1a3300]/40 rounded-lg p-2 text-center bg-white flex flex-col items-center justify-between text-[10px] h-[43mm] box-border relative overflow-hidden';
+          item.className = 'sticker-cell border border-dashed border-[#1a3300]/40 rounded-xl p-1.5 text-center bg-white flex flex-col items-center justify-between text-[9px] h-[42mm] box-border relative overflow-hidden';
           item.innerHTML = `
-            <div class="w-full border-b border-[#1a3300]/15 pb-1">
-              <div class="font-bold text-[9px] text-[#1a3300] leading-tight">
+            <div class="w-full border-b border-[#1a3300]/15 pb-0.5">
+              <div class="font-bold text-[8.5px] text-[#1a3300] leading-tight">
                 ${ACADEMIC_INFO.highSchool}
               </div>
-              <div class="font-mono text-[8px] text-[#1a3300]/70">
+              <div class="font-mono text-[7.5px] text-[#1a3300]/70">
                 ${unit.streamShort} • مادة المعلوماتية
               </div>
             </div>
             
-            <div class="my-0.5 text-center">
-              <div class="font-bold text-[9px] text-[#1a3300] leading-tight line-clamp-1">
+            <div class="my-0.5 text-center flex flex-col items-center">
+              <div class="font-bold text-[8.5px] text-[#1a3300] leading-tight line-clamp-1">
                 الوحدة ${unit.unitNumber}: ${unit.title}
               </div>
-              <img src="${dataUrl}" class="w-18 h-18 mx-auto my-0.5" alt="QR" />
+              <img src="${dataUrl}" class="w-16 h-16 mx-auto my-0.5" alt="QR" />
             </div>
 
-            <div class="w-full pt-1 border-t border-[#1a3300]/15 font-mono text-[7px] text-[#1a3300]/60">
+            <div class="w-full pt-0.5 border-t border-[#1a3300]/15 font-mono text-[7px] text-[#1a3300]/60">
               امسح بالهاتف لمطالعة الدرس والمحاكي
             </div>
           `;
@@ -2589,7 +2629,7 @@ const CLASSES_CONFIG = [
         teamCardsContainer.innerHTML = '';
         teams.forEach(t => {
           const div = document.createElement('div');
-          div.className = `border-2 border-[#1a3300] rounded-2xl p-4 ${t.color} flex flex-col justify-between h-[85mm] box-border text-center`;
+          div.className = `border-2 border-[#1a3300] rounded-2xl p-4 ${t.color} flex flex-col justify-between h-[82mm] box-border text-center`;
           div.innerHTML = `
             <div class="border-b border-[#1a3300]/20 pb-2">
               <div class="font-mono text-[9px] font-bold text-[#1a3300]/60">${ACADEMIC_INFO.highSchool} • CS Unplugged</div>
@@ -2597,7 +2637,7 @@ const CLASSES_CONFIG = [
             </div>
             
             <div class="my-2 flex items-center justify-center gap-3">
-              <img src="${dataUrl}" class="w-20 h-20" alt="QR" />
+              <img src="${dataUrl}" class="w-18 h-18" alt="QR" />
               <div class="text-right text-[10px] text-[#1a3300] font-medium max-w-[130px]">
                 <div class="font-bold">المهمة الميدانية:</div>
                 <div class="leading-tight">${t.role}</div>
@@ -2618,14 +2658,23 @@ const CLASSES_CONFIG = [
         teamCardsSection.scrollIntoView({ behavior: 'smooth' });
       }
 
+      function executeCleanPrint() {
+        const prevTitle = document.title;
+        document.title = ' ';
+        window.print();
+        setTimeout(() => {
+          document.title = prevTitle;
+        }, 1000);
+      }
+
       document.getElementById('btn-show-stickers-24')?.addEventListener('click', generateStickerSheet);
       document.getElementById('btn-show-wall-poster')?.addEventListener('click', generateWallPoster);
       document.getElementById('btn-show-team-cards')?.addEventListener('click', generateTeamCards);
       document.getElementById('btn-print-current-view')?.addEventListener('click', generateStickerSheet);
 
-      document.getElementById('btn-do-print')?.addEventListener('click', () => window.print());
-      document.getElementById('btn-do-print-poster')?.addEventListener('click', () => window.print());
-      document.getElementById('btn-do-print-teams')?.addEventListener('click', () => window.print());
+      document.getElementById('btn-do-print')?.addEventListener('click', executeCleanPrint);
+      document.getElementById('btn-do-print-poster')?.addEventListener('click', executeCleanPrint);
+      document.getElementById('btn-do-print-teams')?.addEventListener('click', executeCleanPrint);
 
       document.getElementById('btn-hide-stickers')?.addEventListener('click', () => stickerSection?.classList.add('hidden'));
       document.getElementById('btn-hide-poster')?.addEventListener('click', () => posterSection?.classList.add('hidden'));
@@ -2927,10 +2976,110 @@ const CLASSES_CONFIG = [
 
   <style>
     @media print {
-      body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
-      .no-print { display: none !important; }
-      .no-print-override { display: block !important; }
-      .a4-sheet { border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+      @page {
+        size: A4 portrait;
+        margin: 0mm; /* Suppresses browser URL, title, date, and page count */
+      }
+
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 210mm !important;
+        max-width: 210mm !important;
+        min-height: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Hide entire web navigation, dashboard, and background */
+      header, footer, nav, aside,
+      #student-global-alert,
+      #admin-login-gate,
+      #admin-dashboard-container,
+      #toast,
+      #admin-bootstrap-data,
+      .no-print {
+        display: none !important;
+      }
+
+      /* Hide all printable templates by default */
+      #sticker-sheet-section,
+      #wall-poster-section,
+      #team-cards-section {
+        display: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* ONLY display the single active template (not having the .hidden class) */
+      #sticker-sheet-section:not(.hidden) {
+        display: block !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      #wall-poster-section:not(.hidden) {
+        display: block !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      #team-cards-section:not(.hidden) {
+        display: block !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      /* A4 Single-Sheet Layout Enforcers */
+      .a4-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        background: #ffffff !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      .a4-sheet-stickers {
+        width: 210mm !important;
+        max-width: 210mm !important;
+        height: 295mm !important;
+        max-height: 295mm !important;
+        padding: 5mm 6mm !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .a4-sheet-poster {
+        width: 210mm !important;
+        max-width: 210mm !important;
+        height: 295mm !important;
+        max-height: 295mm !important;
+        padding: 10mm 12mm !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .a4-sheet-teams {
+        width: 210mm !important;
+        max-width: 210mm !important;
+        height: 295mm !important;
+        max-height: 295mm !important;
+        padding: 7mm 7mm !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .sticker-cell {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
     }
   </style>
 
