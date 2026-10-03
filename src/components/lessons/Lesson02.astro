@@ -1,0 +1,607 @@
+---
+/**
+ * الوحدة 2: تجميع الحاسوب والعتاد المادي — المصدر الوحيد لمحتوى الدرس.
+ * المرجع المعتمد: وثائق الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
+ *
+ * إعدادات الأستاذ (تُغيَّر هنا فقط):
+ *  - VIDEO_URL: رابط فيديو الشرح (YouTube embed).
+ *  - HOMEWORK_SOLUTION_PUBLISHED: لنشر أو حجب حل المسألة حتى تنتهي المراقبة بالقسم.
+ */
+const VIDEO_URL = 'https://www.youtube.com/embed/g8w5A93X7Zc'; // فيديو محاكاة وتجميع الحاسوب
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/memo-02.pdf';
+const pdfDownloadName = 'تجميع_الحاسوب_الوحدة_02.pdf';
+const diagramImgHref = '/images/pc_assembly_diagram.png';
+
+const parts = [
+  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'الدرس (PDF)', desc: 'نص الدرس الكامل المعتمد في الوثيقة مع تحميل PDF' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'مراحل تجميع الحاسوب بالصوت والصورة' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'مصنف الوحدات + مستكشف القطع + محول الذاكرة' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'مخطط التركيب', desc: 'المخطط الانسيابي الكامل لتجميع الحاسوب' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#f6d0ff]', title: 'التمارين والمسائل', desc: 'تحويلات الذاكرة وحل مسألة القرص الصلب' },
+  { id: 'part-6', icon: '🔍', color: 'bg-[#ffe95c]', title: 'المحاكي والبحث', desc: 'محاكي سيسكو والعمل التطبيقي المنزلي' },
+];
+
+const exercises = [
+  {
+    q: 'ما هو تعريف الحاسوب؟ وما هي أقسام مكوناته المادية انطلاقاً من تعريفه؟',
+    a: '<strong>تعريف الحاسوب (Computer):</strong> هو جهاز إلكتروني مبرمج يقوم باستقبال المعلومات، وتخزينها، ومعالجتها قصد إظهارها واستعمالها وقت الحاجة.<br/><strong>أقسام مكوناته المادية:</strong><br/>1. وحدات الإدخال.<br/>2. وحدات الإخراج.<br/>3. وحدات متعددة المهام (إدخال وإخراج معاً).<br/>4. الوحدة المركزية (وحدة المعالجة والتخزين).'
+  },
+  {
+    q: 'صنّف الأجهزة التالية: الفأرة، الشاشة اللمسية، مكبر الصوت، الطابعة متعددة الوظائف، الماسح الضوئي، الفلاش ديسك.',
+    a: '• <strong>وحدات إدخال:</strong> الفأرة، الماسح الضوئي.<br/>• <strong>وحدات إخراج:</strong> مكبر الصوت.<br/>• <strong>وحدات إدخال وإخراج معاً (مزدوجة):</strong> الشاشة اللمسية، الطابعة متعددة الوظائف، الفلاش ديسك (Flash USB).'
+  },
+  {
+    q: 'ما هو الفرق الجوهري بين الذاكرة الحية (RAM) والذاكرة الميتة (ROM)؟',
+    a: '• <strong>الذاكرة الحية (RAM):</strong> ذاكرة مؤقتة ومتطايرة؛ تفقد محتوياتها بمجرد انقطاع التيار الكهربائي، وتقبل القراءة والكتابة، وتخزن البيانات والبرامج أثناء المعالجة.<br/>• <strong>الذاكرة الميتة (ROM):</strong> ذاكرة ثابتة ودائمة؛ لا تفقد بياناتها عند انقطاع الكهرباء، وهي للقراءة فقط وتحتوي البرامج الأساسية لإقلاع وتشغيل الحاسوب (BIOS/UEFI).'
+  },
+  {
+    q: 'ما هو المعالج المركزي (CPU)؟ وما هي وحداته الأساسية؟ وبماذا تقاس سرعته؟',
+    a: '<strong>المعالج المركزي (CPU):</strong> يمثل عقل الحاسوب، حيث يقوم بتسيير وتنسيق كل المهام وتنفيذ التعليمات ومعالجة البيانات.<br/><strong>وحداته الأساسية:</strong><br/>• وحدة التحكم والتوجيه (UC).<br/>• وحدة الحساب والمنطق (UAL).<br/>• السجلات والذاكرة المخبأة (Cache).<br/><strong>قياس سرعته:</strong> تقاس سرعته وتردده بـ <strong>الجيغاهرتز (GHz)</strong> أو <strong>الميغاهرتز (MHz)</strong>.'
+  },
+  {
+    q: 'ما هو الفرق بين البت (bit) والبايت (Byte)؟ وكم حرفاً يتسع له 1 بايت؟',
+    a: '• <strong>البت (bit):</strong> هو أصغر وحدة لقياس الذاكرة والبيانات، ويمثل خانة ثنائية واحدة تحمل القيمة 0 أو 1 (لغة الآلة والنظام الثنائي).<br/>• <strong>البايت (Byte / Octet):</strong> يتكون من <strong>8 بت</strong> (1 Byte = 8 bits).<br/>• يتسع البايت الواحد لتخزين <strong>حرف واحد، أو رقم واحد، أو رمز واحد</strong> وفق أنظمة الترميز (مثل ASCII).'
+  },
+  {
+    q: 'أنجز التحويلات التالية: 2 GB إلى MB، 12 MB إلى Byte، 0.3 TB إلى KB، و 45000 KB إلى GB.',
+    a: '• <strong>2 GB =</strong> 2 × 1024 = <strong>2048 MB</strong>.<br/>• <strong>12 MB =</strong> 12 × 1024 × 1024 = <strong>12,582,912 Byte</strong> (أو تجارياً بالتقريب: 12,000,000 Byte).<br/>• <strong>0.3 TB =</strong> 0.3 × 1024 × 1024 = <strong>314,572.8 KB</strong> (أو تجارياً: 300,000,000 KB).<br/>• <strong>45000 KB =</strong> 45000 ÷ (1024 × 1024) ≈ <strong>0.0429 GB</strong> (أو تجارياً: 45000 ÷ 1000000 = 0.045 GB).'
+  },
+  {
+    q: 'حل المسألة الإدماجية: قرص صلب سعته 256 GB، خُزنت به: مجلد أول (50 GB)، مجلد ثانٍ (0.03 TB)، وملف ثالث (2048 MB). احسب الحجم المتبقي الفارغ.',
+    a: '<strong>1. توحيد السعات إلى الجيجابايت (GB):</strong><br/>• المجلد 1: 50 GB.<br/>• المجلد 2: 0.03 TB = 0.03 × 1024 = <strong>30.72 GB</strong> (أو تقريباً 30 GB).<br/>• الملف 3: 2048 MB = 2048 ÷ 1024 = <strong>2 GB</strong>.<br/><strong>2. إجمالي الحجم المستهلك:</strong><br/>50 + 30.72 + 2 = <strong>82.72 GB</strong>.<br/><strong>3. الحجم المتبقي الفارغ في القرص الصلب:</strong><br/>256 − 82.72 = <strong>173.28 GB</strong> (أو 174 GB بالتقريب العشري).'
+  }
+];
+
+const hardwareComponents = [
+  { id: 'psu', name: 'علبة الإمداد بالكهرباء (PSU)', icon: '⚡', desc: 'تزود الوحدة المركزية وكافة القطع بالطاقة المنظمة وتحول التيار المتناوب 220V إلى مستمر 12V, 5V, 3.3V.' },
+  { id: 'mb', name: 'اللوحة الأم (Motherboard)', icon: '🖲️', desc: 'اللوحة الإلكترونية الرئيسية التي يتصل بها كل مكونات الحاسوب وتنسق بينها عبر النواقل السريعة.' },
+  { id: 'cpu', name: 'المعالج المركزي (CPU)', icon: '🧠', desc: 'عقل الحاسوب؛ ينفذ التعليمات ويعالج البيانات، يتكون من وحدة الحساب والمنطق (UAL) ووحدة التحكم (UC). تقاس سرعته بـ GHz.' },
+  { id: 'ram', name: 'الذاكرة الحية (RAM)', icon: '⚡', desc: 'ذاكرة الوصول العشوائي المؤقتة والمتطايرة؛ تخزن البرامج والبيانات قيد المعالجة وتفقد محتواها عند إطفاء الجهاز.' },
+  { id: 'rom', name: 'الذاكرة الميتة (ROM)', icon: '🔒', desc: 'ذاكرة ثابتة للقراءة فقط، مبرمجة من المصنع وتحتوي على برنامج الفحص والإقلاع الأساسي (BIOS / UEFI).' },
+  { id: 'storage', name: 'الذاكرات الثانوية (HDD / SSD)', icon: '💾', desc: 'وسائط التخزين الدائم لحفظ نظام التشغيل والملفات والبرمجيات حتى بعد فصل الكهرباء.' },
+  { id: 'cards', name: 'بطاقات التوسعة (Cards)', icon: '🎮', desc: 'تركب في شقوق اللوحة الأم لإضافة وظائف متقدمة مثل بطاقة الشاشة (GPU)، بطاقة الشبكة (NIC)، وبطاقة الصوت.' },
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 2</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#ffe95c] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 2: تجميع الحاسوب والعتاد المادي
+      </h1>
+      <p class="text-sm sm:text-base text-[#1a3300]/80 font-medium">
+        المكونات المادية، الوحدات المحيطية، مراحل التجميع العملي، وتمثيل الذاكرة ووحدات القياس.
+      </p>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للانتقال المباشر إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p, i) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ 1. الدرس (PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        1. نص الدرس المعتمد
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a href={pdfHref} download={pdfDownloadName}
+         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold flex items-center gap-2">
+        <span>⬇</span> تحميل الدرس بصيغة PDF
+      </a>
+      <a href={pdfHref} target="_blank" rel="noopener"
+         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold flex items-center gap-2">
+        <span>👁</span> معاينة وقراءة الدرس (PDF)
+      </a>
+    </div>
+
+    <!-- الإشكالية 1 -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2 flex items-center gap-2">
+        <span class="text-amber-600">🎯</span> الإشكالية الأولى (المكونات والعتاد):
+      </h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        بعد التعرف على المعلوماتية وتطوراتها، ما هو الجهاز الأساسي المستخدم فيها؟ وكيف يمكن تقسيم وتصنيف مكوناته انطلاقاً من تعريفه ووظائفه؟
+      </p>
+    </div>
+
+    <!-- المحتوى المفاهيمي -->
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">1. تعريف الحاسوب والمكونات المادية:</h3>
+      
+      <div>
+        <strong class="text-[#1a3300]">تعريف الحاسوب (Computer):</strong> هو جهاز إلكتروني يقوم باستقبال المعلومات وتخزينها ومعالجتها قصد إظهارها واستعمالها وقت الحاجة.
+      </div>
+
+      <div class="space-y-2">
+        <strong class="text-[#1a3300]">تصنيف المكونات المادية للحاسوب:</strong>
+        
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="text-[#1a3300]">أ / وحدات الإدخال:</strong> هي الأجهزة التي من خلالها يتم إدخال المعلومات لوحدة المعالجة، ومن أهمها: لوحة المفاتيح، الفأرة، الميكروفون، الماسح الضوئي، كاميرا الويب.
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="text-[#1a3300]">ب / وحدات الإخراج:</strong> هي الوحدات التي تظهر نتائج المعالجة، ومنها: الشاشة، الطابعة، السماعات ومكبرات الصوت.
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#d5f5c2]/60 border border-[#1a3300]/20">
+          <strong class="text-[#1a3300]">ج / وحدات الإدخال والإخراج معاً (متعددة المهام):</strong> هي الوحدات التي تؤدي وظيفتي الإدخال والإخراج في آن واحد، مثل: قارئ الأقراص المضغوطة، قارئ بطاقة الذاكرة، شاشات لمسية، طابعة متعددة الوظائف، وسائط الفلاش ديسك.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <strong class="text-[#1a3300]">د / الوحدة المركزية (وحدة المعالجة والتخزين):</strong>
+        <p>هي الوحدة التي يتم فيها القيام بجميع العمليات، وتحتوي على المكونات التالية:</p>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm font-medium">
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>الصندوق الرئيسي:</strong> علبة فولاذية تحتوي جميع عناصر الوحدة المركزية.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>علبة الإمداد بالكهرباء (PSU):</strong> توزع الكهرباء المنظمة على كل مكونات الوحدة المركزية.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>اللوحة الأم (Motherboard):</strong> لوحة إلكترونية مطبوعة يتصل بها كل مكونات الحاسوب.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>المعالج المركزي (CPU):</strong> عقل الحاسوب لتسيير المهام وتنفيذ التعليمات، تقاس سرعته بـ GHz أو MHz.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>الذاكرة الحية (RAM):</strong> ذاكرة مؤقتة تخزن المعلومات أثناء المعالجة وتفقد محتواها بانقطاع التيار.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>الذاكرة الميتة (ROM):</strong> ذاكرة ثابتة تحتوي معلومات ضرورية لتشغيل وإقلاع الكمبيوتر.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>الذاكرات الثانوية:</strong> لحفظ البيانات دائمياً مثل القرص الصلب، الفلاش ديسك، الأقراص المضغوطة.</li>
+          <li class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• <strong>البطاقات الداخلية:</strong> بطاقة الشبكة، بطاقة بيانية (الشاشة)، وبطاقة الصوت.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- الإشكالية 2 وسعة الذاكرة -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2 flex items-center gap-2">
+        <span class="text-blue-600">🎯</span> الإشكالية الثانية (سعة الذاكرة والتحويلات):
+      </h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        بعد التعرف على مختلف مكونات جهاز الحاسوب وكان من بينها وحدات لتخزين الذاكرة، فهل تعرف كيف تخزن البيانات في الحاسوب وبأي شكل وما هي وحدات قياسها؟
+      </p>
+    </div>
+
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">2. تمثيل الذاكرة ومضاعفات البايت:</h3>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="text-[#1a3300]">البت (Bit):</strong> تتكون الذاكرات من خلايا، كل خلية تشكل بت (bit) يحتوي على قيمتين إما 1 أو 0، ويسمى هذا بـ <strong>النظام الثنائي</strong> أو <strong>لغة الآلة</strong>.
+        </div>
+        <div class="p-3 rounded-xl bg-[#ffe95c]/50 border border-[#1a3300]/20">
+          <strong class="text-[#1a3300]">البايت (Byte / Octet):</strong> كل 8 بت تشكل 1 بايت Byte أي أوكتي Octet وهو المكان الذي يتسع لحرف أو رقم واحد.
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-white border border-[#1a3300]/20">
+        <strong class="block mb-2 text-[#1a3300]">مضاعفات الـ Byte والتحويل بينها (قاعدة 1024):</strong>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono font-bold text-xs sm:text-sm">
+          <div class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15">1 KB = 1024 Byte</div>
+          <div class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15">1 MB = 1024 KB</div>
+          <div class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15">1 GB = 1024 MB</div>
+          <div class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15">1 TB = 1024 GB</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🎬</span>
+        2. فيديو الشرح والتجميع
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    {VIDEO_URL ? (
+      <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black shadow-md">
+        <iframe src={VIDEO_URL} class="w-full h-full" title="فيديو شرح تجميع الحاسوب ومكوناته"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-[#1a3300]/30 bg-white aspect-video flex flex-col items-center justify-center text-center gap-3 p-6">
+        <span class="text-5xl">🎬</span>
+        <p class="text-base font-extrabold text-[#1a3300]">فيديو الشرح سيُضاف قريباً</p>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ 3. الدرس التفاعلي ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#d5f5c2] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">⚡</span>
+        3. الدرس التفاعلي والأدوات
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- أداة 1: فرز الوحدات المحيطية -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">أ / مصنّف الوحدات المحيطية التفاعلي:</h3>
+        <span class="text-xs text-[#1a3300]/70 font-bold">اضغط على أي جهاز لتصنيفه فورياً:</span>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-2 p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">
+        {[
+          { name: 'لوحة المفاتيح', type: 'in', label: 'وحدة إدخال' },
+          { name: 'الفأرة', type: 'in', label: 'وحدة إدخال' },
+          { name: 'الشاشة', type: 'out', label: 'وحدة إخراج' },
+          { name: 'الطابعة', type: 'out', label: 'وحدة إخراج' },
+          { name: 'الشاشة اللمسية', type: 'both', label: 'وحدة مزدوجة (إدخال/إخراج)' },
+          { name: 'الماسح الضوئي', type: 'in', label: 'وحدة إدخال' },
+          { name: 'الميكروفون', type: 'in', label: 'وحدة إدخال' },
+          { name: 'مكبرات الصوت', type: 'out', label: 'وحدة إخراج' },
+          { name: 'الفلاش ديسك', type: 'both', label: 'وحدة مزدوجة (إدخال/إخراج)' },
+          { name: 'طابعة متعددة الوظائف', type: 'both', label: 'وحدة مزدوجة (إدخال/إخراج)' },
+        ].map(item => (
+          <button
+            type="button"
+            class="periph-btn py-2 px-3.5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] text-xs sm:text-sm font-bold text-[#1a3300] cursor-pointer transition-all hover:scale-105"
+            data-type={item.type}
+            data-label={item.label}
+            data-name={item.name}
+          >
+            {item.name}
+          </button>
+        ))}
+      </div>
+
+      <div id="periph-result" class="min-h-[50px] p-3 rounded-xl bg-white border-2 border-[#1a3300]/20 flex items-center justify-center text-center font-bold text-sm text-[#1a3300]">
+        اختر جهازا من الأعلى لرؤية تصنيفه واتجاه تدفق بياناته
+      </div>
+    </div>
+
+    <!-- أداة 2: مستكشف أجزاء الوحدة المركزية -->
+    <div class={`${boxCls} space-y-4`}>
+      <h3 class="font-extrabold text-[#1a3300]">ب / مستكشف المكونات الداخلية للوحدة المركزية:</h3>
+      <p class="text-xs text-[#1a3300]/75">اضغط على أي مكون لقراءة دوره ووظيفته الهندسية:</p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {hardwareComponents.map(comp => (
+          <button
+            type="button"
+            class="comp-btn flex items-center justify-center gap-2 p-3 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#ffe95c] hover:border-[#1a3300] text-xs sm:text-sm font-bold text-[#1a3300] cursor-pointer transition-all text-center"
+            data-title={comp.name}
+            data-desc={comp.desc}
+            data-icon={comp.icon}
+          >
+            <span>{comp.icon}</span>
+            <span class="truncate">{comp.name.split('(')[0]}</span>
+          </button>
+        ))}
+      </div>
+
+      <div id="comp-info-box" class="p-4 rounded-xl bg-[#d5f5c2]/50 border-2 border-[#1a3300]/20 space-y-2">
+        <h4 id="comp-title" class="font-extrabold text-[#1a3300] flex items-center gap-2 text-base">
+          <span>🧠</span> اضغط على أي مكون لعرض تفاصيله
+        </h4>
+        <p id="comp-desc" class="text-xs sm:text-sm text-[#1a3300]/90 leading-relaxed">
+          تحتوي العلبة الفولاذية على علبة التغذية، اللوحة الأم، المعالج CPU، الذاكرة الحية RAM، الذاكرة الميتة ROM، والقرص الصلب.
+        </p>
+      </div>
+    </div>
+
+    <!-- أداة 3: محول سعة الذاكرة التفاعلي الفوري -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">جـ / المحول الذكي لسعات الذاكرة (Memory Calculator):</h3>
+        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
+          قاعدة الـ 1024 الثنائية
+        </span>
+      </div>
+      <p class="text-xs text-[#1a3300]/80">اكتب القيمة واختر الوحدة لحساب جميع السعات المقابلة لها فورياً:</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-bold text-[#1a3300] mb-1">القيمة العددية:</label>
+          <input
+            id="calc-input"
+            type="number"
+            value="2"
+            min="0"
+            step="any"
+            class="w-full p-2.5 rounded-xl border-2 border-[#1a3300]/20 bg-white font-mono font-bold text-[#1a3300] text-base focus:border-[#1a3300] outline-none"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-[#1a3300] mb-1">الوحدة المدخلة:</label>
+          <select
+            id="calc-unit"
+            class="w-full p-2.5 rounded-xl border-2 border-[#1a3300]/20 bg-white font-bold text-[#1a3300] text-sm focus:border-[#1a3300] outline-none cursor-pointer"
+          >
+            <option value="GB" selected>جيجابايت (GB)</option>
+            <option value="TB">تيرابايت (TB)</option>
+            <option value="MB">ميجابايت (MB)</option>
+            <option value="KB">كيلوبايت (KB)</option>
+            <option value="B">بايت (Byte)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- شبكة النتائج المحسوبة -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2">
+        <div class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 text-center">
+          <span class="block text-[11px] font-bold text-[#1a3300]/70">تيرابايت TB</span>
+          <span id="res-tb" class="font-mono font-extrabold text-sm text-[#1a3300]">0.00195</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 text-center">
+          <span class="block text-[11px] font-bold text-[#1a3300]/70">جيجابايت GB</span>
+          <span id="res-gb" class="font-mono font-extrabold text-sm text-[#1a3300]">2</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 text-center">
+          <span class="block text-[11px] font-bold text-[#1a3300]/70">ميجابايت MB</span>
+          <span id="res-mb" class="font-mono font-extrabold text-sm text-[#1a3300]">2048</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 text-center">
+          <span class="block text-[11px] font-bold text-[#1a3300]/70">كيلوبايت KB</span>
+          <span id="res-kb" class="font-mono font-extrabold text-sm text-[#1a3300]">2097152</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-[#ffe95c]/40 border border-[#1a3300]/20 text-center col-span-2 sm:col-span-1">
+          <span class="block text-[11px] font-bold text-[#1a3300]/70">بايت Byte</span>
+          <span id="res-b" class="font-mono font-extrabold text-xs text-[#1a3300]">2147483648</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. الخريطة الذهنية ومخطط التركيب ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffc09f] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🧠</span>
+        4. مخطط تركيب وتجميع الحاسوب بالعربية
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h3 class="font-extrabold text-[#1a3300]">المخطط الانسيابي التسلسلي لتجميع الحاسوب المكتبي:</h3>
+          <p class="text-xs text-[#1a3300]/70">المخطط المعتمد رسمياً في وثيقة التلميذ والمطابق لمحاكي Cisco IT Essentials</p>
+        </div>
+        <a
+          href={diagramImgHref}
+          download="مخطط_تركيب_الحاسوب_بالعربية.png"
+          class="py-2 px-3.5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] flex items-center gap-1.5"
+        >
+          <span>📥</span> تحميل المخطط بدقة عالية
+        </a>
+      </div>
+
+      <!-- عرض صورة المخطط -->
+      <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300]/20 bg-white p-2 sm:p-4 flex justify-center shadow-xs">
+        <img
+          src={diagramImgHref}
+          alt="مخطط تركيب الحاسوب بالعربية — الأستاذ شلابي جمال الدين"
+          class="max-w-full h-auto rounded-xl hover:scale-[1.02] transition-transform duration-300"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- ملخص المراحل التسلسلية -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#1a3300]/90">
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="block mb-1 text-[#1a3300]">1. مسار الصندوق والتغذية:</strong>
+          تثبيت علبة التغذية (PSU) داخل الصندوق وتثبيت براغيها الأربعة.
+        </div>
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="block mb-1 text-[#1a3300]">2. مسار اللوحة الأم والمعالج:</strong>
+          تركيب RAM ثم المعالج CPU والمعجون الحراري والمبرد (Ventirad) وتثبيت اللوحة داخل الصندوق.
+        </div>
+        <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="block mb-1 text-[#1a3300]">3. الأقراص والكابلات والتشغيل:</strong>
+          تركيب بطاقات التوسعة والقرص الصلب والقرنيات، ربط كابلات الطاقة والمعطيات، وغلق الصندوق وتشغيل الجهاز.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. التمارين والمسائل ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#f6d0ff] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">✍️</span>
+        5. التمارين والمسائل التقييمية
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-sm text-[#1a3300]/80">حاول حل الأسئلة والتحويلات في كراسك أولاً، ثم اضغط على «إظهار الجواب» لتتأكد من صحة حلك:</p>
+
+    <div class="space-y-3">
+      {exercises.map((ex, i) => (
+        <details class="group rounded-2xl bg-white border-2 border-[#1a3300]/15 open:border-[#1a3300]/40 transition-colors">
+          <summary class="flex items-center justify-between gap-3 p-4 cursor-pointer list-none">
+            <span class="text-sm font-bold text-[#1a3300]">{i + 1}. {ex.q}</span>
+            <span class="shrink-0 px-3 py-1.5 rounded-xl bg-[#f0ebe0] group-open:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors">
+              <span class="group-open:hidden">إظهار الجواب</span><span class="hidden group-open:inline">إخفاء</span>
+            </span>
+          </summary>
+          <div class="mx-4 mb-4 p-3.5 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 text-xs sm:text-sm text-[#1a3300] leading-loose" set:html={ex.a} />
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ 6. المحاكي والبحث المنزلي ============ -->
+  <section id="part-6" class="scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-4 border-[#1a3300] p-5 sm:p-10 space-y-6 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-3xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl">🔍</span>
+        6. برنامج المحاكاة والعمل التطبيقي
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- بطاقة برنامج محاكي سيسكو -->
+    <div class={`${boxCls} bg-gradient-to-r from-blue-50 to-emerald-50 border-2 border-[#1a3300]/25 space-y-3`}>
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">💻</span>
+        <div>
+          <h3 class="text-base sm:text-lg font-extrabold text-[#1a3300]">برنامج تجميع الحاسوب ثلاثي الأبعاد باللغة العربية (Cisco IT Essentials):</h3>
+          <p class="text-xs text-[#1a3300]/80">برنامج تفاعلي يمكنك من تركيب جميع قطع الحاسوب خطوة بخطوة وفحص توافقها ومنافذها.</p>
+        </div>
+      </div>
+      <div class="pt-2 flex flex-wrap gap-3">
+        <a
+          href="/docs/برنامج تجميع الحاسوب باللغة العربية.rar"
+          class="py-2.5 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-white text-xs sm:text-sm font-bold flex items-center gap-2"
+        >
+          <span>📥</span> تحميل برنامج المحاكاة الافتراضي (RAR)
+        </a>
+      </div>
+    </div>
+
+    <!-- العمل المنزلي والبحث -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط المنزلي 01 (مواصفات حاسوبي الشخصي):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          تفقد حاسوبك المنزلي أو حاسوب المؤسسة أو هاتف ذكي، واكتب بطاقة تقنية تبين: نوع وسرعة المعالج (CPU)، سعة الذاكرة الحية (RAM)، وسعة الذاكرة الثانوية (القرص الصلب).
+        </p>
+      </div>
+
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط المنزلي 02 (البحث التوثيقي المقارن):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          ابحث باختصار عن الفرق بين نوعي الأقراص الصلبة: الأقراص الميكانيكية التقليدية <strong>(HDD)</strong> والأقراص الإلكترونية الحديثة <strong>(SSD)</strong> من حيث السرعة والمقاومة للصدمات والسعر.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script is:inline>
+  // تفاعلية مصنف الأجهزة المحيطية
+  const periphBtns = document.querySelectorAll('.periph-btn');
+  const periphResult = document.getElementById('periph-result');
+  periphBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      const label = btn.getAttribute('data-label');
+      const name = btn.getAttribute('data-name');
+      
+      periphBtns.forEach(b => b.classList.remove('bg-[#ffe95c]', 'border-[#1a3300]'));
+      btn.classList.add('bg-[#ffe95c]', 'border-[#1a3300]');
+      
+      let badgeColor = 'bg-blue-100 text-blue-800 border-blue-300';
+      if (type === 'out') badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-300';
+      if (type === 'both') badgeColor = 'bg-purple-100 text-purple-800 border-purple-300';
+      
+      periphResult.innerHTML = `
+        <div class="flex items-center justify-center gap-2 flex-wrap">
+          <span class="text-base font-extrabold text-[#1a3300]">${name}</span>
+          <span class="text-xs font-bold px-3 py-1 rounded-full border ${badgeColor}">
+            ${label}
+          </span>
+        </div>
+      `;
+    });
+  });
+
+  // تفاعلية مستكشف القطع
+  const compBtns = document.querySelectorAll('.comp-btn');
+  const compTitle = document.getElementById('comp-title');
+  const compDesc = document.getElementById('comp-desc');
+  compBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      compBtns.forEach(b => b.classList.remove('bg-[#ffe95c]'));
+      btn.classList.add('bg-[#ffe95c]');
+      const title = btn.getAttribute('data-title');
+      const desc = btn.getAttribute('data-desc');
+      const icon = btn.getAttribute('data-icon');
+      compTitle.innerHTML = `<span>${icon}</span> ${title}`;
+      compDesc.textContent = desc;
+    });
+  });
+
+  // تفاعلية محول سعة الذاكرة
+  const calcInput = document.getElementById('calc-input');
+  const calcUnit = document.getElementById('calc-unit');
+  const resTb = document.getElementById('res-tb');
+  const resGb = document.getElementById('res-gb');
+  const resMb = document.getElementById('res-mb');
+  const resKb = document.getElementById('res-kb');
+  const resB = document.getElementById('res-b');
+
+  function updateConversions() {
+    const val = parseFloat(calcInput.value) || 0;
+    const unit = calcUnit.value;
+    
+    // تحويل القيمة إلى بايت أولاً
+    let bytes = 0;
+    if (unit === 'TB') bytes = val * 1024 * 1024 * 1024 * 1024;
+    else if (unit === 'GB') bytes = val * 1024 * 1024 * 1024;
+    else if (unit === 'MB') bytes = val * 1024 * 1024;
+    else if (unit === 'KB') bytes = val * 1024;
+    else if (unit === 'B') bytes = val;
+
+    const tb = bytes / (1024 * 1024 * 1024 * 1024);
+    const gb = bytes / (1024 * 1024 * 1024);
+    const mb = bytes / (1024 * 1024);
+    const kb = bytes / 1024;
+
+    resTb.textContent = tb >= 1 ? tb.toLocaleString('fr-FR', { maximumFractionDigits: 4 }) : tb.toFixed(5);
+    resGb.textContent = gb >= 1 ? gb.toLocaleString('fr-FR', { maximumFractionDigits: 3 }) : gb.toFixed(4);
+    resMb.textContent = mb >= 1 ? mb.toLocaleString('fr-FR', { maximumFractionDigits: 2 }) : mb.toFixed(3);
+    resKb.textContent = kb >= 1 ? kb.toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : kb.toFixed(2);
+    resB.textContent = Math.round(bytes).toLocaleString('fr-FR');
+  }
+
+  calcInput.addEventListener('input', updateConversions);
+  calcUnit.addEventListener('change', updateConversions);
+  updateConversions();
+</script>

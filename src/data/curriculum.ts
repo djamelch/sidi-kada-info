@@ -94,7 +94,7 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
             shortDesc: 'المكونات الأساسية للوحدة المركزية، وحدات قياس الذاكرة والتركيب الداخلي.',
             slug: '/tcst/m1-u2',
             term: 1,
-            status: 'in_progress',
+            status: 'available',
             estimatedMinutes: 7,
             hasSimulator: true
           },
@@ -297,8 +297,9 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
             shortDesc: 'المكونات الخارجية والداخلية، وحدات قياس سعة التخزين والنصوص.',
             slug: '/tcl/m1-u2',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 6
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           },
           {
             id: 'tcl-m1-u3',
