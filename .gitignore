@@ -18,3 +18,9 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Large media and archives (Cloudflare Pages 25MB limit)
+*.rar
+*.zip
+*.mp4
+*.7z
