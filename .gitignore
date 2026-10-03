@@ -1,0 +1,20 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Environment and secrets files
+.env
+.env.*
+!.env.example
+.mcp.json
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

@@ -1,0 +1,1244 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { STREAMS_DATA, ACADEMIC_INFO } from '../data/curriculum';
+
+// Flatten units for management
+const allUnits: Array<{
+  id: string;
+  streamId: 'tcst' | 'tcl';
+  streamName: string;
+  streamShort: string;
+  domainTitle: string;
+  unitNumber: number;
+  title: string;
+  slug: string;
+  term: number;
+  fullUrl: string;
+  defaultStatus: 'available' | 'in_progress' | 'planned';
+}> = [];
+
+Object.values(STREAMS_DATA).forEach((stream) => {
+  stream.domains.forEach((domain) => {
+    domain.units.forEach((unit) => {
+      allUnits.push({
+        id: unit.id,
+        streamId: stream.id,
+        streamName: stream.name,
+        streamShort: stream.shortName,
+        domainTitle: domain.title,
+        unitNumber: unit.unitNumber,
+        title: unit.title,
+        slug: unit.slug,
+        term: unit.term,
+        fullUrl: `${ACADEMIC_INFO.siteUrl}${unit.slug}`,
+        defaultStatus: unit.status
+      });
+    });
+  });
+});
+
+// Official 31-week progression curriculum data
+const CURRICULUM_WEEKS = [
+  // Term 1 (12 weeks)
+  { week: 1, term: 1, tcst: 'الدخول المدرسي والتقويم التشخيصي للمكتسبات القبلية', tcl: 'الدخول المدرسي والتقويم التشخيصي للمكتسبات القبلية' },
+  { week: 2, term: 1, tcst: 'المجال 01 / الوحدة 01: تقنية المعلومات ومفهوم المعالجة', tcl: 'المجال 01 / الوحدة 01: تقنية المعلومات ومفهوم المعالجة' },
+  { week: 3, term: 1, tcst: 'المجال 01 / الوحدة 02: تجميع الحاسوب والعتاد الداخلي (1)', tcl: 'المجال 01 / الوحدة 02: تجميع الحاسوب والعتاد الداخلي (1)' },
+  { week: 4, term: 1, tcst: 'المجال 01 / الوحدة 02: تجميع الحاسوب والعتاد الداخلي (2)', tcl: 'المجال 01 / الوحدة 02: تجميع الحاسوب ووحدات القياس' },
+  { week: 5, term: 1, tcst: 'المجال 01 / الوحدة 03: نظام التشغيل والإقلاع وإدارة الملفات', tcl: 'المجال 01 / الوحدة 03: نظام التشغيل وإدارة الملفات' },
+  { week: 6, term: 1, tcst: 'المجال 01 / الوحدة 04: حماية الحاسوب وأمن البيانات والمعلومات', tcl: 'المجال 01 / الوحدة 04: حماية الحاسوب ومكافحة الفيروسات' },
+  { week: 7, term: 1, tcst: 'المجال 01 / الوحدة 05: الشبكة المحلية ومشاركة الموارد (1)', tcl: 'المجال 01 / الوحدة 05: الشبكة المحلية ومشاركة الموارد' },
+  { week: 8, term: 1, tcst: 'المجال 01 / الوحدة 05: الشبكة المحلية وتطبيق عملي (2)', tcl: 'المجال 01: تطبيقات إدماجية وتقويم مرحلي' },
+  { week: 9, term: 1, tcst: 'فرض الفصل الأول في مادة المعلوماتية', tcl: 'فرض الفصل الأول في مادة المعلوماتية' },
+  { week: 10, term: 1, tcst: 'تصحيح فرض الفصل الأول ومعالجة النقائص البيداغوجية', tcl: 'تصحيح فرض الفصل الأول ومعالجة النقائص' },
+  { week: 11, term: 1, tcst: 'مراجعة عامة وإدماج كفاءات المجال 01', tcl: 'مراجعة عامة وتطبيقات مكتبية إدماجية' },
+  { week: 12, term: 1, tcst: 'اختبارات الفصل الأول (التقويم الفصلي)', tcl: 'اختبارات الفصل الأول (التقويم الفصلي)' },
+  
+  // Term 2 (11 weeks)
+  { week: 13, term: 2, tcst: 'المجال 02 / الوحدة 01: مفهوم الخوارزمية والهيكل العام', tcl: 'المجال 02 / الوحدة 01: معالج النصوص (واجهة Word وتنسيق النصوص)' },
+  { week: 14, term: 2, tcst: 'المجال 02 / الوحدة 02: المتغيرات والثوابت وأنواع البيانات', tcl: 'المجال 02 / الوحدة 01: الجداول والأشكال وإدراج الصور' },
+  { week: 15, term: 2, tcst: 'المجال 02 / الوحدة 03: التعليمات الأساسية (القراءة والكتابة والإسناد)', tcl: 'المجال 02 / الوحدة 01: إعداد الصفحة والطباعة ودمج المراسلات' },
+  { week: 16, term: 2, tcst: 'المجال 02 / الوحدة 04: المخططات الانسيابية وقواعد رسمها', tcl: 'المجال 02 / الوحدة 02: المجدول (Excel) والتعامل مع أوراق العمل' },
+  { week: 17, term: 2, tcst: 'المجال 02 / الوحدة 04: تمارين تطبيقية في المخططات التتابعية', tcl: 'المجال 02 / الوحدة 02: الصيغ الحسابية البسيطة والمراجع' },
+  { week: 18, term: 2, tcst: 'المجال 02 / الوحدة 05: الهياكل الشرطية البسيطة والبديلة', tcl: 'المجال 02 / الوحدة 02: الدوال الإحصائية والمنطقية الأساسية (SUM, AVERAGE, IF)' },
+  { week: 19, term: 2, tcst: 'فرض الفصل الثاني في مادة المعلوماتية', tcl: 'فرض الفصل الثاني في مادة المعلوماتية' },
+  { week: 20, term: 2, tcst: 'تصحيح فرض الفصل الثاني + الهياكل الشرطية المتعددة', tcl: 'تصحيح فرض الفصل الثاني + الرسوم البيانية في Excel' },
+  { week: 21, term: 2, tcst: 'المجال 02 / الوحدة 06: الهياكل التكرارية (حلقة For)', tcl: 'المجال 02 / الوحدة 03: العروض التقديمية (PowerPoint وتصميم الشرائح)' },
+  { week: 22, term: 2, tcst: 'المجال 02: تطبيقات إدماجية شاملة على برنامج AlgoBox', tcl: 'المجال 02: مشروع مكتبي إدماجي متكامل' },
+  { week: 23, term: 2, tcst: 'اختبارات الفصل الثاني', tcl: 'اختبارات الفصل الثاني' },
+
+  // Term 3 (8 weeks)
+  { week: 24, term: 3, tcst: 'المجال 03 / الوحدة 01: مدخل إلى شبكة الويب ولغة HTML', tcl: 'المجال 03 / الوحدة 01: مدخل إلى شبكة الإنترنت والبحث المتقدم' },
+  { week: 25, term: 3, tcst: 'المجال 03 / الوحدة 01: الوسوم الأساسية وهيكلة صفحة الويب', tcl: 'المجال 03 / الوحدة 01: البريد الإلكتروني وأخلاقيات استخدام الويب' },
+  { week: 26, term: 3, tcst: 'المجال 03 / الوحدة 02: إدراج الوسائط والروابط التشعبية', tcl: 'المجال 03 / الوحدة 02: إنشاء صفحات وبسيطة أو مدونات' },
+  { week: 27, term: 3, tcst: 'المجال 04 / الوحدة 01: معالجة النصوص المتقدمة وتنسيق المذكرات', tcl: 'المجال 03: مشروع ختامي تطبيقي' },
+  { week: 28, term: 3, tcst: 'فرض الفصل الثالث في مادة المعلوماتية', tcl: 'فرض الفصل الثالث في مادة المعلوماتية' },
+  { week: 29, term: 3, tcst: 'المجال 04 / الوحدة 02: الجداول وتوليد الفهارس التلقائية', tcl: 'مراجعة ختامية ومعالجة بيداغوجية' },
+  { week: 30, term: 3, tcst: 'مشروع إدماجي ختامي للمادة', tcl: 'مشروع إدماجي ختامي للمادة' },
+  { week: 31, term: 3, tcst: 'اختبارات الفصل الثالث ومجالس الأقسام', tcl: 'اختبارات الفصل الثالث ومجالس الأقسام' }
+];
+---
+
+<Layout title="فضاء الأستاذ — لوحة القيادة البيداغوجية" currentStream="admin">
+
+  <!-- ============================================================ -->
+  <!-- 1. EDITORIAL SECURITY GATE (Unauthenticated View)            -->
+  <!-- ============================================================ -->
+  <div id="admin-login-gate" class="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 py-12 sketch-grid-bg relative overflow-hidden">
+    
+    <div class="w-full max-w-sm border border-[#1a3300]/20 bg-[#fcfaf5] rounded-[12px] p-7 shadow-sm relative z-10 space-y-6">
+      
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-[#ffe95c] border border-[#1a3300]/20 text-[#1a3300] font-mono text-[10px] font-bold uppercase tracking-wider mb-2">
+          <span>🔒</span>
+          <span>ADMIN ACCESS GATE</span>
+        </div>
+        <h1 class="font-display text-2xl font-bold text-[#1a3300] tracking-tight">فضاء الأستاذ</h1>
+        <p class="text-xs text-[#1a3300]/70 mt-1 leading-relaxed">
+          {ACADEMIC_INFO.highSchool} • {ACADEMIC_INFO.teacher}
+        </p>
+      </div>
+
+      <form id="admin-auth-form" class="space-y-4" onsubmit="return false;">
+        <div>
+          <label for="admin-pin-input" class="block text-xs text-[#1a3300]/80 mb-1.5 font-bold">
+            رمز المرور السري (<span class="font-mono">PIN</span>):
+          </label>
+          <div class="relative">
+            <input 
+              id="admin-pin-input" 
+              type="password" 
+              inputmode="numeric"
+              maxlength="20"
+              placeholder="••••" 
+              autocomplete="current-password"
+              class="w-full bg-[#f2eee3] border border-[#1a3300]/20 focus:border-[#1a3300] rounded-[6px] py-2.5 px-3.5 font-mono text-center text-lg font-bold text-[#1a3300] tracking-widest outline-hidden transition-all"
+              required
+            />
+            <button 
+              type="button" 
+              id="btn-toggle-pin-visibility" 
+              class="absolute inset-y-0 left-3 flex items-center text-[#1a3300]/60 hover:text-[#1a3300] text-xs font-mono font-bold"
+              tabindex="-1"
+            >
+              عرض
+            </button>
+          </div>
+          <div id="login-error-msg" class="hidden text-[#cb5521] text-[11px] font-mono mt-2 text-center bg-[#f6d0ff]/50 border border-[#cb5521]/30 py-1.5 px-2.5 rounded-[6px] font-bold">
+          </div>
+        </div>
+
+        <!-- Sleek Minimal Keypad -->
+        <div class="border border-[#1a3300]/15 rounded-[8px] p-2 bg-[#f2eee3]">
+          <div class="grid grid-cols-3 gap-1.5 text-xs font-mono font-bold text-[#1a3300]">
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="1">1</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="2">2</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="3">3</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="4">4</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="5">5</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="6">6</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="7">7</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="8">8</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="9">9</button>
+            <button type="button" id="pin-clear-btn" class="py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#f6d0ff] hover:text-[#cb5521] text-[#1a3300]/60 text-[10px] border border-[#1a3300]/15 transition-colors font-bold">مسح</button>
+            <button type="button" class="pin-key py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-colors" data-val="0">0</button>
+            <button type="button" id="pin-backspace-btn" class="py-2.5 rounded-[6px] bg-[#fcfaf5] hover:bg-[#ffe95c] text-[#1a3300]/70 text-[10px] border border-[#1a3300]/15 transition-colors font-bold">⌫</button>
+          </div>
+        </div>
+
+        <div class="flex items-center text-[11px] text-[#1a3300]/70 font-medium">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="remember-device-check" class="rounded border-[#1a3300]/30 text-[#1a3300] focus:ring-[#1a3300]" checked />
+            <span>حفظ الجلسة على هذا المتصفح</span>
+          </label>
+        </div>
+
+        <button 
+          type="submit" 
+          id="btn-submit-auth" 
+          class="btn-primary-cta w-full justify-center text-xs"
+        >
+          <span>دخول لوحة القيادة</span>
+          <span class="font-mono">→</span>
+        </button>
+      </form>
+
+      <div class="pt-4 border-t border-[#1a3300]/15 text-center font-mono text-[11px] text-[#1a3300]/70">
+        الرمز الافتراضي: <span class="font-bold text-[#1a3300] bg-[#ffe95c] px-1.5 py-0.5 rounded-[4px]">2027</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- 2. SERIOUS DASHBOARD INTERFACE (Authenticated View)          -->
+  <!-- ============================================================ -->
+  <div id="admin-dashboard-container" class="hidden">
+    
+    <!-- Top Dashboard Header -->
+    <section class="border-b border-zinc-200 bg-white py-6 px-6 no-print">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <div class="font-mono text-xs text-zinc-400 uppercase tracking-widest">CONTROL PANEL</div>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span class="font-mono text-[11px] text-emerald-700">SESSION ACTIVE</span>
+          </div>
+          <h1 class="text-xl font-bold text-zinc-950 tracking-tight">
+            لوحة قيادة معرفة تك
+          </h1>
+          <p class="text-xs text-zinc-500 mt-0.5">
+            {ACADEMIC_INFO.highSchool} — {ACADEMIC_INFO.city} • الأستاذ: {ACADEMIC_INFO.teacher}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a 
+            href="/" 
+            target="_blank"
+            class="px-3 py-1.5 rounded-md border border-zinc-200 hover:border-zinc-300 text-zinc-700 hover:text-zinc-950 text-xs font-medium transition-colors"
+          >
+            معاينة واجهة التلاميذ ↗
+          </a>
+          <button 
+            id="btn-admin-logout"
+            class="px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-medium transition-colors"
+          >
+            قفل الجلسة (خروج)
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-zinc-200 sticky top-15 z-40 no-print">
+      <div class="max-w-6xl mx-auto px-6 flex gap-1 overflow-x-auto py-2 text-xs font-medium scrollbar-none">
+        <button id="tab-btn-units" class="admin-tab-btn px-3 py-1.5 rounded-md bg-zinc-900 text-white shrink-0">
+          إدارة حالة الدروس
+        </button>
+        <button id="tab-btn-qr" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
+          استوديو الـ QR والملصقات A4
+        </button>
+        <button id="tab-btn-tracker" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
+          تتبع التدرج السنوي (31 أسبوعاً)
+        </button>
+        <button id="tab-btn-docs" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
+          الحقيبة البيداغوجية
+        </button>
+        <button id="tab-btn-settings" class="admin-tab-btn px-3 py-1.5 rounded-md text-zinc-600 hover:bg-zinc-100 shrink-0">
+          الأمان والرمز السري
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: CURRICULUM STATUS MANAGER                              -->
+    <!-- ============================================================ -->
+    <div id="tab-content-units" class="admin-tab-panel max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
+      <div class="border border-zinc-200 rounded-xl bg-white p-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-4 border-b border-zinc-100">
+          <div>
+            <h2 class="text-base font-bold text-zinc-950">حالة نشر الوحدات التعليمية</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">
+              تحديد حالة الوحدات للتلاميذ (متاح / قيد التحضير / مخفي). التعديلات تُحفظ محلياً وتظهر فوراً للتلاميذ.
+            </p>
+          </div>
+          <button 
+            id="btn-reset-unit-statuses"
+            class="font-mono text-[11px] text-zinc-500 hover:text-zinc-900 underline"
+          >
+            استعادة الضبط الافتراضي
+          </button>
+        </div>
+
+        <!-- Stream Filter -->
+        <div class="flex items-center gap-2 mb-4 text-xs">
+          <span class="text-zinc-400 font-mono text-[11px]">FILTER:</span>
+          <button id="filter-all" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-900 text-white text-[11px]">الكل (25 وحدة)</button>
+          <button id="filter-tcst" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-100 text-zinc-700 text-[11px]">علمي (14)</button>
+          <button id="filter-tcl" class="filter-stream-btn px-2.5 py-1 rounded bg-zinc-100 text-zinc-700 text-[11px]">أدبي (11)</button>
+        </div>
+
+        <!-- Table -->
+        <div class="border border-zinc-200 rounded-lg overflow-x-auto">
+          <table class="w-full text-right text-xs">
+            <thead class="bg-zinc-50 text-zinc-500 font-mono text-[11px] border-b border-zinc-200">
+              <tr>
+                <th class="p-3">STREAM</th>
+                <th class="p-3">TERM</th>
+                <th class="p-3">UNIT</th>
+                <th class="p-3">DOMAIN</th>
+                <th class="p-3 text-center">STATUS</th>
+                <th class="p-3 text-center">VIEW</th>
+              </tr>
+            </thead>
+            <tbody id="units-table-body" class="divide-y divide-zinc-100">
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: QR & 24-STICKER STUDIO                                 -->
+    <!-- ============================================================ -->
+    <div id="tab-content-qr" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Controls Column -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="border border-zinc-200 rounded-xl bg-white p-6">
+            <h2 class="text-base font-bold text-zinc-950 mb-4">اختيار الوحدة لتوليد الكود والملصقات</h2>
+
+            <div class="space-y-4">
+              <!-- Stream switch -->
+              <div class="flex rounded-lg border border-zinc-200 p-1 bg-zinc-50 text-xs font-medium">
+                <button id="btn-stream-tcst" class="flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all">
+                  جذع مشترك علوم (TCST)
+                </button>
+                <button id="btn-stream-tcl" class="flex-1 py-1.5 rounded text-zinc-500 hover:text-zinc-900 transition-all">
+                  جذع مشترك آداب (TCL)
+                </button>
+              </div>
+
+              <!-- Unit select -->
+              <div>
+                <label for="unit-select" class="block font-mono text-[11px] text-zinc-500 mb-1">
+                  TARGET UNIT:
+                </label>
+                <select 
+                  id="unit-select"
+                  class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-medium text-zinc-900 outline-hidden focus:border-zinc-900 transition-all"
+                >
+                </select>
+              </div>
+
+              <!-- Permanent URL input -->
+              <div class="border border-zinc-200 rounded-lg p-3 bg-zinc-50">
+                <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-1">
+                  <span>STUDENT URL</span>
+                  <span class="text-emerald-700">PERMANENT</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input 
+                    id="target-url-input" 
+                    type="text" 
+                    readonly 
+                    class="flex-grow bg-white border border-zinc-200 rounded px-2.5 py-1 text-xs font-mono text-zinc-700 select-all"
+                  />
+                  <button 
+                    id="btn-copy-url"
+                    class="px-3 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors"
+                  >
+                    نسخ
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div class="border border-zinc-200 rounded-xl p-5 bg-zinc-50 text-xs text-zinc-600 leading-relaxed">
+            <span class="font-bold text-zinc-900">ملاحظة تنظيمية:</span>
+            ورقة الملصقات A4 تحتوي على 24 ملصق متطابق مصمم خصيصاً لمقاييس ورق الملصقات اللاصقة (Avery / Standard 4x6). يتم قصها وتوزيعها على التلاميذ للصقها في أعلى صفحة الدرس في كراس المادة.
+          </div>
+        </div>
+
+        <!-- Preview Column -->
+        <div class="space-y-6">
+          <div class="border border-zinc-200 rounded-xl bg-white p-6 text-center flex flex-col items-center">
+            <div class="font-mono text-[11px] text-zinc-400 mb-3">QR CODE PREVIEW</div>
+
+            <div class="p-3 bg-white border border-zinc-200 rounded-lg mb-4 inline-block">
+              <canvas id="qr-canvas" class="w-44 h-44 block mx-auto"></canvas>
+            </div>
+
+            <div class="mb-5">
+              <div id="preview-unit-title" class="font-bold text-zinc-900 text-xs mb-0.5">تقنية المعلومات</div>
+              <div id="preview-stream-name" class="font-mono text-[11px] text-zinc-400">{ACADEMIC_INFO.highSchool}</div>
+            </div>
+
+            <div class="w-full space-y-2">
+              <button 
+                id="btn-download-qr"
+                class="w-full py-2 rounded-lg border border-zinc-300 hover:border-zinc-400 text-zinc-900 text-xs font-medium transition-all"
+              >
+                تحميل صورة QR (PNG)
+              </button>
+
+              <button 
+                id="btn-show-stickers"
+                class="w-full py-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-medium transition-all"
+              >
+                توليد ورقة ملصقات A4 للقسم (24 ملصق)
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: CURRICULUM TIMELINE TRACKER (31 WEEKS)                 -->
+    <!-- ============================================================ -->
+    <div id="tab-content-tracker" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
+      <div class="border border-zinc-200 rounded-xl bg-white p-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-4 border-b border-zinc-100">
+          <div>
+            <h2 class="text-base font-bold text-zinc-950">متابعة التدرج السنوي (31 أسبوعاً)</h2>
+            <p class="text-xs text-zinc-500 mt-0.5">التوزيع الوزاري الرسمي 2026-2027 مع التتبع التفاعلي الأسبوعي</p>
+          </div>
+          <div class="font-mono text-xs text-zinc-700">
+            الإنجاز: <span id="tracker-percentage" class="font-bold text-zinc-950">0%</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-zinc-100 rounded-full h-1.5 mb-8 overflow-hidden">
+          <div id="tracker-progress-bar" class="bg-zinc-950 h-1.5 rounded-full transition-all duration-300" style="width: 0%;"></div>
+        </div>
+
+        <!-- Weeks List by Term -->
+        <div class="space-y-8">
+          
+          <!-- Term 1 -->
+          <div>
+            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 1 • 12 WEEKS</div>
+            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+              {CURRICULUM_WEEKS.filter(w => w.term === 1).map(item => (
+                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <input 
+                      type="checkbox" 
+                      id={`week-${item.week}`} 
+                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      data-week={item.week}
+                    />
+                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                      W{String(item.week).padStart(2, '0')}
+                    </label>
+                    <span class="text-zinc-800">
+                      {item.tcst}
+                    </span>
+                  </div>
+                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
+                    أدبي: {item.tcl}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Term 2 -->
+          <div>
+            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 2 • 11 WEEKS</div>
+            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+              {CURRICULUM_WEEKS.filter(w => w.term === 2).map(item => (
+                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <input 
+                      type="checkbox" 
+                      id={`week-${item.week}`} 
+                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      data-week={item.week}
+                    />
+                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                      W{String(item.week).padStart(2, '0')}
+                    </label>
+                    <span class="text-zinc-800">
+                      {item.tcst}
+                    </span>
+                  </div>
+                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
+                    أدبي: {item.tcl}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Term 3 -->
+          <div>
+            <div class="font-mono text-[11px] text-zinc-400 uppercase tracking-widest mb-2">TERM 3 • 8 WEEKS</div>
+            <div class="border border-zinc-200 rounded-lg divide-y divide-zinc-100 text-xs">
+              {CURRICULUM_WEEKS.filter(w => w.term === 3).map(item => (
+                <div class="p-3 flex items-center justify-between gap-4 hover:bg-zinc-50/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <input 
+                      type="checkbox" 
+                      id={`week-${item.week}`} 
+                      class="week-tracker-check rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900" 
+                      data-week={item.week}
+                    />
+                    <label for={`week-${item.week}`} class="font-mono text-zinc-500 cursor-pointer">
+                      W{String(item.week).padStart(2, '0')}
+                    </label>
+                    <span class="text-zinc-800">
+                      {item.tcst}
+                    </span>
+                  </div>
+                  <span class="font-mono text-[11px] text-zinc-400 hidden md:inline">
+                    أدبي: {item.tcl}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: TEACHER DOCUMENTS CABINET                              -->
+    <!-- ============================================================ -->
+    <div id="tab-content-docs" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
+      <div class="border border-zinc-200 rounded-xl bg-white p-6">
+        <h2 class="text-base font-bold text-zinc-950 mb-1">الحقيبة الرقمية للأستاذ</h2>
+        <p class="text-xs text-zinc-500 mb-6">فهرس الوثائق والمذكرات والمطبوعات المحفوظة محلياً في مجلد العمل</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          
+          <div class="border border-zinc-200 rounded-lg p-4 space-y-3">
+            <div class="font-bold text-zinc-900">المذكرات البيداغوجية والتحضير</div>
+            <ul class="space-y-2 text-zinc-600 font-mono text-[11px]">
+              <li class="flex items-center justify-between">
+                <span>المذكرة البيداغوجية 01: تقنية المعلومات</span>
+                <span class="text-zinc-400">DOCX / PDF</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span>المذكرة البيداغوجية 02: تجميع الحاسوب</span>
+                <span class="text-zinc-400">DOCX</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span>دليل تحضير درس تقنية المعلومات الشامل</span>
+                <span class="text-zinc-400">MD</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="border border-zinc-200 rounded-lg p-4 space-y-3">
+            <div class="font-bold text-zinc-900">مطبوعات ووثائق التلميذ الميدانية</div>
+            <ul class="space-y-2 text-zinc-600 font-mono text-[11px]">
+              <li class="flex items-center justify-between">
+                <span>مطبوعة درس تقنية المعلومات A4</span>
+                <span class="text-zinc-400">A4 HTML / PNG</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span>بطاقة ملخص الدرس 01 البصرية</span>
+                <span class="text-zinc-400">PNG</span>
+              </li>
+              <li class="flex items-center justify-between">
+                <span>ملحق المذكرة: ما يكتبه التلميذ على الكراس</span>
+                <span class="text-zinc-400">DOCX / PDF</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 5: SECURITY & PASSCODE SETTINGS                           -->
+    <!-- ============================================================ -->
+    <div id="tab-content-settings" class="admin-tab-panel hidden max-w-6xl mx-auto px-6 py-8 no-print space-y-6">
+      <div class="border border-zinc-200 rounded-xl bg-white p-6 max-w-md">
+        <h2 class="text-base font-bold text-zinc-950 mb-1">الأمان ورمز المرور</h2>
+        <p class="text-xs text-zinc-500 mb-6">
+          تغيير رمز المرور السري. التشفير يتم محلياً بتقنية SHA-256.
+        </p>
+
+        <form id="change-pwd-form" class="space-y-4" onsubmit="return false;">
+          <div>
+            <label for="old-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">CURRENT PIN:</label>
+            <input 
+              id="old-pin-input" 
+              type="password" 
+              placeholder="الرمز الحالي (الافتراضي: 2027)" 
+              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
+              required 
+            />
+          </div>
+
+          <div>
+            <label for="new-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">NEW PIN:</label>
+            <input 
+              id="new-pin-input" 
+              type="password" 
+              placeholder="الرمز الجديد..." 
+              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
+              required 
+            />
+          </div>
+
+          <div>
+            <label for="confirm-new-pin-input" class="block font-mono text-[11px] text-zinc-500 mb-1">CONFIRM NEW PIN:</label>
+            <input 
+              id="confirm-new-pin-input" 
+              type="password" 
+              placeholder="تأكيد الرمز الجديد..." 
+              class="w-full bg-white border border-zinc-300 rounded-lg px-3 py-2 text-xs font-mono text-zinc-900 outline-hidden focus:border-zinc-900"
+              required 
+            />
+          </div>
+
+          <div id="pwd-change-msg" class="hidden text-xs font-mono p-2 rounded"></div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <button 
+              type="submit" 
+              id="btn-save-new-pwd" 
+              class="flex-1 py-2 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-medium transition-all"
+            >
+              حفظ الرمز الجديد
+            </button>
+            <button 
+              type="button" 
+              id="btn-reset-default-pwd" 
+              class="py-2 px-3 rounded-lg border border-zinc-300 text-zinc-700 text-xs font-medium hover:bg-zinc-50 transition-all"
+            >
+              استرجاع 2027
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-zinc-100">
+          <button 
+            id="btn-clear-all-storage"
+            class="text-[11px] text-rose-600 hover:text-rose-800 underline font-mono"
+          >
+            مسح الذاكرة المؤقتة وإعادة ضبط المصنع
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- PRINTABLE 24-STICKER SHEET VIEW (A4 High Resolution)          -->
+  <!-- ============================================================ -->
+  <div id="sticker-sheet-section" class="hidden no-print-override">
+    <div class="no-print max-w-5xl mx-auto px-6 my-4 flex items-center justify-between bg-zinc-100 border border-zinc-300 p-4 rounded-xl">
+      <div class="text-xs text-zinc-900 font-medium">
+        ورقة ملصقات A4 للقسم (24 ملصق) جاهزة للطباعة والتوزيع
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-do-print" class="px-4 py-2 bg-zinc-950 hover:bg-zinc-800 text-white font-medium text-xs rounded-lg transition-colors">
+          طباعة فورية A4 (Ctrl + P)
+        </button>
+        <button id="btn-hide-stickers" class="px-3 py-2 bg-white border border-zinc-300 text-zinc-700 font-medium text-xs rounded-lg hover:bg-zinc-50">
+          إغلاق المعاينة
+        </button>
+      </div>
+    </div>
+
+    <!-- 24-Sticker A4 Grid (4 cols x 6 rows) -->
+    <div class="a4-sheet bg-white p-3 max-w-[210mm] mx-auto border border-zinc-300 shadow-lg print:shadow-none print:border-none print:m-0 print:p-2">
+      <div id="stickers-container" class="grid grid-cols-4 gap-2"></div>
+    </div>
+  </div>
+
+
+  <!-- Minimal Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-950 text-white font-mono text-xs px-4 py-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none transition-all duration-200 z-50">
+    <span id="toast-text"></span>
+  </div>
+
+  <!-- Hidden Bootstrap Data Element -->
+  <div 
+    id="admin-bootstrap-data" 
+    class="hidden" 
+    data-units={JSON.stringify(allUnits)} 
+    data-info={JSON.stringify(ACADEMIC_INFO)}
+  ></div>
+
+
+  <!-- ============================================================ -->
+  <!-- CLIENT LOGIC & SECURITY SCRIPT                                -->
+  <!-- ============================================================ -->
+  <script>
+    import QRCode from 'qrcode';
+
+    const bootstrapEl = document.getElementById('admin-bootstrap-data');
+    const allUnits: any[] = bootstrapEl ? JSON.parse(bootstrapEl.dataset.units || '[]') : [];
+    const ACADEMIC_INFO: any = bootstrapEl ? JSON.parse(bootstrapEl.dataset.info || '{}') : {};
+
+    // SHA-256 of "2027"
+    const DEFAULT_HASH = '5313e5bf17148de844ff74be3663d47c6e361ca469b30a36337701233c89a15e';
+    const HASH_KEY = 'maerifa_admin_pwd_hash';
+    const SESSION_KEY = 'maerifa_admin_session_active';
+    const PERSISTENT_KEY = 'maerifa_admin_persistent_auth';
+    const STATUS_OVERRIDE_KEY = 'maerifa_units_status_v1';
+    const TRACKER_KEY = 'maerifa_curriculum_tracker_v1';
+
+    async function sha256(message: string): Promise<string> {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getStoredHash(): string {
+      return localStorage.getItem(HASH_KEY) || DEFAULT_HASH;
+    }
+
+    const loginGate = document.getElementById('admin-login-gate');
+    const dashboardContainer = document.getElementById('admin-dashboard-container');
+    const pinInput = document.getElementById('admin-pin-input') as HTMLInputElement;
+    const loginError = document.getElementById('login-error-msg');
+    const rememberCheck = document.getElementById('remember-device-check') as HTMLInputElement;
+    const authForm = document.getElementById('admin-auth-form');
+    const logoutBtn = document.getElementById('btn-admin-logout');
+    const togglePinBtn = document.getElementById('btn-toggle-pin-visibility');
+
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    function showToast(msg: string) {
+      if (toast && toastText) {
+        toastText.textContent = msg;
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+      }
+    }
+
+    function checkAuthentication(): boolean {
+      return sessionStorage.getItem(SESSION_KEY) === 'true' || localStorage.getItem(PERSISTENT_KEY) === 'true';
+    }
+
+    function unlockDashboard() {
+      if (loginGate && dashboardContainer) {
+        loginGate.classList.add('hidden');
+        dashboardContainer.classList.remove('hidden');
+        initDashboard();
+      }
+    }
+
+    function lockDashboard() {
+      sessionStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(PERSISTENT_KEY);
+      if (loginGate && dashboardContainer) {
+        dashboardContainer.classList.add('hidden');
+        loginGate.classList.remove('hidden');
+        if (pinInput) {
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      }
+    }
+
+    logoutBtn?.addEventListener('click', () => {
+      lockDashboard();
+      showToast('تم قفل الجلسة.');
+    });
+
+    togglePinBtn?.addEventListener('click', () => {
+      if (pinInput) {
+        pinInput.type = pinInput.type === 'password' ? 'text' : 'password';
+      }
+    });
+
+    document.querySelectorAll('.pin-key').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (pinInput) pinInput.value += (btn as HTMLElement).dataset.val || '';
+      });
+    });
+
+    document.getElementById('pin-clear-btn')?.addEventListener('click', () => {
+      if (pinInput) pinInput.value = '';
+    });
+
+    document.getElementById('pin-backspace-btn')?.addEventListener('click', () => {
+      if (pinInput && pinInput.value.length > 0) {
+        pinInput.value = pinInput.value.slice(0, -1);
+      }
+    });
+
+    authForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const entered = pinInput.value.trim();
+      if (!entered) return;
+
+      const inputHash = await sha256(entered);
+      const targetHash = getStoredHash();
+
+      if (inputHash === targetHash) {
+        sessionStorage.setItem(SESSION_KEY, 'true');
+        if (rememberCheck?.checked) {
+          localStorage.setItem(PERSISTENT_KEY, 'true');
+        } else {
+          localStorage.removeItem(PERSISTENT_KEY);
+        }
+        if (loginError) loginError.classList.add('hidden');
+        unlockDashboard();
+        showToast('تم تسجيل الدخول بنجاح');
+      } else {
+        if (loginError) {
+          loginError.textContent = 'رمز المرور غير صحيح.';
+          loginError.classList.remove('hidden');
+        }
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    });
+
+    if (checkAuthentication()) {
+      unlockDashboard();
+    } else {
+      setTimeout(() => pinInput?.focus(), 200);
+    }
+
+    // Dashboard Internal Logic
+    let isInitialized = false;
+
+    function initDashboard() {
+      if (isInitialized) return;
+      isInitialized = true;
+
+      initTabs();
+      initUnitsManager();
+      initQRStudio();
+      initTracker();
+      initSettings();
+    }
+
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.admin-tab-btn');
+      const tabPanels = document.querySelectorAll('.admin-tab-panel');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => {
+            b.classList.remove('bg-zinc-900', 'text-white');
+            b.classList.add('text-zinc-600');
+          });
+          btn.classList.add('bg-zinc-900', 'text-white');
+          btn.classList.remove('text-zinc-600');
+
+          tabPanels.forEach(p => p.classList.add('hidden'));
+          if (btn.id === 'tab-btn-units') document.getElementById('tab-content-units')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-qr') document.getElementById('tab-content-qr')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-tracker') document.getElementById('tab-content-tracker')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-docs') document.getElementById('tab-content-docs')?.classList.remove('hidden');
+          if (btn.id === 'tab-btn-settings') document.getElementById('tab-content-settings')?.classList.remove('hidden');
+        });
+      });
+    }
+
+    function getStatusOverrides(): Record<string, string> {
+      try {
+        return JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveStatusOverride(unitId: string, status: string) {
+      const current = getStatusOverrides();
+      current[unitId] = status;
+      localStorage.setItem(STATUS_OVERRIDE_KEY, JSON.stringify(current));
+    }
+
+    function initUnitsManager() {
+      const tbody = document.getElementById('units-table-body');
+      const filterAllBtn = document.getElementById('filter-all');
+      const filterTcstBtn = document.getElementById('filter-tcst');
+      const filterTclBtn = document.getElementById('filter-tcl');
+      const resetBtn = document.getElementById('btn-reset-unit-statuses');
+
+      let currentFilter: 'all' | 'tcst' | 'tcl' = 'all';
+
+      function renderTable() {
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        const overrides = getStatusOverrides();
+
+        const filtered = allUnits.filter(u => {
+          if (currentFilter === 'all') return true;
+          return u.streamId === currentFilter;
+        });
+
+        filtered.forEach(unit => {
+          const currentStatus = overrides[unit.id] || unit.defaultStatus;
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-zinc-50/50 transition-colors';
+
+          tr.innerHTML = `
+            <td class="p-3 font-mono text-[11px] text-zinc-500">
+              ${unit.streamShort}
+            </td>
+            <td class="p-3 font-mono text-[11px] text-zinc-400">T${unit.term}</td>
+            <td class="p-3">
+              <div class="font-medium text-zinc-900">الوحدة ${unit.unitNumber}: ${unit.title}</div>
+              <div class="text-[10px] font-mono text-zinc-400">${unit.slug}</div>
+            </td>
+            <td class="p-3 text-zinc-500">${unit.domainTitle}</td>
+            <td class="p-3 text-center">
+              <select 
+                class="unit-status-select bg-white border border-zinc-300 rounded px-2 py-1 text-[11px] font-medium text-zinc-800 outline-hidden"
+                data-id="${unit.id}"
+              >
+                <option value="available" ${currentStatus === 'available' ? 'selected' : ''}>متاح للطلاب</option>
+                <option value="in_progress" ${currentStatus === 'in_progress' ? 'selected' : ''}>قيد التحضير</option>
+                <option value="planned" ${currentStatus === 'planned' ? 'selected' : ''}>مخفي / مغلق</option>
+              </select>
+            </td>
+            <td class="p-3 text-center">
+              <a 
+                href="${unit.slug}" 
+                target="_blank" 
+                class="font-mono text-[11px] text-zinc-500 hover:text-zinc-950 underline"
+              >
+                معاينة ↗
+              </a>
+            </td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.unit-status-select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const target = e.target as HTMLSelectElement;
+            const unitId = target.dataset.id;
+            const newStatus = target.value;
+            if (unitId) {
+              saveStatusOverride(unitId, newStatus);
+              showToast('تم تحديث حالة الوحدة');
+            }
+          });
+        });
+      }
+
+      filterAllBtn?.addEventListener('click', () => {
+        currentFilter = 'all';
+        setActiveFilter(filterAllBtn);
+        renderTable();
+      });
+      filterTcstBtn?.addEventListener('click', () => {
+        currentFilter = 'tcst';
+        setActiveFilter(filterTcstBtn);
+        renderTable();
+      });
+      filterTclBtn?.addEventListener('click', () => {
+        currentFilter = 'tcl';
+        setActiveFilter(filterTclBtn);
+        renderTable();
+      });
+
+      function setActiveFilter(btn: HTMLElement) {
+        [filterAllBtn, filterTcstBtn, filterTclBtn].forEach(b => {
+          b?.classList.remove('bg-zinc-900', 'text-white');
+          b?.classList.add('bg-zinc-100', 'text-zinc-700');
+        });
+        btn.classList.add('bg-zinc-900', 'text-white');
+        btn.classList.remove('bg-zinc-100', 'text-zinc-700');
+      }
+
+      resetBtn?.addEventListener('click', () => {
+        if (confirm('استعادة الحالة الافتراضية لجميع الوحدات؟')) {
+          localStorage.removeItem(STATUS_OVERRIDE_KEY);
+          renderTable();
+          showToast('تمت استعادة الضبط الافتراضي');
+        }
+      });
+
+      renderTable();
+    }
+
+    function initQRStudio() {
+      let currentStream = 'tcst';
+      let currentUnitId = allUnits.find(u => u.streamId === 'tcst')?.id || allUnits[0].id;
+
+      const streamTcstBtn = document.getElementById('btn-stream-tcst');
+      const streamTclBtn = document.getElementById('btn-stream-tcl');
+      const unitSelect = document.getElementById('unit-select') as HTMLSelectElement;
+      const targetUrlInput = document.getElementById('target-url-input') as HTMLInputElement;
+      const copyUrlBtn = document.getElementById('btn-copy-url');
+      const downloadQrBtn = document.getElementById('btn-download-qr');
+      const showStickersBtn = document.getElementById('btn-show-stickers');
+      const hideStickersBtn = document.getElementById('btn-hide-stickers');
+      const doPrintBtn = document.getElementById('btn-do-print');
+      const stickerSection = document.getElementById('sticker-sheet-section');
+      const stickersContainer = document.getElementById('stickers-container');
+      const qrCanvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+      const previewUnitTitle = document.getElementById('preview-unit-title');
+      const previewStreamName = document.getElementById('preview-stream-name');
+
+      function populateDropdown(stream: string) {
+        if (!unitSelect) return;
+        unitSelect.innerHTML = '';
+        const filtered = allUnits.filter(u => u.streamId === stream);
+        let currentDomain = '';
+        let currentOptgroup: HTMLOptGroupElement | null = null;
+
+        filtered.forEach((u) => {
+          if (u.domainTitle !== currentDomain) {
+            currentDomain = u.domainTitle;
+            currentOptgroup = document.createElement('optgroup');
+            currentOptgroup.label = currentDomain;
+            unitSelect.appendChild(currentOptgroup);
+          }
+          const opt = document.createElement('option');
+          opt.value = u.id;
+          opt.textContent = `الوحدة ${u.unitNumber}: ${u.title}`;
+          if (u.id === currentUnitId) opt.selected = true;
+          currentOptgroup?.appendChild(opt);
+        });
+      }
+
+      async function renderQRCode() {
+        const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
+        if (targetUrlInput) targetUrlInput.value = unit.fullUrl;
+        if (previewUnitTitle) previewUnitTitle.textContent = `الوحدة ${unit.unitNumber}: ${unit.title}`;
+        if (previewStreamName) previewStreamName.textContent = `${unit.streamName} • ${ACADEMIC_INFO.highSchool}`;
+
+        if (qrCanvas) {
+          try {
+            await QRCode.toCanvas(qrCanvas, unit.fullUrl, {
+              width: 180,
+              margin: 1.5,
+              color: { dark: '#09090b', light: '#ffffff' }
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      }
+
+      streamTcstBtn?.addEventListener('click', () => {
+        currentStream = 'tcst';
+        streamTcstBtn.className = 'flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all';
+        streamTclBtn?.classList.remove('bg-white', 'text-zinc-950', 'shadow-2xs');
+        streamTclBtn?.classList.add('text-zinc-500');
+        const first = allUnits.find(u => u.streamId === 'tcst');
+        if (first) currentUnitId = first.id;
+        populateDropdown('tcst');
+        renderQRCode();
+      });
+
+      streamTclBtn?.addEventListener('click', () => {
+        currentStream = 'tcl';
+        streamTclBtn.className = 'flex-1 py-1.5 rounded bg-white text-zinc-950 shadow-2xs transition-all';
+        streamTcstBtn?.classList.remove('bg-white', 'text-zinc-950', 'shadow-2xs');
+        streamTcstBtn?.classList.add('text-zinc-500');
+        const first = allUnits.find(u => u.streamId === 'tcl');
+        if (first) currentUnitId = first.id;
+        populateDropdown('tcl');
+        renderQRCode();
+      });
+
+      unitSelect?.addEventListener('change', (e) => {
+        currentUnitId = (e.target as HTMLSelectElement).value;
+        renderQRCode();
+      });
+
+      copyUrlBtn?.addEventListener('click', () => {
+        if (targetUrlInput) {
+          navigator.clipboard.writeText(targetUrlInput.value);
+          showToast('تم نسخ الرابط');
+        }
+      });
+
+      downloadQrBtn?.addEventListener('click', () => {
+        if (qrCanvas) {
+          const link = document.createElement('a');
+          link.download = `QR-${currentUnitId}.png`;
+          link.href = qrCanvas.toDataURL('image/png');
+          link.click();
+          showToast('جاري التحميل...');
+        }
+      });
+
+      showStickersBtn?.addEventListener('click', () => {
+        if (!qrCanvas || !stickersContainer || !stickerSection) return;
+        const unit = allUnits.find(u => u.id === currentUnitId) || allUnits[0];
+        const dataUrl = qrCanvas.toDataURL('image/png');
+
+        stickersContainer.innerHTML = '';
+        for (let i = 0; i < 24; i++) {
+          const item = document.createElement('div');
+          item.className = 'border border-dashed border-zinc-300 rounded p-2 text-center bg-white flex flex-col items-center justify-between text-[10px] h-[43mm] box-border relative overflow-hidden';
+          item.innerHTML = `
+            <div class="w-full border-b border-zinc-100 pb-1">
+              <div class="font-bold text-[9px] text-zinc-800 leading-tight">
+                ${ACADEMIC_INFO.highSchool}
+              </div>
+              <div class="font-mono text-[8px] text-zinc-500">
+                ${unit.streamShort} • مادة المعلوماتية
+              </div>
+            </div>
+            
+            <div class="my-0.5 text-center">
+              <div class="font-bold text-[9px] text-zinc-900 leading-tight line-clamp-1">
+                الوحدة ${unit.unitNumber}: ${unit.title}
+              </div>
+              <img src="${dataUrl}" class="w-18 h-18 mx-auto my-0.5" alt="QR" />
+            </div>
+
+            <div class="w-full pt-1 border-t border-zinc-100 font-mono text-[7px] text-zinc-400">
+              امسح بالهاتف لمطالعة الكبسولة
+            </div>
+          `;
+          stickersContainer.appendChild(item);
+        }
+
+        stickerSection.classList.remove('hidden');
+        stickerSection.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      hideStickersBtn?.addEventListener('click', () => {
+        stickerSection?.classList.add('hidden');
+      });
+
+      doPrintBtn?.addEventListener('click', () => {
+        window.print();
+      });
+
+      populateDropdown(currentStream);
+      renderQRCode();
+    }
+
+    function initTracker() {
+      const checkboxes = document.querySelectorAll('.week-tracker-check') as NodeListOf<HTMLInputElement>;
+      const percentEl = document.getElementById('tracker-percentage');
+      const progressBar = document.getElementById('tracker-progress-bar');
+
+      function loadTrackerState(): number[] {
+        try {
+          return JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]');
+        } catch {
+          return [];
+        }
+      }
+
+      function saveTrackerState(completedWeeks: number[]) {
+        localStorage.setItem(TRACKER_KEY, JSON.stringify(completedWeeks));
+      }
+
+      function updateUI() {
+        const completed = loadTrackerState();
+        checkboxes.forEach(cb => {
+          const w = parseInt(cb.dataset.week || '0', 10);
+          cb.checked = completed.includes(w);
+        });
+
+        const pct = Math.round((completed.length / 31) * 100);
+        if (percentEl) percentEl.textContent = `${pct}%`;
+        if (progressBar) progressBar.style.width = `${pct}%`;
+      }
+
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+          const w = parseInt(cb.dataset.week || '0', 10);
+          let completed = loadTrackerState();
+          if (cb.checked) {
+            if (!completed.includes(w)) completed.push(w);
+          } else {
+            completed = completed.filter(item => item !== w);
+          }
+          saveTrackerState(completed);
+          updateUI();
+          showToast('تم تحديث التدرج');
+        });
+      });
+
+      updateUI();
+    }
+
+    function initSettings() {
+      const pwdForm = document.getElementById('change-pwd-form');
+      const oldInput = document.getElementById('old-pin-input') as HTMLInputElement;
+      const newInput = document.getElementById('new-pin-input') as HTMLInputElement;
+      const confirmInput = document.getElementById('confirm-new-pin-input') as HTMLInputElement;
+      const pwdMsg = document.getElementById('pwd-change-msg');
+      const resetDefaultBtn = document.getElementById('btn-reset-default-pwd');
+      const clearStorageBtn = document.getElementById('btn-clear-all-storage');
+
+      pwdForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const oldVal = oldInput.value.trim();
+        const newVal = newInput.value.trim();
+        const confVal = confirmInput.value.trim();
+
+        const currentHash = getStoredHash();
+        const oldHash = await sha256(oldVal);
+
+        if (oldHash !== currentHash) {
+          showPwdMsg('رمز المرور الحالي غير صحيح', 'rose');
+          return;
+        }
+
+        if (newVal.length < 4) {
+          showPwdMsg('الرمز يجب أن يكون 4 خانات على الأقل', 'zinc');
+          return;
+        }
+
+        if (newVal !== confVal) {
+          showPwdMsg('الرمز وتأكيده غير متطابقين', 'zinc');
+          return;
+        }
+
+        const newHash = await sha256(newVal);
+        localStorage.setItem(HASH_KEY, newHash);
+        showPwdMsg('تم تحديث الرمز بنجاح', 'emerald');
+        oldInput.value = '';
+        newInput.value = '';
+        confirmInput.value = '';
+        showToast('تم تغيير رمز المرور');
+      });
+
+      resetDefaultBtn?.addEventListener('click', () => {
+        if (confirm('استرجاع الرمز السري الافتراضي (2027)؟')) {
+          localStorage.setItem(HASH_KEY, DEFAULT_HASH);
+          showPwdMsg('تم استرجاع الرمز الافتراضي (2027)', 'emerald');
+          showToast('الرمز: 2027');
+        }
+      });
+
+      clearStorageBtn?.addEventListener('click', () => {
+        if (confirm('مسح الإعدادات المؤقتة وتسجيل الخروج؟')) {
+          localStorage.clear();
+          sessionStorage.clear();
+          location.reload();
+        }
+      });
+
+      function showPwdMsg(text: string, color: string) {
+        if (!pwdMsg) return;
+        pwdMsg.textContent = text;
+        pwdMsg.className = `text-xs font-mono p-2 rounded text-center bg-${color}-50 text-${color}-800 border border-${color}-200`;
+        pwdMsg.classList.remove('hidden');
+      }
+    }
+
+  </script>
+
+  <style>
+    @media print {
+      body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .no-print-override { display: block !important; }
+      .a4-sheet { border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    }
+  </style>
+
+</Layout>

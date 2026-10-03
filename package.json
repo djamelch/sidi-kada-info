@@ -1,0 +1,21 @@
+{
+  "name": "informatics-platform",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^5.4.2",
+    "qrcode": "^1.5.4",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6"
+  }
+}

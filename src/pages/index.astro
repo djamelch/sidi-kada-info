@@ -1,0 +1,269 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { STREAMS_DATA, ACADEMIC_INFO } from '../data/curriculum';
+
+const tcst = STREAMS_DATA.tcst;
+const tcl = STREAMS_DATA.tcl;
+
+const domainBgColors: Record<string, string> = {
+  'tcst-d1': 'bg-[#a8e5e5]/40',
+  'tcst-d2': 'bg-[#ffe95c]/50',
+  'tcst-d3': 'bg-[#d5f5c2]/50',
+  'tcst-d4': 'bg-[#f6d0ff]/40',
+  'tcl-d1': 'bg-[#a8e5e5]/40',
+  'tcl-d2': 'bg-[#ffe95c]/50',
+  'tcl-d3': 'bg-[#d5f5c2]/50'
+};
+---
+
+<Layout title={`${ACADEMIC_INFO.platformName} — المنصة التعليمية لمادة المعلوماتية`} currentStream="all">
+
+  <!-- ============================================================ -->
+  <!-- 1. HERO SECTION — CLEAN, ACCESSIBLE & ESSENTIAL              -->
+  <!-- ============================================================ -->
+  <section class="relative z-10 pt-16 pb-20 px-4 sm:px-6 text-center">
+    
+    <div class="max-w-4xl mx-auto">
+      
+
+
+      <!-- Main Clean Display Headline -->
+      <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#1a3300] leading-[1.15] mb-6">
+        تعلّم المعلوماتية <br />
+        <span class="highlight-marker rounded-2xl px-4 py-1 shadow-xs inline-block my-2">بخطوات منهجية واضحة</span>
+      </h1>
+
+      <!-- Simple, Direct Subtitle -->
+      <p class="text-base sm:text-lg text-[#1a3300]/80 font-normal leading-relaxed max-w-[620px] mx-auto mb-10">
+        المنصة التعليمية المعتمدة لدروس ومفاهيم مادة المعلوماتية، مصممة لمرافقة تلاميذ السنة الأولى ثانوي طيلة الموسم الدراسي.
+      </p>
+
+      <!-- Direct Stream Action Buttons (NO ADMIN BUTTONS) -->
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-4">
+        <a 
+          href="/tcst" 
+          class="px-8 py-4 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm sm:text-base font-bold shadow-subtle hover:shadow-card-lift transition-all active:scale-95 inline-flex items-center gap-3 hover-lift"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-[#a8e5e5]"></span>
+          <span>برنامج جذع مشترك علوم وتكنولوجيا</span>
+          <span class="text-base">←</span>
+        </a>
+
+        <a 
+          href="/tcl" 
+          class="px-8 py-4 rounded-2xl bg-[#fcfaf5] hover:bg-[#d5f5c2]/40 text-[#1a3300] border-2 border-[#1a3300]/30 hover:border-[#1a3300] text-sm sm:text-base font-bold transition-all inline-flex items-center gap-3 hover-lift"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-[#d5f5c2]"></span>
+          <span>برنامج جذع مشترك آداب</span>
+          <span class="text-base">←</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- 2. OFFICIAL CURRICULUM BENTO GRID: TCST & TCL TRACKS         -->
+  <!-- ============================================================ -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 relative z-10 border-t border-[#1a3300]/15">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 pb-4 border-b border-[#1a3300]/15">
+      <div>
+        <div class="font-mono text-xs font-bold text-[#1a3300]/60 uppercase tracking-widest mb-1.5">OFFICIAL CURRICULUM 2026-2027</div>
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-[#1a3300]">
+          هيكلة المقررات الدراسية حسب الشعبة
+        </h2>
+      </div>
+      <div class="text-xs font-bold text-[#1a3300] bg-[#ffe95c] border border-[#1a3300]/25 px-4 py-2 rounded-full shadow-xs">
+        التوزيع الوزاري المعتمد: <span class="font-mono font-black">31</span> أسبوعاً بيداغوجياً
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Scientific Stream (TCST) -->
+      <div class="rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-8 shadow-sm flex flex-col justify-between tactile-card hover-lift">
+        <div>
+          <!-- Header Banner -->
+          <div class="flex items-center justify-between pb-4 border-b border-[#1a3300]/15 mb-6">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black bg-[#a8e5e5] text-[#1a3300] border border-[#1a3300]/20">
+              <span>🔬 {tcst.shortName}</span>
+            </span>
+            <span class="text-xs text-[#1a3300] font-bold">
+              المعامل: <span class="font-mono font-black text-sm text-[#cb5521]">2</span> • <span class="font-mono">1</span> ساعة/أسبوع
+            </span>
+          </div>
+
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-[#1a3300] mb-3">
+            {tcst.name}
+          </h3>
+          <p class="text-xs sm:text-sm text-[#1a3300]/80 leading-relaxed mb-6 font-normal">
+            بنية الحاسوب، نظم التشغيل، الخوارزميات والمخططات الانسيابية، الشبكات المحلية، وتقنيات الويب HTML.
+          </p>
+
+          <!-- Domain Items -->
+          <div class="space-y-3 mb-8">
+            {tcst.domains.map((dom) => {
+              const containerBg = domainBgColors[dom.id] || 'bg-[#ffe95c]/40';
+
+              return (
+                <a 
+                  href={`/tcst#${dom.id}`}
+                  class="flex items-center justify-between p-4 rounded-2xl bg-white hover:bg-[#ffe95c]/20 border-2 border-[#1a3300]/10 hover:border-[#1a3300]/30 transition-all group/item block hover-lift shadow-xs"
+                >
+                  <div class="flex items-center gap-4">
+                    <div class={`w-12 h-12 rounded-2xl ${containerBg} border-2 border-[#1a3300]/15 flex items-center justify-center text-[#1a3300] shrink-0 group-hover/item:scale-105 transition-transform`}>
+                      {dom.id === 'tcst-d1' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="2" y="3" width="20" height="14" rx="3"/>
+                          <line x1="8" y1="21" x2="16" y2="21"/>
+                          <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                      )}
+                      {dom.id === 'tcst-d2' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="5" r="3"/>
+                          <line x1="12" y1="8" x2="12" y2="12"/>
+                          <path d="M12 12 L6 16 L6 20"/>
+                          <path d="M12 12 L18 16 L18 20"/>
+                          <circle cx="6" cy="20" r="2" fill="currentColor"/>
+                          <circle cx="18" cy="20" r="2" fill="currentColor"/>
+                        </svg>
+                      )}
+                      {dom.id === 'tcst-d3' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="9"/>
+                          <line x1="3" y1="12" x2="21" y2="12"/>
+                          <path d="M12 3a14 14 0 0 1 0 18"/>
+                          <path d="M12 3a14 14 0 0 0 0 18"/>
+                        </svg>
+                      )}
+                      {dom.id === 'tcst-d4' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                          <polyline points="14 2 14 8 20 8"/>
+                          <line x1="16" y1="13" x2="8" y2="13"/>
+                          <line x1="16" y1="17" x2="8" y2="17"/>
+                          <line x1="10" y1="9" x2="8" y2="9"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div>
+                      <div class="text-sm font-bold text-[#1a3300]">
+                        {dom.title}
+                      </div>
+                      <div class="text-xs text-[#1a3300]/65">
+                        <span class="font-mono font-bold">{dom.units.length}</span> وحدات تعليمية
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-[#1a3300]/60 group-hover/item:text-[#1a3300] group-hover/item:-translate-x-1 transition-all text-xs font-bold">
+                    عرض ←
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <a 
+          href="/tcst"
+          class="w-full py-4 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-sm text-center transition-all flex items-center justify-center gap-2 shadow-sm hover-lift"
+        >
+          <span>تصفح برنامج الشعبة العلمية بالتفصيل</span>
+          <span>←</span>
+        </a>
+
+      </div>
+
+      <!-- Literary Stream (TCL) -->
+      <div class="rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-8 shadow-sm flex flex-col justify-between tactile-card hover-lift">
+        <div>
+          <!-- Header Banner -->
+          <div class="flex items-center justify-between pb-4 border-b border-[#1a3300]/15 mb-6">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black bg-[#d5f5c2] text-[#1a3300] border border-[#1a3300]/20">
+              <span>📚 {tcl.shortName}</span>
+            </span>
+            <span class="text-xs text-[#1a3300] font-bold">
+              المعامل: <span class="font-mono font-black text-sm text-[#1a3300]">1</span> • ساعتان/أسبوع
+            </span>
+          </div>
+
+          <h3 class="font-display text-2xl sm:text-3xl font-bold text-[#1a3300] mb-3">
+            {tcl.name}
+          </h3>
+          <p class="text-xs sm:text-sm text-[#1a3300]/80 leading-relaxed mb-6 font-normal">
+            المهارات المكتبية: معالجة النصوص Word، جداول البيانات Excel، والعروض التقديمية PowerPoint، وتقنيات الويب.
+          </p>
+
+          <!-- Domain Items -->
+          <div class="space-y-3 mb-8">
+            {tcl.domains.map((dom) => {
+              const containerBg = domainBgColors[dom.id] || 'bg-[#ffe95c]/40';
+
+              return (
+                <a 
+                  href={`/tcl#${dom.id}`}
+                  class="flex items-center justify-between p-4 rounded-2xl bg-white hover:bg-[#ffe95c]/20 border-2 border-[#1a3300]/10 hover:border-[#1a3300]/30 transition-all group/item block hover-lift shadow-xs"
+                >
+                  <div class="flex items-center gap-4">
+                    <div class={`w-12 h-12 rounded-2xl ${containerBg} border-2 border-[#1a3300]/15 flex items-center justify-center text-[#1a3300] shrink-0 group-hover/item:scale-105 transition-transform`}>
+                      {dom.id === 'tcl-d1' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="2" y="3" width="20" height="14" rx="3"/>
+                          <line x1="8" y1="21" x2="16" y2="21"/>
+                          <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                      )}
+                      {dom.id === 'tcl-d2' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="3"/>
+                          <line x1="3" y1="9" x2="21" y2="9"/>
+                          <line x1="3" y1="15" x2="21" y2="15"/>
+                          <line x1="9" y1="3" x2="9" y2="21"/>
+                          <line x1="15" y1="3" x2="15" y2="21"/>
+                        </svg>
+                      )}
+                      {dom.id === 'tcl-d3' && (
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="9"/>
+                          <line x1="3" y1="12" x2="21" y2="12"/>
+                          <path d="M12 3a14 14 0 0 1 0 18"/>
+                          <path d="M12 3a14 14 0 0 0 0 18"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div>
+                      <div class="text-sm font-bold text-[#1a3300]">
+                        {dom.title}
+                      </div>
+                      <div class="text-xs text-[#1a3300]/65">
+                        <span class="font-mono font-bold">{dom.units.length}</span> وحدات تعليمية
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-[#1a3300]/60 group-hover/item:text-[#1a3300] group-hover/item:-translate-x-1 transition-all text-xs font-bold">
+                    عرض ←
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <a 
+          href="/tcl"
+          class="w-full py-4 rounded-2xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] font-bold text-sm text-center transition-all flex items-center justify-center gap-2 shadow-sm hover-lift"
+        >
+          <span>تصفح برنامج الشعبة الأدبية بالتفصيل</span>
+          <span>←</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</Layout>

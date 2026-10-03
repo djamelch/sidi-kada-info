@@ -1,0 +1,559 @@
+---
+/**
+ * الوحدة 1: تقنية المعلومات — المصدر الوحيد لمحتوى الدرس.
+ * المرجع: «بدون تصحيح الواجب المذكرة_البيداغوجية_01_الحصة_01_تقنية_المعلومات.docx / .pdf»
+ *
+ * إعدادات الأستاذ (تُغيَّر هنا فقط):
+ *  - VIDEO_URL: رابط فيديو الشرح (YouTube embed). اتركه فارغاً إلى أن يجهز الفيديو.
+ *  - HOMEWORK_SOLUTION_PUBLISHED: اتركه false إلى أن تنتهي المراقبة والتصحيح في القسم.
+ *    عندما يكون false لا يُكتب الحل في الصفحة إطلاقاً (لا يمكن للتلميذ رؤيته حتى من الكود).
+ */
+const VIDEO_URL = '';
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/memo-01.pdf';
+const pdfDownloadName = 'المذكرة_البيداغوجية_01_تقنية_المعلومات.pdf';
+
+const parts = [
+  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'الدرس (PDF)', desc: 'نص الدرس كما هو في المذكرة، مع تحميل ملف PDF' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح الدرس بالصوت والصورة' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'نفس الدرس بأمثلة وحركات تفاعلية' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'الخريطة الذهنية', desc: 'كل الدرس في مخطط واحد للحفظ' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#f6d0ff]', title: 'التمارين', desc: 'سؤال وجواب مخفي يظهر عند الضغط' },
+  { id: 'part-6', icon: '🔍', color: 'bg-[#ffe95c]', title: 'البحث (العمل المنزلي)', desc: 'البحث المطلوب في آخر الدرس' },
+];
+
+const exercises = [
+  {
+    q: 'ما الفرق بين البيانات والمعلومات؟ أعط مثالاً.',
+    a: 'البيانات: مجموعة من حروف أو كلمات أو أرقام أو رموز أو صور (غير معالجة) متعلقة بموضوع ما. مثال: أستاذ، 1، قسم، المعلوماتية، يدرس، ج م ع ت.<br/>المعلومات: هي البيانات التي تمت معالجتها بحيث أصبحت ذات معنى. مثال: أستاذ المعلوماتية يدرس قسم 1 ج م ع ت.'
+  },
+  {
+    q: 'عرّف التقنية مع مثال.',
+    a: 'التقنية: هي قدرة الشخص على إنجاز أعمال بمهارة على أساس علمي. مثال: ميكانيكي يتقن تركيب محرك.'
+  },
+  {
+    q: 'عرّف المعلوماتية، ومن أي كلمتين تتكون؟ واذكر أبعادها الأربعة.',
+    a: 'المعلوماتية: هو العلم الحديث الذي يعالج المعلومات ويبني البرامج التي يقترحها الإنسان بطريقة آلية وباستعمال جهاز الحاسوب وبرامج خاصة.<br/>تتكون من: معلومات (Informations) + آلية (Automatique).<br/>أبعادها: العتاد الصلب (Hardware) – البرمجيات (Software) – الموارد المعرفية – الموارد البشرية.'
+  },
+  {
+    q: 'اذكر مجالات تقنية المعلومات.',
+    a: 'التعليم والبحث العلمي – الصحة والطب – الإدارة والخدمات – التجارة – الصناعة – الاتصالات والإعلام.'
+  },
+  {
+    q: 'فكّك مصطلح تكنولوجيا الإعلام والاتصال (TIC).',
+    a: 'تكنولوجيا: مجموع التقنيات والوسائل والأجهزة الهندسية الحديثة.<br/>الإعلام: الإخبار وتقديم المعطيات والمعلومات.<br/>الاتصال: عملية تفاعل وتبادل رسائل بين مرسل ومستقبل عبر وسيط اتصالي معين.'
+  },
+  {
+    q: 'اذكر إيجابيات وسلبيات تكنولوجيا الإعلام والاتصال.',
+    a: 'الإيجابيات: ربح الوقت والجهد وتخفيض التكاليف – تحسين جودة التعليم والتعلم – فتح آفاق جديدة للعمل.<br/>السلبيات: تراجع المهارات الذهنية – العزلة الاجتماعية والأمراض النفسية – المشاكل الصحية.'
+  },
+];
+
+const fields = [
+  { icon: '🎓', name: 'التعليم والبحث العلمي' },
+  { icon: '🩺', name: 'الصحة والطب' },
+  { icon: '🏛️', name: 'الإدارة والخدمات' },
+  { icon: '🛒', name: 'التجارة' },
+  { icon: '🏭', name: 'الصناعة' },
+  { icon: '📡', name: 'الاتصالات والإعلام' },
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 1</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#a8e5e5] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 1: تقنية المعلومات
+      </h1>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للذهاب إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p, i) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ 1. الدرس (PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        1. الدرس (PDF)
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a href={pdfHref} download={pdfDownloadName}
+         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold">
+        ⬇ تحميل الدرس (PDF)
+      </a>
+      <a href={pdfHref} target="_blank" rel="noopener"
+         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold">
+        👁 فتح الدرس (PDF)
+      </a>
+    </div>
+
+    <!-- الإشكالية -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2">الإشكالية:</h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        يتعامل الإنسان يومياً مع كم هائل من المعطيات غير المنظمة من أرقام، نصوص، أصوات وصور. كيف ننتقل من هذه المعطيات الأولية المبعثرة إلى معلومة مفيدة وقرار سليم؟ وما هو العلم والأدوات والتقنيات التي أحدثت ثورة في تداولها والتواصل بها عبر العالم؟
+      </p>
+    </div>
+
+    <!-- 1. المفاهيم الأساسية -->
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">1. المفاهيم الأساسية:</h3>
+
+      <div>
+        <strong class="text-[#1a3300]">أ / البيانات (Data - Données):</strong>
+        هي مجموعة من حروف أو كلمات أو أرقام أو رموز أو صور (غير معالجة) متعلقة بموضوع ما.
+        <div class="mt-1 p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">مثال: أستاذ، 1، قسم، المعلوماتية، يدرس، ج م ع ت.</div>
+      </div>
+
+      <div>
+        <strong class="text-[#1a3300]">ب / المعلومات (Information - Informations):</strong>
+        هي البيانات التي تمت معالجتها بحيث أصبحت ذات معنى.
+        <div class="mt-1 p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">مثال: أستاذ المعلوماتية يدرس قسم 1 ج م ع ت.</div>
+      </div>
+
+      <div>
+        <strong class="text-[#1a3300]">د / التقنية (Technique):</strong>
+        هي قدرة الشخص على انجاز أعمال بمهارة على أساس علمي. مثل ميكانيكي يتقن تركيب محرك.
+      </div>
+
+      <div class="space-y-2">
+        <div>
+          <strong class="text-[#1a3300]">جـ / المعلوماتية (Informatique):</strong>
+          هو العلم الحديث الذي يعالج المعلومات ويبني البرامج التي يقترحها الانسان بطريقة آلية وباستعمال جهاز الحاسوب وبرامج خاصة. وتحتوي أربعة أبعاد رئيسية هي:
+        </div>
+        <div class="p-2 rounded-lg bg-[#ffe95c]/40 text-center font-bold">
+          المعلوماتية Informatique = معلومات Informations + آلية Automatique
+        </div>
+        <ol class="grid grid-cols-2 gap-2 text-xs sm:text-sm font-bold">
+          <li class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">1. العتاد الصلب (Hardware)</li>
+          <li class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">2. البرمجيات (Software)</li>
+          <li class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">3. الموارد المعرفية</li>
+          <li class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">4. الموارد البشرية</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 2. مجالات IT -->
+    <div class={`${boxCls} space-y-3 text-sm text-[#1a3300]/90`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">2. مجالات تقنية المعلومات (Information Technology - IT):</h3>
+      <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2 font-bold text-xs sm:text-sm">
+        {fields.map(f => <li class="p-2 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10">• {f.name}</li>)}
+      </ul>
+    </div>
+
+    <!-- 3. TIC -->
+    <div class={`${boxCls} space-y-3 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">3. مفهوم تكنولوجيا الإعلام والاتصال (TIC):</h3>
+      <div>
+        <strong class="text-[#1a3300]">أ / تفكيك المصطلح:</strong> هو ترجمة للعبارة الفرنسية (Technologies de l'Information et de la Communication):
+        <ul class="pr-4 mt-1">
+          <li>• <strong>تكنولوجيا (Technologie):</strong> مجموع التقنيات والوسائل والأجهزة الهندسية الحديثة.</li>
+          <li>• <strong>الإعلام (Information):</strong> الإخبار وتقديم المعطيات والمعلومات.</li>
+          <li>• <strong>الاتصال (Communication):</strong> هي عملية تفاعل وتبادل رسائل بين مرسل ومستقبل عبر وسيط اتصالي معين.</li>
+        </ul>
+      </div>
+      <div>
+        <strong class="text-[#1a3300]">ب / التعريف الشامل لتكنولوجيا الإعلام والاتصال (TIC):</strong>
+        هي جملة التقنيات، الأدوات، الأجهزة السمعية البصرية، وشبكات الاتصال السلكية واللاسلكية والإنترنت.
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 rounded-xl bg-[#d5f5c2]/50 border border-[#1a3300]/15">
+          <strong class="text-[#1a3300]">ج / خصائص وإيجابيات تكنولوجيا الإعلام والاتصال:</strong>
+          <ul class="mt-1"><li>• ربح الوقت والجهد وتخفيض التكاليف.</li><li>• تحسين جودة التعليم والتعلم.</li><li>• فتح آفاق جديدة للعمل.</li></ul>
+        </div>
+        <div class="p-3 rounded-xl bg-[#ffc09f]/40 border border-[#1a3300]/15">
+          <strong class="text-[#1a3300]">د / سلبيات وتحديات تكنولوجيا الإعلام والاتصال:</strong>
+          <ul class="mt-1"><li>• تراجع المهارات الذهنية.</li><li>• العزلة الاجتماعية والأمراض النفسية.</li><li>• المشاكل الصحية.</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🎬</span>
+        2. فيديو الشرح
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    {VIDEO_URL ? (
+      <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black">
+        <iframe src={VIDEO_URL} class="w-full h-full" title="فيديو شرح الوحدة 1: تقنية المعلومات"
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-[#1a3300]/30 bg-white aspect-video flex flex-col items-center justify-center text-center gap-3 p-6">
+        <span class="text-5xl">🎬</span>
+        <p class="text-base font-extrabold text-[#1a3300]">فيديو الشرح سيُضاف قريباً</p>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ 3. الدرس التفاعلي ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#d5f5c2] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">⚡</span>
+        3. الدرس التفاعلي
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- أ: من البيانات إلى المعلومات -->
+    <div class={`${boxCls} space-y-4`}>
+      <h3 class="font-extrabold text-[#1a3300]">أ / من البيانات إلى المعلومات</h3>
+      <p class="text-sm text-[#1a3300]/80">هذه <strong>بيانات</strong> غير معالجة. اضغط على الزر لمعالجتها:</p>
+
+      <div id="data-words" class="flex flex-wrap justify-center gap-2 min-h-[56px] p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">
+        <span class="word">يدرس</span><span class="word">ج م ع ت</span><span class="word">أستاذ</span>
+        <span class="word">1</span><span class="word">المعلوماتية</span><span class="word">قسم</span>
+      </div>
+
+      <div class="flex justify-center">
+        <button id="process-btn" type="button"
+          class="py-3 px-6 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold cursor-pointer">
+          ⚙️ معالجة البيانات
+        </button>
+      </div>
+
+      <div id="info-result" class="hidden p-4 rounded-xl bg-[#d5f5c2] border-2 border-[#1a3300]/20 text-center">
+        <span class="text-xs font-bold text-[#1a3300]/70 block mb-1">أصبحت معلومة ذات معنى:</span>
+        <span class="text-base sm:text-lg font-extrabold text-[#1a3300]">أستاذ المعلوماتية يدرس قسم 1 ج م ع ت</span>
+      </div>
+    </div>
+
+    <!-- ب: التقنية -->
+    <div class={`${boxCls} flex items-center gap-4`}>
+      <span class="text-4xl shrink-0">🔧</span>
+      <div class="text-sm text-[#1a3300]/90 leading-loose">
+        <h3 class="font-extrabold text-[#1a3300]">ب / التقنية</h3>
+        قدرة الشخص على إنجاز أعمال <strong>بمهارة</strong> على <strong>أساس علمي</strong>.
+        مثال: ميكانيكي يتقن تركيب محرك.
+      </div>
+    </div>
+
+    <!-- جـ: المعلوماتية -->
+    <div class={`${boxCls} space-y-3`}>
+      <h3 class="font-extrabold text-[#1a3300]">جـ / المعلوماتية</h3>
+      <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold text-[#1a3300]">
+        <span class="px-3 py-2 rounded-xl bg-[#a8e5e5]">معلومات INFORmations</span>
+        <span class="text-xl">+</span>
+        <span class="px-3 py-2 rounded-xl bg-[#d5f5c2]">آلية autoMATIQUE</span>
+        <span class="text-xl">=</span>
+        <span class="px-3 py-2 rounded-xl bg-[#ffe95c]">INFORMATIQUE</span>
+      </div>
+      <p class="text-xs text-[#1a3300]/70 text-center">اضغط على كل بُعد:</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button type="button" class="dim-btn" data-text="العتاد الصلب (Hardware)">💻 1</button>
+        <button type="button" class="dim-btn" data-text="البرمجيات (Software)">🧩 2</button>
+        <button type="button" class="dim-btn" data-text="الموارد المعرفية">📚 3</button>
+        <button type="button" class="dim-btn" data-text="الموارد البشرية">👥 4</button>
+      </div>
+      <div id="dim-result" class="min-h-[44px] p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 text-center text-sm font-bold text-[#1a3300]">
+        أبعاد المعلوماتية الأربعة
+      </div>
+    </div>
+
+    <!-- د: المجالات -->
+    <div class={`${boxCls} space-y-3`}>
+      <h3 class="font-extrabold text-[#1a3300]">د / مجالات تقنية المعلومات</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {fields.map(f => (
+          <div class="p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10 text-center">
+            <span class="text-3xl block">{f.icon}</span>
+            <span class="text-xs sm:text-sm font-bold text-[#1a3300]">{f.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- هـ: الاتصال -->
+    <div class={`${boxCls} space-y-3`}>
+      <h3 class="font-extrabold text-[#1a3300]">هـ / الاتصال: تبادل رسائل بين مرسل ومستقبل عبر وسيط</h3>
+      <div class="relative flex items-center justify-between gap-2 p-4 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">
+        <div class="text-center z-10"><span class="text-3xl block">🧑</span><span class="text-xs font-bold">المرسل</span></div>
+        <div class="relative flex-1 h-10 mx-2">
+          <div class="absolute top-1/2 inset-x-0 border-t-2 border-dashed border-[#1a3300]/30"></div>
+          <span class="msg absolute top-1/2 -translate-y-1/2 text-2xl">✉️</span>
+          <span class="absolute -bottom-3 inset-x-0 text-center text-[11px] font-bold text-[#1a3300]/60">الوسيط</span>
+        </div>
+        <div class="text-center z-10"><span class="text-3xl block">🧑</span><span class="text-xs font-bold">المستقبل</span></div>
+      </div>
+    </div>
+
+    <!-- و: إيجابيات وسلبيات -->
+    <div class={`${boxCls} space-y-3`}>
+      <h3 class="font-extrabold text-[#1a3300]">و / إيجابيات وسلبيات TIC</h3>
+      <div class="flex gap-2">
+        <button type="button" id="tab-pros" class="tab-btn flex-1 py-2 rounded-xl text-sm font-bold border-2 border-[#1a3300]/20 bg-[#d5f5c2]">👍 الإيجابيات</button>
+        <button type="button" id="tab-cons" class="tab-btn flex-1 py-2 rounded-xl text-sm font-bold border-2 border-[#1a3300]/20 bg-white">👎 السلبيات</button>
+      </div>
+      <ul id="list-pros" class="space-y-2 text-sm font-bold text-[#1a3300]">
+        <li class="p-3 rounded-xl bg-[#d5f5c2]/50">⏱️ ربح الوقت والجهد وتخفيض التكاليف</li>
+        <li class="p-3 rounded-xl bg-[#d5f5c2]/50">📖 تحسين جودة التعليم والتعلم</li>
+        <li class="p-3 rounded-xl bg-[#d5f5c2]/50">💼 فتح آفاق جديدة للعمل</li>
+      </ul>
+      <ul id="list-cons" class="hidden space-y-2 text-sm font-bold text-[#1a3300]">
+        <li class="p-3 rounded-xl bg-[#ffc09f]/50">🧠 تراجع المهارات الذهنية</li>
+        <li class="p-3 rounded-xl bg-[#ffc09f]/50">😔 العزلة الاجتماعية والأمراض النفسية</li>
+        <li class="p-3 rounded-xl bg-[#ffc09f]/50">🏥 المشاكل الصحية</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 4. الخريطة الذهنية ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffc09f] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🧠</span>
+        4. الخريطة الذهنية
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class={`${boxCls} space-y-4`}>
+      <div class="text-center">
+        <span class="inline-block px-5 py-3 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] font-extrabold text-[#1a3300]">تقنية المعلومات</span>
+        <div class="w-0.5 h-5 bg-[#1a3300]/30 mx-auto"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-[#1a3300]">
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#a8e5e5]">
+          <strong class="block mb-2">1. المفاهيم الأساسية</strong>
+          <ul class="space-y-1 text-xs sm:text-sm">
+            <li>• البيانات: غير معالجة</li>
+            <li>• المعلومات: بيانات معالجة ذات معنى</li>
+            <li>• التقنية: مهارة على أساس علمي</li>
+            <li>• المعلوماتية: معلومات + آلية
+              <ul class="pr-4 text-xs text-[#1a3300]/80"><li>عتاد – برمجيات – موارد معرفية – موارد بشرية</li></ul>
+            </li>
+          </ul>
+        </div>
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#ffe95c]">
+          <strong class="block mb-2">2. مجالات IT</strong>
+          <ul class="space-y-1 text-xs sm:text-sm">
+            {fields.map(f => <li>• {f.name}</li>)}
+          </ul>
+        </div>
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#d5f5c2]">
+          <strong class="block mb-2">3. TIC</strong>
+          <ul class="space-y-1 text-xs sm:text-sm">
+            <li>• تكنولوجيا + إعلام + اتصال</li>
+            <li>• الإيجابيات: الوقت – التعليم – العمل</li>
+            <li>• السلبيات: المهارات الذهنية – العزلة – الصحة</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. التمارين ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#f6d0ff] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">✍️</span>
+        5. التمارين
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-sm text-[#1a3300]/80">أجب على السؤال في كراسك أولاً، ثم اضغط «إظهار الجواب» لتتأكد.</p>
+
+    <div class="space-y-3">
+      {exercises.map((ex, i) => (
+        <details class="group rounded-2xl bg-white border-2 border-[#1a3300]/15 open:border-[#1a3300]/40">
+          <summary class="flex items-center justify-between gap-3 p-4 cursor-pointer list-none">
+            <span class="text-sm font-bold text-[#1a3300]">{i + 1}. {ex.q}</span>
+            <span class="shrink-0 px-3 py-1.5 rounded-xl bg-[#f0ebe0] group-open:bg-[#ffe95c] text-xs font-bold text-[#1a3300]">
+              <span class="group-open:hidden">إظهار الجواب</span><span class="hidden group-open:inline">إخفاء</span>
+            </span>
+          </summary>
+          <div class="mx-4 mb-4 p-3 rounded-xl bg-[#d5f5c2]/50 border border-[#1a3300]/15 text-sm text-[#1a3300] leading-loose" set:html={ex.a} />
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ 6. البحث (العمل المنزلي) — بطاقة كبيرة ============ -->
+  <section id="part-6" class="scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-4 border-[#1a3300] p-5 sm:p-10 space-y-6 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-3xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl">🔍</span>
+        6. البحث (العمل المنزلي)
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <h3 class="text-base sm:text-lg font-extrabold text-[#1a3300]">4. أهم مراحل تطور تكنولوجيا الإعلام والاتصال: عمل منزلي</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• الموضوع الأول (مجالات تقنية المعلومات):</strong>
+        <p class="text-sm text-[#1a3300]/90 leading-loose">
+          اختر مجالين حيويين مثل الصحة والتعليم وتوسع في شرح كيف غيرت الأنظمة الذكية وتطبيقات IT طريقة العمل فيهما مقارنة بالسابق.
+        </p>
+      </div>
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• الموضوع الثاني (مراحل تطور العتاد والبرمجيات):</strong>
+        <p class="text-sm text-[#1a3300]/90 leading-loose">
+          أعد تقريراً مصوراً يبرز خطاً زمنياً لأجيال الحواسيب، مع مقارنة تفصيلية بين حاسوب الجيل الأول (ENIAC) وحاسوبك المكتبي أو المحمول اليوم من حيث الحجم والسرعة ونظام التشغيل.
+        </p>
+      </div>
+    </div>
+
+    {HOMEWORK_SOLUTION_PUBLISHED ? (
+      <div class="p-5 rounded-2xl bg-[#d5f5c2]/50 border-2 border-[#1a3300]/30 space-y-3 text-sm text-[#1a3300] leading-loose">
+        <h3 class="font-extrabold">✅ الحل</h3>
+        <p><strong>الموضوع الأول:</strong> في التعليم: الانتقال من الكتاب الورقي والسبورة فقط إلى المنصات الرقمية والكتب الإلكترونية ومتابعة النتائج عبر الإنترنت. في الصحة: الانتقال من الملفات الورقية إلى الملف الطبي الإلكتروني، أجهزة التصوير الطبي الرقمية (السكانير والرنين المغناطيسي)، والاستشارة الطبية عن بعد.</p>
+        <p><strong>الموضوع الثاني:</strong> ENIAC (1946): يشغل قاعة كاملة (حوالي 167 م²)، وزنه حوالي 30 طناً، يعمل بحوالي 18000 صمام مفرغ، سرعته حوالي 5000 عملية جمع في الثانية، ولا يملك نظام تشغيل (يُبرمج بإعادة توصيل الأسلاك يدوياً). حاسوب اليوم: صغير وخفيف (حوالي 1 إلى 2 كغ للمحمول)، يعمل بمعالج يضم مليارات الترانزستورات، ينفذ مليارات العمليات في الثانية، ويملك نظام تشغيل بواجهة رسومية (Windows، Linux، macOS).</p>
+      </div>
+    ) : (
+      <div class="p-5 rounded-2xl bg-[#ffe95c]/40 border-2 border-[#1a3300]/30 flex items-center gap-4">
+        <span class="text-4xl shrink-0">🔒</span>
+        <div class="text-sm text-[#1a3300] leading-loose">
+          <strong class="block text-base">الحل مخفي مؤقتاً</strong>
+          سيظهر الحل هنا بعد مراقبة البحوث وتصحيحها في القسم.
+        </div>
+      </div>
+    )}
+  </section>
+
+</div>
+
+<style>
+  .word {
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.6rem;
+    background: #fff;
+    border: 1px solid rgb(26 51 0 / 0.2);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #1a3300;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .word.fly { transform: translateY(16px) scale(0.6); opacity: 0; }
+  .dim-btn {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background: #fff;
+    border: 2px solid rgb(26 51 0 / 0.15);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #1a3300;
+    cursor: pointer;
+  }
+  .dim-btn:hover, .dim-btn.active { background: #ffe95c; border-color: #1a3300; }
+  .msg { animation: send 3s ease-in-out infinite; right: 0; }
+  @keyframes send {
+    0% { right: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { right: calc(100% - 2rem); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .msg { animation: none; right: 45%; }
+    .word { transition: none; }
+  }
+  summary::-webkit-details-marker { display: none; }
+</style>
+
+<script>
+  // أ: معالجة البيانات
+  const processBtn = document.getElementById('process-btn');
+  const words = document.querySelectorAll('#data-words .word');
+  const result = document.getElementById('info-result');
+  processBtn?.addEventListener('click', () => {
+    if (!result) return;
+    if (!result.classList.contains('hidden')) {
+      result.classList.add('hidden');
+      words.forEach(w => w.classList.remove('fly'));
+      processBtn.textContent = '⚙️ معالجة البيانات';
+      return;
+    }
+    words.forEach((w, i) => setTimeout(() => w.classList.add('fly'), i * 120));
+    setTimeout(() => {
+      result.classList.remove('hidden');
+      processBtn.textContent = '↺ إعادة';
+    }, words.length * 120 + 400);
+  });
+
+  // جـ: أبعاد المعلوماتية
+  const dimBtns = document.querySelectorAll<HTMLButtonElement>('.dim-btn');
+  const dimResult = document.getElementById('dim-result');
+  dimBtns.forEach(btn => btn.addEventListener('click', () => {
+    dimBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (dimResult) dimResult.textContent = btn.dataset.text ?? '';
+  }));
+
+  // و: الإيجابيات / السلبيات
+  const tabPros = document.getElementById('tab-pros');
+  const tabCons = document.getElementById('tab-cons');
+  const listPros = document.getElementById('list-pros');
+  const listCons = document.getElementById('list-cons');
+  function showTab(pros: boolean) {
+    listPros?.classList.toggle('hidden', !pros);
+    listCons?.classList.toggle('hidden', pros);
+    tabPros?.classList.toggle('bg-[#d5f5c2]', pros);
+    tabPros?.classList.toggle('bg-white', !pros);
+    tabCons?.classList.toggle('bg-[#ffc09f]', !pros);
+    tabCons?.classList.toggle('bg-white', pros);
+  }
+  tabPros?.addEventListener('click', () => showTab(true));
+  tabCons?.addEventListener('click', () => showTab(false));
+</script>

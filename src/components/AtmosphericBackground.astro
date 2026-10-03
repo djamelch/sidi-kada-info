@@ -1,0 +1,153 @@
+---
+// Atmospheric Background Sketches Component — Say Briefly Refero Design
+// Ultra-subtle (5-8% opacity) hand-drawn sketches bleeding off the page edges,
+// strictly isolated to outer margins so they NEVER collide or overlap with reading content.
+---
+
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.06] xl:opacity-[0.08] select-none hidden lg:block" aria-hidden="true">
+  
+  <!-- 1. Top-Right: Microprocessor & Circuit Traces (Bleeding off top-right margin) -->
+  <svg class="absolute -top-14 -right-40 xl:-right-28 2xl:-right-12 w-[360px] h-[360px]" viewBox="0 0 400 400" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- CPU Chip -->
+    <rect x="130" y="90" width="80" height="80" rx="10" stroke-width="2.2"/>
+    <rect x="145" y="105" width="50" height="50" rx="6" stroke-dasharray="4 3"/>
+    <circle cx="170" cy="130" r="10" stroke-width="1.8"/>
+    <!-- CPU Pins -->
+    <line x1="105" y1="105" x2="130" y2="105"/>
+    <line x1="105" y1="120" x2="130" y2="120"/>
+    <line x1="105" y1="135" x2="130" y2="135"/>
+    <line x1="105" y1="150" x2="130" y2="150"/>
+    <line x1="210" y1="105" x2="235" y2="105"/>
+    <line x1="210" y1="120" x2="235" y2="120"/>
+    <line x1="210" y1="135" x2="235" y2="135"/>
+    <line x1="210" y1="150" x2="235" y2="150"/>
+    <line x1="145" y1="65" x2="145" y2="90"/>
+    <line x1="160" y1="65" x2="160" y2="90"/>
+    <line x1="175" y1="65" x2="175" y2="90"/>
+    <line x1="190" y1="65" x2="190" y2="90"/>
+    <line x1="145" y1="170" x2="145" y2="195"/>
+    <line x1="160" y1="170" x2="160" y2="195"/>
+    <line x1="175" y1="170" x2="175" y2="195"/>
+    <line x1="190" y1="170" x2="190" y2="195"/>
+    <!-- Bus Traces -->
+    <path d="M235 105 L280 105 L300 70 L360 70"/>
+    <circle cx="360" cy="70" r="4.5" fill="#1a3300"/>
+    <path d="M235 135 L300 135 L320 180 L380 180"/>
+    <circle cx="380" cy="180" r="4.5" fill="#1a3300"/>
+    <path d="M105 120 L70 120 L50 160 L20 160"/>
+    <circle cx="20" cy="160" r="4.5" fill="#1a3300"/>
+    <path d="M160 195 L160 235 L190 270 L260 270"/>
+    <circle cx="260" cy="270" r="4.5" fill="#1a3300"/>
+    <!-- Parallel Bus lines -->
+    <line x1="290" y1="210" x2="390" y2="210" stroke-dasharray="5 4"/>
+    <line x1="290" y1="222" x2="390" y2="222" stroke-dasharray="5 4"/>
+    <line x1="290" y1="234" x2="390" y2="234" stroke-dasharray="5 4"/>
+  </svg>
+
+  <!-- 2. Top-Left: Workstation, Peripherals & Binary Stream (Bleeding off top-left margin) -->
+  <svg class="absolute top-10 -left-44 xl:-left-32 2xl:-left-12 w-[340px] h-[340px]" viewBox="0 0 380 380" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Monitor Bezel & Screen -->
+    <rect x="70" y="50" width="170" height="120" rx="10" stroke-width="2.2"/>
+    <rect x="82" y="62" width="146" height="96" rx="5"/>
+    <!-- Screen content lines -->
+    <line x1="96" y1="80" x2="160" y2="80"/>
+    <line x1="96" y1="96" x2="190" y2="96"/>
+    <line x1="96" y1="112" x2="140" y2="112"/>
+    <line x1="96" y1="128" x2="175" y2="128" stroke-dasharray="3 3"/>
+    <!-- Monitor Stand -->
+    <path d="M145 170 L140 205 L170 205 L165 170"/>
+    <line x1="125" y1="205" x2="185" y2="205" stroke-width="2.5"/>
+    <!-- Keyboard -->
+    <rect x="65" y="225" width="190" height="52" rx="8"/>
+    <line x1="80" y1="240" x2="240" y2="240" stroke-dasharray="8 5"/>
+    <line x1="80" y1="254" x2="240" y2="254" stroke-dasharray="8 5"/>
+    <!-- Mouse -->
+    <rect x="275" y="235" width="34" height="48" rx="16"/>
+    <line x1="292" y1="235" x2="292" y2="250"/>
+    <!-- Binary Matrix cascade -->
+    <text x="75" y="315" font-family="monospace" font-size="14" font-weight="bold" fill="#1a3300" stroke="none">01001001</text>
+    <text x="75" y="338" font-family="monospace" font-size="14" font-weight="bold" fill="#1a3300" stroke="none">01010100</text>
+  </svg>
+
+  <!-- 3. Middle-Right: Algorithmic Flowchart Sketch (Bleeding off middle-right margin) -->
+  <svg class="absolute top-[42%] -right-44 xl:-right-32 2xl:-right-14 w-[300px] h-[380px]" viewBox="0 0 340 430" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Start Oval -->
+    <ellipse cx="170" cy="40" rx="55" ry="24" stroke-width="2"/>
+    <text x="152" y="46" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1a3300" stroke="none">بداية</text>
+    <!-- Arrow down -->
+    <line x1="170" y1="64" x2="170" y2="105"/>
+    <polygon points="166,97 170,107 174,97" fill="#1a3300"/>
+    <!-- Input Box (Parallelogram) -->
+    <polygon points="110,148 230,148 250,110 130,110" stroke-width="1.8"/>
+    <text x="135" y="134" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1a3300" stroke="none">قراءة المدخلات</text>
+    <!-- Arrow down -->
+    <line x1="170" y1="148" x2="170" y2="190"/>
+    <polygon points="166,182 170,192 174,182" fill="#1a3300"/>
+    <!-- Condition Diamond -->
+    <polygon points="170,192 235,235 170,278 105,235" stroke-width="2.2"/>
+    <text x="153" y="240" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1a3300" stroke="none">شرط ؟</text>
+    <!-- Decision: Yes -->
+    <line x1="235" y1="235" x2="285" y2="235"/>
+    <text x="250" y="226" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1a3300" stroke="none">نعم</text>
+    <!-- Decision: No -->
+    <line x1="170" y1="278" x2="170" y2="320"/>
+    <text x="178" y="302" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1a3300" stroke="none">لا</text>
+    <!-- End Oval -->
+    <ellipse cx="170" cy="350" rx="50" ry="22" stroke-width="2"/>
+    <text x="155" y="355" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1a3300" stroke="none">نهاية</text>
+  </svg>
+
+  <!-- 4. Middle-Left: Logic Gates & Code Tags (Bleeding off middle-left margin) -->
+  <svg class="absolute top-[45%] -left-44 xl:-left-32 2xl:-left-14 w-[290px] h-[350px]" viewBox="0 0 320 390" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- AND Gate -->
+    <path d="M55 50 L95 50 A32 32 0 0 1 95 114 L55 114 Z" stroke-width="2"/>
+    <line x1="30" y1="66" x2="55" y2="66"/>
+    <line x1="30" y1="98" x2="55" y2="98"/>
+    <line x1="127" y1="82" x2="155" y2="82"/>
+    <text x="70" y="87" font-family="monospace" font-size="12" font-weight="bold" fill="#1a3300" stroke="none">AND</text>
+    <!-- OR Gate -->
+    <path d="M55 160 C75 160 92 170 125 192 C92 214 75 224 55 224 C67 202 67 182 55 160 Z" stroke-width="2"/>
+    <line x1="30" y1="176" x2="60" y2="176"/>
+    <line x1="30" y1="208" x2="60" y2="208"/>
+    <line x1="125" y1="192" x2="152" y2="192"/>
+    <text x="76" y="197" font-family="monospace" font-size="12" font-weight="bold" fill="#1a3300" stroke="none">OR</text>
+    <!-- Code Brackets & Elements -->
+    <text x="60" y="295" font-family="monospace" font-size="30" font-weight="bold" fill="#1a3300" stroke="none">&lt;html&gt;</text>
+    <text x="90" y="335" font-family="monospace" font-size="26" font-weight="bold" fill="#1a3300" stroke="none">&#123; code &#125;</text>
+  </svg>
+
+  <!-- 5. Bottom-Right: Computer Network Cloud (Bleeding off bottom-right margin) -->
+  <svg class="absolute bottom-10 -right-40 xl:-right-28 2xl:-right-10 w-[310px] h-[270px]" viewBox="0 0 350 300" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cloud -->
+    <path d="M130 90 C120 68 92 68 80 85 C65 85 52 102 58 118 C40 128 46 156 68 156 L175 156 C196 156 208 140 197 118 C202 102 186 85 164 90 C158 74 136 74 130 90 Z" stroke-width="2"/>
+    <!-- Topology Lines -->
+    <line x1="100" y1="156" x2="70" y2="215"/>
+    <line x1="145" y1="156" x2="175" y2="215"/>
+    <!-- Node 1: Workstation -->
+    <rect x="50" y="215" width="42" height="30" rx="4"/>
+    <line x1="71" y1="245" x2="71" y2="255"/>
+    <line x1="60" y1="255" x2="82" y2="255" stroke-width="2"/>
+    <!-- Node 2: Server Tower -->
+    <rect x="160" y="205" width="32" height="50" rx="4"/>
+    <line x1="168" y1="218" x2="184" y2="218"/>
+    <circle cx="176" cy="235" r="2.5" fill="#1a3300"/>
+    <circle cx="176" cy="246" r="2.5" fill="#1a3300"/>
+  </svg>
+
+  <!-- 6. Bottom-Left: Magnetic Storage & USB Drive (Bleeding off bottom-left margin) -->
+  <svg class="absolute bottom-10 -left-40 xl:-left-28 2xl:-left-10 w-[290px] h-[250px]" viewBox="0 0 320 280" fill="none" stroke="#1a3300" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Hard Disk Platter Assembly -->
+    <rect x="50" y="45" width="140" height="95" rx="10" stroke-width="2"/>
+    <circle cx="120" cy="92" r="34"/>
+    <circle cx="120" cy="92" r="10" fill="#1a3300"/>
+    <!-- Actuator Arm -->
+    <path d="M120 92 L155 115 L170 110"/>
+    <circle cx="170" cy="110" r="4" fill="#1a3300"/>
+    <!-- USB Drive -->
+    <rect x="65" y="175" width="70" height="34" rx="5"/>
+    <rect x="135" y="182" width="24" height="20" rx="3"/>
+    <line x1="143" y1="188" x2="151" y2="188"/>
+    <line x1="143" y1="196" x2="151" y2="196"/>
+  </svg>
+
+</div>
