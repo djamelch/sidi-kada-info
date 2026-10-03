@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a02"/>
+      <stop offset="100%" stop-color="#112200"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff176"/>
+      <stop offset="100%" stop-color="#ffe95c"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)" stroke="#ffe95c" stroke-width="6" stroke-opacity="0.25"/>
+
+  <!-- Subtle Circuit Dots -->
+  <g opacity="0.18" fill="#ffe95c">
+    <circle cx="80" cy="80" r="5"/>
+    <circle cx="120" cy="80" r="3"/>
+    <circle cx="80" cy="120" r="3"/>
+    <circle cx="432" cy="80" r="5"/>
+    <circle cx="392" cy="80" r="3"/>
+    <circle cx="432" cy="120" r="3"/>
+    <circle cx="80" cy="432" r="5"/>
+    <circle cx="432" cy="432" r="5"/>
+  </g>
+
+  <!-- Computer Monitor -->
+  <rect x="116" y="95" width="280" height="175" rx="18" fill="#142800" stroke="url(#goldGrad)" stroke-width="8"/>
+  <rect x="136" y="115" width="240" height="135" rx="10" fill="#0d1a00"/>
+  
+  <!-- Screen Stand -->
+  <path d="M226 270 L286 270 L296 300 L216 300 Z" fill="url(#goldGrad)"/>
+  <rect x="196" y="298" width="120" height="10" rx="5" fill="url(#goldGrad)"/>
+
+  <!-- Code Brackets & Slash on Screen -->
+  <g filter="url(#glow)">
+    <!-- Left Bracket < -->
+    <path d="M210 152 L175 182 L210 212" fill="none" stroke="#ffe95c" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Slash / -->
+    <line x1="268" y1="145" x2="244" y2="219" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+    <!-- Right Bracket > -->
+    <path d="M302 152 L337 182 L302 212" fill="none" stroke="#ffe95c" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Open Educational Book Motif -->
+  <g transform="translate(0, 10)">
+    <!-- Left Page -->
+    <path d="M256 350 C210 325 150 325 110 338 L110 405 C150 392 210 392 256 418 Z" 
+          fill="#172e02" stroke="url(#goldGrad)" stroke-width="6" stroke-linejoin="round"/>
+    <!-- Right Page -->
+    <path d="M256 350 C302 325 362 325 402 338 L402 405 C362 392 302 392 256 418 Z" 
+          fill="#172e02" stroke="url(#goldGrad)" stroke-width="6" stroke-linejoin="round"/>
+    
+    <!-- Central Spine -->
+    <line x1="256" y1="350" x2="256" y2="422" stroke="#ffe95c" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Subtle Digital Data lines in pages -->
+    <line x1="140" y1="355" x2="225" y2="348" stroke="#ffe95c" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+    <line x1="140" y1="375" x2="215" y2="368" stroke="#ffe95c" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+    <line x1="287" y1="348" x2="372" y2="355" stroke="#ffe95c" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+    <line x1="297" y1="368" x2="372" y2="375" stroke="#ffe95c" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+  </g>
+
+  <!-- Small Corner Badge / Sparkle -->
+  <circle cx="256" cy="452" r="6" fill="#ffe95c"/>
+  <circle cx="236" cy="452" r="3" fill="#ffe95c" opacity="0.6"/>
+  <circle cx="276" cy="452" r="3" fill="#ffe95c" opacity="0.6"/>
+</svg>

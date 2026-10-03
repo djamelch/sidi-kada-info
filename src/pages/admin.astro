@@ -115,17 +115,15 @@ const CLASSES_CONFIG = [
       <form id="admin-auth-form" class="space-y-4" onsubmit="return false;">
         <div>
           <label for="admin-pin-input" class="block text-xs text-[#1a3300]/90 mb-1.5 font-bold">
-            رمز المرور السري (<span class="font-mono">PIN</span>):
+            كلمة المرور السرية للأستاذ:
           </label>
           <div class="relative">
             <input 
               id="admin-pin-input" 
               type="password" 
-              inputmode="numeric"
-              maxlength="20"
-              placeholder="••••" 
+              placeholder="••••••••••••" 
               autocomplete="current-password"
-              class="w-full bg-[#f2eee3] border-2 border-[#1a3300]/20 focus:border-[#1a3300] rounded-xl py-3 px-4 font-mono text-center text-xl font-black text-[#1a3300] tracking-widest outline-hidden transition-all shadow-inner"
+              class="w-full bg-[#f2eee3] border-2 border-[#1a3300]/20 focus:border-[#1a3300] rounded-xl py-3 px-4 font-mono text-center text-lg font-black text-[#1a3300] tracking-widest outline-hidden transition-all shadow-inner"
               required
             />
             <button 
@@ -138,24 +136,6 @@ const CLASSES_CONFIG = [
             </button>
           </div>
           <div id="login-error-msg" class="hidden text-[#cb5521] text-[11px] font-mono mt-2 text-center bg-[#f6d0ff]/50 border border-[#cb5521]/30 py-1.5 px-2.5 rounded-xl font-bold">
-          </div>
-        </div>
-
-        <!-- Sleek Tactile Keypad -->
-        <div class="border-2 border-[#1a3300]/15 rounded-2xl p-2.5 bg-[#f2eee3]">
-          <div class="grid grid-cols-3 gap-1.5 text-xs font-mono font-bold text-[#1a3300]">
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="1">1</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="2">2</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="3">3</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="4">4</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="5">5</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="6">6</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="7">7</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="8">8</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="9">9</button>
-            <button type="button" id="pin-clear-btn" class="py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#f6d0ff] hover:text-[#cb5521] text-[#1a3300]/60 text-[10px] border border-[#1a3300]/15 transition-all active:scale-95 font-bold">مسح</button>
-            <button type="button" class="pin-key py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] border border-[#1a3300]/15 transition-all active:scale-95 shadow-2xs" data-val="0">0</button>
-            <button type="button" id="pin-backspace-btn" class="py-2.5 rounded-xl bg-[#fcfaf5] hover:bg-[#ffe95c] text-[#1a3300]/70 text-[10px] border border-[#1a3300]/15 transition-all active:scale-95 font-bold">⌫</button>
           </div>
         </div>
 
@@ -176,8 +156,9 @@ const CLASSES_CONFIG = [
         </button>
       </form>
 
-      <div class="pt-4 border-t border-[#1a3300]/15 text-center font-mono text-[11px] text-[#1a3300]/70">
-        الرمز الافتراضي: <span class="font-bold text-[#1a3300] bg-[#ffe95c] px-2 py-0.5 rounded-md border border-[#1a3300]/20">2027</span>
+      <div class="pt-4 border-t border-[#1a3300]/15 text-center font-mono text-[11px] text-[#1a3300]/70 flex items-center justify-center gap-1.5">
+        <span>🔒</span>
+        <span>فضاء آمن ومشفر — مخصص للأستاذ فقط</span>
       </div>
 
     </div>
@@ -1338,33 +1319,33 @@ const CLASSES_CONFIG = [
 
           <form id="change-pwd-form" class="space-y-4" onsubmit="return false;">
             <div>
-              <label for="old-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CURRENT PIN:</label>
+              <label for="old-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CURRENT PASSWORD:</label>
               <input 
                 id="old-pin-input" 
                 type="password" 
-                placeholder="الرمز الحالي (الافتراضي: 2027)" 
+                placeholder="كلمة المرور الحالية..." 
                 class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
                 required 
               />
             </div>
 
             <div>
-              <label for="new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">NEW PIN:</label>
+              <label for="new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">NEW PASSWORD:</label>
               <input 
                 id="new-pin-input" 
                 type="password" 
-                placeholder="الرمز الجديد..." 
+                placeholder="كلمة المرور الجديدة..." 
                 class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
                 required 
               />
             </div>
 
             <div>
-              <label for="confirm-new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CONFIRM NEW PIN:</label>
+              <label for="confirm-new-pin-input" class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">CONFIRM NEW PASSWORD:</label>
               <input 
                 id="confirm-new-pin-input" 
                 type="password" 
-                placeholder="تأكيد الرمز الجديد..." 
+                placeholder="تأكيد كلمة المرور الجديدة..." 
                 class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
                 required 
               />
@@ -1372,20 +1353,13 @@ const CLASSES_CONFIG = [
 
             <div id="pwd-change-msg" class="hidden text-xs font-mono p-2.5 rounded-xl"></div>
 
-            <div class="flex items-center gap-2 pt-2">
+            <div class="pt-2">
               <button 
                 type="submit" 
                 id="btn-save-new-pwd" 
-                class="flex-1 py-2.5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all cursor-pointer shadow-sm"
+                class="w-full py-3 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-bold transition-all cursor-pointer shadow-sm hover-lift"
               >
-                حفظ الرمز الجديد
-              </button>
-              <button 
-                type="button" 
-                id="btn-reset-default-pwd" 
-                class="py-2.5 px-3.5 rounded-xl border border-[#1a3300]/25 text-[#1a3300] text-xs font-bold hover:bg-[#ffe95c] transition-all cursor-pointer"
-              >
-                استرجاع 2027
+                حفظ وتحديث كلمة المرور
               </button>
             </div>
           </form>
@@ -1543,7 +1517,9 @@ const CLASSES_CONFIG = [
     const CLASSES_CONFIG: any[] = bootstrapEl ? JSON.parse(bootstrapEl.dataset.classes || '[]') : [];
 
     // Storage Keys
-    const DEFAULT_HASH = '5313e5bf17148de844ff74be3663d47c6e361ca469b30a36337701233c89a15e'; // SHA-256 of "2027"
+    // Storage Keys
+    const OLD_DEFAULT_HASH = '5313e5bf17148de844ff74be3663d47c6e361ca469b30a36337701233c89a15e'; // Old initial code
+    const DEFAULT_HASH = 'dc262d283bb82de7ba8a8ca08633b7e507f0a4ecba63e0c1c17cd893ec100807'; // SHA-256 of "Djamo1993#"
     const HASH_KEY = 'maerifa_admin_pwd_hash';
     const SESSION_KEY = 'maerifa_admin_session_active';
     const PERSISTENT_KEY = 'maerifa_admin_persistent_auth';
@@ -1554,6 +1530,14 @@ const CLASSES_CONFIG = [
     const EXAM_MODE_KEY = 'maerifa_exam_mode';
     const CLASSES_PROGRESS_KEY = 'maerifa_classes_progress_v1';
 
+    // Auto-migrate from old initial hash to new secure live password
+    const currentStored = localStorage.getItem(HASH_KEY);
+    if (!currentStored || currentStored === OLD_DEFAULT_HASH) {
+      localStorage.setItem(HASH_KEY, DEFAULT_HASH);
+      sessionStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(PERSISTENT_KEY);
+    }
+
     async function sha256(message: string): Promise<string> {
       const msgBuffer = new TextEncoder().encode(message);
       const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -1562,7 +1546,12 @@ const CLASSES_CONFIG = [
     }
 
     function getStoredHash(): string {
-      return localStorage.getItem(HASH_KEY) || DEFAULT_HASH;
+      const stored = localStorage.getItem(HASH_KEY);
+      if (!stored || stored === OLD_DEFAULT_HASH) {
+        localStorage.setItem(HASH_KEY, DEFAULT_HASH);
+        return DEFAULT_HASH;
+      }
+      return stored;
     }
 
     const loginGate = document.getElementById('admin-login-gate');
@@ -1620,23 +1609,9 @@ const CLASSES_CONFIG = [
 
     togglePinBtn?.addEventListener('click', () => {
       if (pinInput) {
-        pinInput.type = pinInput.type === 'password' ? 'text' : 'password';
-      }
-    });
-
-    document.querySelectorAll('.pin-key').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (pinInput) pinInput.value += (btn as HTMLElement).dataset.val || '';
-      });
-    });
-
-    document.getElementById('pin-clear-btn')?.addEventListener('click', () => {
-      if (pinInput) pinInput.value = '';
-    });
-
-    document.getElementById('pin-backspace-btn')?.addEventListener('click', () => {
-      if (pinInput && pinInput.value.length > 0) {
-        pinInput.value = pinInput.value.slice(0, -1);
+        const isPwd = pinInput.type === 'password';
+        pinInput.type = isPwd ? 'text' : 'password';
+        togglePinBtn.textContent = isPwd ? 'إخفاء' : 'عرض';
       }
     });
 
@@ -1657,10 +1632,10 @@ const CLASSES_CONFIG = [
         }
         if (loginError) loginError.classList.add('hidden');
         unlockDashboard();
-        showToast('مرحباً بك أستاذ، تم فتح لوحة التحكم');
+        showToast('مرحباً بك أستاذ، تم فتح لوحة التحكم بنجاح');
       } else {
         if (loginError) {
-          loginError.textContent = 'رمز المرور غير صحيح.';
+          loginError.textContent = 'كلمة المرور غير صحيحة.';
           loginError.classList.remove('hidden');
         }
         pinInput.value = '';
@@ -2838,7 +2813,6 @@ const CLASSES_CONFIG = [
       const newInput = document.getElementById('new-pin-input') as HTMLInputElement;
       const confirmInput = document.getElementById('confirm-new-pin-input') as HTMLInputElement;
       const pwdMsg = document.getElementById('pwd-change-msg');
-      const resetDefaultBtn = document.getElementById('btn-reset-default-pwd');
       const clearStorageBtn = document.getElementById('btn-clear-all-storage');
 
       pwdForm?.addEventListener('submit', async (e) => {
@@ -2851,35 +2825,27 @@ const CLASSES_CONFIG = [
         const oldHash = await sha256(oldVal);
 
         if (oldHash !== currentHash) {
-          showPwdMsg('رمز المرور الحالي غير صحيح', 'rose');
+          showPwdMsg('كلمة المرور الحالية غير صحيحة', 'rose');
           return;
         }
 
         if (newVal.length < 4) {
-          showPwdMsg('الرمز يجب أن يكون 4 خانات على الأقل', 'zinc');
+          showPwdMsg('كلمة المرور يجب أن تكون 4 خانات على الأقل', 'zinc');
           return;
         }
 
         if (newVal !== confVal) {
-          showPwdMsg('الرمز وتأكيده غير متطابقين', 'zinc');
+          showPwdMsg('كلمة المرور وتأكيدها غير متطابقين', 'zinc');
           return;
         }
 
         const newHash = await sha256(newVal);
         localStorage.setItem(HASH_KEY, newHash);
-        showPwdMsg('تم تحديث الرمز السري بنجاح', 'emerald');
+        showPwdMsg('تم تحديث كلمة المرور بنجاح', 'emerald');
         oldInput.value = '';
         newInput.value = '';
         confirmInput.value = '';
-        showToast('تم تغيير رمز المرور');
-      });
-
-      resetDefaultBtn?.addEventListener('click', () => {
-        if (confirm('استرجاع الرمز السري الافتراضي (2027)؟')) {
-          localStorage.setItem(HASH_KEY, DEFAULT_HASH);
-          showPwdMsg('تم استرجاع الرمز الافتراضي (2027)', 'emerald');
-          showToast('الرمز الافتراضي: 2027');
-        }
+        showToast('تم تغيير وتحديث كلمة المرور');
       });
 
       clearStorageBtn?.addEventListener('click', () => {
