@@ -202,7 +202,7 @@ const stream = STREAMS_DATA.tcst;
 
       // Synchronize with teacher's localStorage status overrides
       try {
-        const overrides = JSON.parse(localStorage.getItem('maerifa_units_status_v1') || '{}');
+        const overrides = JSON.parse(localStorage.getItem('maerifa_units_status_v2') || '{}');
         document.querySelectorAll('.unit-row').forEach(row => {
           const unitId = (row as HTMLElement).dataset.unitId;
           const slug = (row as HTMLElement).dataset.defaultSlug;

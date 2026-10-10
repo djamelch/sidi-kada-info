@@ -7,7 +7,7 @@
  *  - VIDEO_URL: رابط فيديو الشرح (YouTube embed).
  *  - HOMEWORK_SOLUTION_PUBLISHED: لنشر أو حجب حل المسألة حتى تنتهي المراقبة بالقسم.
  */
-const VIDEO_URL = 'https://www.youtube.com/embed/g8w5A93X7Zc'; // فيديو محاكاة وتجميع الحاسوب
+const YOUTUBE_ID = 'f5bVfUOR5iM'; // فيديو درس تجميع الحاسوب موشن غرافيك v2
 const HOMEWORK_SOLUTION_PUBLISHED = false;
 
 interface Props {
@@ -242,10 +242,32 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
       <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
     </div>
 
-    {VIDEO_URL ? (
-      <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black shadow-md">
-        <iframe src={VIDEO_URL} class="w-full h-full" title="فيديو شرح تجميع الحاسوب ومكوناته"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>
+    {YOUTUBE_ID ? (
+      <div 
+        id="video-facade-container"
+        class="relative rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black group cursor-pointer shadow-md select-none"
+        data-video-id={YOUTUBE_ID}
+      >
+        <img 
+          src={`https://img.youtube.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`} 
+          alt="غلاف فيديو شرح الوحدة 2: تجميع الحاسوب"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/35 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-3">
+          <button 
+            type="button" 
+            aria-label="تشغيل فيديو الشرح"
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#ff0000] group-hover:bg-[#cc0000] text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 active:scale-95 cursor-pointer"
+          >
+            <svg class="w-8 h-8 sm:w-9 sm:h-9 fill-current translate-x-0.5" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <span class="px-4 py-1.5 rounded-full bg-black/75 backdrop-blur-xs text-white text-xs sm:text-sm font-bold tracking-wide shadow-sm border border-white/20">
+            ▶ اضغط هنا لمشاهدة شرح الدرس
+          </span>
+        </div>
       </div>
     ) : (
       <div class="rounded-2xl border-2 border-dashed border-[#1a3300]/30 bg-white aspect-video flex flex-col items-center justify-center text-center gap-3 p-6">
@@ -604,4 +626,21 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
   calcInput.addEventListener('input', updateConversions);
   calcUnit.addEventListener('change', updateConversions);
   updateConversions();
+
+  // تفعيل مشغل الفيديو عند الضغط (Lite YouTube Facade لأقصى سرعة تحميل)
+  const videoFacade = document.getElementById('video-facade-container');
+  videoFacade?.addEventListener('click', () => {
+    const vidId = videoFacade.getAttribute('data-video-id');
+    if (!vidId) return;
+    videoFacade.innerHTML = `
+      <iframe 
+        src="https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0" 
+        class="w-full h-full" 
+        title="فيديو شرح الوحدة 2: تجميع الحاسوب"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+        allowfullscreen>
+      </iframe>
+    `;
+    videoFacade.classList.remove('cursor-pointer', 'group');
+  }, { once: true });
 </script>

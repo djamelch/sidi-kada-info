@@ -1580,7 +1580,7 @@ const CLASSES_CONFIG = [
     const HASH_KEY = 'maerifa_admin_pwd_hash';
     const SESSION_KEY = 'maerifa_admin_session_active';
     const PERSISTENT_KEY = 'maerifa_admin_persistent_auth';
-    const STATUS_OVERRIDE_KEY = 'maerifa_units_status_v1';
+    const STATUS_OVERRIDE_KEY = 'maerifa_units_status_v2';
     const TRACKER_KEY = 'maerifa_curriculum_tracker_v1';
     const TRACKER_NOTES_KEY = 'maerifa_curriculum_tracker_notes_v1';
     const ALERT_KEY = 'maerifa_global_alert';
@@ -1991,7 +1991,7 @@ const CLASSES_CONFIG = [
       document.getElementById('btn-batch-lock-all')?.addEventListener('click', () => {
         const overrides = JSON.parse(localStorage.getItem(STATUS_OVERRIDE_KEY) || '{}');
         allUnits.forEach(u => {
-          if (u.id !== 'tcst-m1-u1' && u.id !== 'tcl-m1-u1') {
+          if (u.defaultStatus !== 'available') {
             if (typeof overrides[u.id] === 'object' && overrides[u.id] !== null) {
               overrides[u.id].status = 'planned';
             } else {
