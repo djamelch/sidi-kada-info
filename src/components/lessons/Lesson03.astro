@@ -1,0 +1,940 @@
+---
+/**
+ * الوحدة 3: نظام التشغيل (المفاهيم ومراحل التثبيت) — المصدر الوحيد لمحتوى الدرس.
+ * المرجع المعتمد: وثائق الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
+ * «نظام التشغيل .docx / .pdf» و «مذكرات نظام التشغيل.docx / .pdf»
+ *
+ * إعدادات الأستاذ (تُغيَّر هنا فقط):
+ *  - YOUTUBE_ID: معرّف فيديو الشرح على يوتيوب (اتركه فارغاً إلى أن يجهز الفيديو).
+ *  - HOMEWORK_SOLUTION_PUBLISHED: لنشر أو حجب حل العمل المنزلي.
+ */
+const YOUTUBE_ID = '';
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/memo-03.pdf';
+const pdfDownloadName = 'نظام_التشغيل_الوحدة_03.pdf';
+
+const parts = [
+  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'الدرس (PDF)', desc: 'نص الدرس الكامل (المفاهيم + مراحل التثبيت) مع تحميل PDF' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح نظام التشغيل ومراحل تثبيته بالصوت والصورة' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'مصنف الأنظمة + مستكشف التقسيم + مقارنة التهيئة' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'الخريطة الذهنية', desc: 'ملخص شامل ومنظم لكامل مفاهيم ومراحل الوحدة' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#f6d0ff]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي مع الحلول المخفية' },
+  { id: 'part-6', icon: '💻', color: 'bg-[#ffe95c]', title: 'محاكي البيوس والتثبيت', desc: 'محاكي تفاعلي لإعداد BIOS وخطوات تثبيت Windows 7' },
+];
+
+const exercises = [
+  {
+    q: 'ما المقصود بنظام التشغيل (Operating System)؟ وبماذا يسمح؟',
+    a: '<strong>تعريف نظام التشغيل:</strong> هو مجموعة من الملفات والبرمجيات المتكاملة فيما بينها والتي تسمح بـ:<br/>1. إعداد الحاسوب لبدء التشغيل.<br/>2. إدارة موارد الحاسوب (وحدات الإدخال، المعالج، الذاكرة، القرص الصلب، وكل الأجهزة الملحقة).<br/>3. تنظيم وإدارة الملفات.'
+  },
+  {
+    q: 'ما هي أهم مميزات نظام التشغيل؟',
+    a: '• يعتبر الوسيط بين المستخدم والحاسوب.<br/>• ذو واجهة بيانية سهلة الاستخدام.<br/>• يسمح بتنفيذ أكثر من برنامج في نفس الوقت.'
+  },
+  {
+    q: 'أعطِ أمثلة عن أشهر أنظمة التشغيل الخاصة بالحواسيب، وأخرى خاصة باللوحات اللمسية والهواتف الذكية.',
+    a: '• <strong>أنظمة تشغيل الحواسيب:</strong> MS-DOS ، Windows ، Linux ، Unix ، MacOs ...<br/>• <strong>أنظمة تشغيل اللوحات اللمسية والهواتف الذكية:</strong> Android ، iOS ، Windows Phone ...'
+  },
+  {
+    q: 'ما هو مفهوم تثبيت نظام التشغيل؟',
+    a: 'هو عملية نسخ وإعداد ملفات وبرامج النظام على القرص الصلب بصفة دائمة، انطلاقاً من وسيط إقلاع (Bootable) مثل قرص DVD أو مفتاح USB أو عبر شبكة الإنترنت، وذلك لتهيئة الحاسوب ليصبح جاهزاً للعمل وتشغيل البرامج المختلفة.'
+  },
+  {
+    q: 'ما المقصود بتقسيم القرص الصلب؟ وما هو القسم الأساسي؟ ولماذا نحتاج إلى تقسيم القرص؟',
+    a: '• <strong>تقسيم القرص الصلب:</strong> هو تقسيم القرص إلى أقسام افتراضية كل قسم له حرف أو أيقونة خاصة به (مثل C, D, E).<br/>• <strong>القسم الأساسي:</strong> هو الذي يحتوي على ملفات نظام التشغيل وهو يتولى عملية إقلاع الحاسوب.<br/>• <strong>أهداف التقسيم:</strong><br/>1. ترتيب وتنظيم الملفات.<br/>2. جعل الملفات الشخصية والخاصة في تجزئة مختلفة عن تجزئة النظام.<br/>3. إمكانية تثبيت أكثر من نظام تشغيل واحد (كل واحد في قسم).'
+  },
+  {
+    q: 'ما هي أنواع التهيئة التي يحتاجها القرص الصلب؟ وما الفرق بينهما؟',
+    a: 'يقصد بالتهيئة تنظيم القرص، وهناك نوعان:<br/>• <strong>التهيئة الفيزيائية:</strong> وهي تقسيم القرص إلى مسارات، قطاعات، وأسطوانات، وتتم هذه العملية من طرف الصانع ولا يمكن للمستخدم أن يقوم بها مرة أخرى.<br/>• <strong>التهيئة المنطقية:</strong> وهي وضع نظام الملفات مثل (FAT, FAT32, NTFS) ليتمكن نظام التشغيل من استخدام المساحة التخزينية في القرص الصلب.'
+  },
+  {
+    q: 'ما هو الإعداد الواجب تغييره قبل تثبيت نظام التشغيل؟ وكيف ندخل إليه؟',
+    a: 'عند تشغيل الجهاز فإنه يقلع افتراضياً من القرص الصلب نظراً للترتيب الموجود في <strong>BIOS</strong>؛ فإذا أردنا إقلاع الجهاز من جهة أخرى (قرص مضغوط، ذاكرة متصلة بمنفذ USB...) نقوم بتغيير إعدادات الإقلاع في <strong>BIOS</strong> بالضغط على مفتاح <strong>Suppr</strong> أو <strong>F2</strong> بعد بدء تشغيل الجهاز (والمفتاح يتغير من جهاز لآخر).'
+  },
+  {
+    q: 'أثناء تثبيت الويندوز، ما الفرق بين خيار «ترقية» وخيار «تخصيص»؟',
+    a: '• <strong>ترقية (Upgrade):</strong> تُستعمل في حالة وجود نظام تشغيل سابق لتحديثه مع الحفاظ على الملفات والإعدادات.<br/>• <strong>تخصيص (Custom):</strong> تُستعمل لتثبيت نظام ويندوز جديد في القسم المختار.'
+  }
+];
+
+const osExamples = [
+  { name: 'Windows', type: 'pc', badge: 'نظام تشغيل للحواسيب', desc: 'أشهر نظام تشغيل للحواسيب المكتبية والمحمولة من تطوير شركة مايكروسوفت، يتميز بواجهة بيانية سهلة الاستخدام.' },
+  { name: 'Linux', type: 'pc', badge: 'نظام تشغيل للحواسيب', desc: 'نظام تشغيل حر ومفتوح المصدر يتميز بالأمان العالي والاستقرار، وله عدة توزيعات شهيرة مثل Ubuntu.' },
+  { name: 'MacOs', type: 'pc', badge: 'نظام تشغيل للحواسيب', desc: 'نظام التشغيل الخاص بحواسيب شركة Apple (ماكنتوش)، يتميز بواجهة رسومية أنيقة وأداء متكامل.' },
+  { name: 'Unix', type: 'pc', badge: 'نظام تشغيل للحواسيب', desc: 'من أقدم وأقوى أنظمة التشغيل متعددة المهام والمستخدمين، شكّل القاعدة التي بُنيت عليها أنظمة حديثة.' },
+  { name: 'MS-DOS', type: 'pc', badge: 'نظام تشغيل للحواسيب', desc: 'نظام تشغيل قديم من شركة مايكروسوفت يعتمد على الواجهة النصية وكتابة الأوامر عبر لوحة المفاتيح.' },
+  { name: 'Android', type: 'mobile', badge: 'للوحات اللمسية والهواتف الذكية', desc: 'النظام الأكثر انتشاراً في الهواتف الذكية واللوحات اللمسية، طورته شركة Google ويعتمد على نواة لينكس.' },
+  { name: 'iOS', type: 'mobile', badge: 'للوحات اللمسية والهواتف الذكية', desc: 'نظام التشغيل الحصري لأجهزة شركة Apple المحمولة واللمسية (مثل iPhone)، يتميز بالحماية والسرعة.' },
+  { name: 'Windows Phone', type: 'mobile', badge: 'للوحات اللمسية والهواتف الذكية', desc: 'نظام تشغيل طورته شركة مايكروسوفت للهواتف الذكية واللوحات اللمسية بواجهة المربعات الحية.' },
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 3</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#d5f5c2] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 3: نظام التشغيل
+      </h1>
+      <p class="text-sm sm:text-base text-[#1a3300]/80 font-medium">
+        مفهوم نظام التشغيل ومميزاته، تقسيم وتهيئة القرص الصلب، إعدادات BIOS، ومراحل تثبيت النظام.
+      </p>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للانتقال المباشر إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p, i) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ 1. الدرس (PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        1. نص الدرس المعتمد
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a href={pdfHref} download={pdfDownloadName}
+         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold flex items-center gap-2">
+        <span>⬇</span> تحميل الدرس بصيغة PDF
+      </a>
+      <a href={pdfHref} target="_blank" rel="noopener"
+         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold flex items-center gap-2">
+        <span>👁</span> معاينة وقراءة الدرس (PDF)
+      </a>
+    </div>
+
+    <!-- ====== الحصة الأولى: نظام التشغيل (مفاهيم) ====== -->
+    <div class="p-3.5 rounded-2xl bg-[#ffe95c]/50 border-2 border-[#1a3300]/20 flex items-center justify-between flex-wrap gap-2">
+      <span class="font-extrabold text-sm sm:text-base text-[#1a3300]">📘 الجزء الأول: نظام التشغيل (مفاهيم)</span>
+      <span class="text-xs font-bold bg-white px-3 py-1 rounded-full border border-[#1a3300]/20 text-[#1a3300]">المدة: 02 ساعات</span>
+    </div>
+
+    <!-- وضعية الانطلاق 1 -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2 flex items-center gap-2">
+        <span class="text-amber-600">🎯</span> وضعية الانطلاق والإشكالية:
+      </h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        عند تشغيل الحاسوب، لا يمكن للمكونات المادية (المعالج، الذاكرة، الأقراص...) أن تعمل لوحدها، بل تحتاج إلى نظام تشغيل يقوم بتسييرها وتشغيل البرامج.
+        <br />
+        <strong class="text-[#1a3300]">الإشكالية:</strong> كيف يسمح نظام التشغيل للحاسوب بالعمل، وكيف نقوم بتثبيته عليه؟
+      </p>
+    </div>
+
+    <!-- 1- نظام التشغيل -->
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">1- نظام التشغيل (Operating System):</h3>
+
+      <div class="p-3.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+        <strong class="text-[#1a3300] block">تعريف نظام التشغيل:</strong>
+        <p>هو مجموعة من الملفات والبرمجيات المتكاملة فيما بينها والتي تسمح بـ:</p>
+        <ul class="pr-4 space-y-1 font-medium">
+          <li>• إعداد الحاسوب لبدء التشغيل.</li>
+          <li>• إدارة موارد الحاسوب (وحدات الإدخال، المعالج، الذاكرة، القرص الصلب، كل الأجهزة الملحقة).</li>
+          <li>• تنظيم وإدارة الملفات.</li>
+        </ul>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-xl bg-[#d5f5c2]/50 border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block mb-1.5">مميزات نظام التشغيل:</strong>
+          <ul class="space-y-1">
+            <li>• يعتبر الوسيط بين المستخدم والحاسوب.</li>
+            <li>• ذو واجهة بيانية سهلة الاستخدام.</li>
+            <li>• يسمح بتنفيذ أكثر من برنامج في نفس الوقت.</li>
+          </ul>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-[#a8e5e5]/40 border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block mb-1.5">من أشهر أنظمة التشغيل:</strong>
+          <ul class="space-y-1.5">
+            <li>
+              • <strong>أنظمة تشغيل الحواسيب:</strong>
+              <span class="block font-mono text-xs mt-0.5 bg-white/80 px-2 py-1 rounded border border-[#1a3300]/10" dir="ltr">MS-DOS ; Windows ; Linux ; Unix ; MacOs …</span>
+            </li>
+            <li>
+              • <strong>أنظمة التشغيل للوحات اللمسية والهواتف الذكية:</strong>
+              <span class="block font-mono text-xs mt-0.5 bg-white/80 px-2 py-1 rounded border border-[#1a3300]/10" dir="ltr">Android ; iOS ; Windows Phone …</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2- تثبيت نظام التشغيل -->
+    <div class={`${boxCls} space-y-2 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">2- تثبيت نظام التشغيل:</h3>
+      <p>
+        هو عملية نسخ وإعداد ملفات وبرامج النظام على القرص الصلب بصفة دائمة، انطلاقاً من وسيط إقلاع (<strong>Bootable</strong>) مثل قرص <strong>DVD</strong> أو مفتاح <strong>USB</strong> أو عبر شبكة الإنترنت، وذلك لتهيئة الحاسوب ليصبح جاهزاً للعمل وتشغيل البرامج المختلفة.
+      </p>
+    </div>
+
+    <!-- 3- مفهوم تقسيم القرص الصلب -->
+    <div class={`${boxCls} space-y-3 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">3- مفهوم تقسيم القرص الصلب:</h3>
+      <p>
+        هو تقسيم القرص إلى أقسام افتراضية كل قسم له حرف أو أيقونة خاصة به.
+      </p>
+      <div class="p-3 rounded-xl bg-[#ffe95c]/40 border border-[#1a3300]/15 font-medium">
+        <strong class="text-[#1a3300]">القسم الأساسي:</strong> هو الذي يحتوي على ملفات نظام التشغيل وهو يتولى عملية إقلاع الحاسوب.
+      </div>
+      <div>
+        <strong class="text-[#1a3300] block mb-1">ويهدف هذا التقسيم إلى:</strong>
+        <ul class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm font-bold">
+          <li class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">1. ترتيب وتنظيم الملفات.</li>
+          <li class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">2. جعل الملفات الشخصية والخاصة في تجزئة مختلفة عن تجزئة النظام.</li>
+          <li class="p-2.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">3. إمكانية تثبيت أكثر من نظام تشغيل واحد كل واحد في قسم.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4- مفهوم تهيئة القرص الصلب -->
+    <div class={`${boxCls} space-y-3 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">4- مفهوم تهيئة القرص الصلب:</h3>
+      <p>ونقصد بها تنظيم القرص، وهناك نوعان من التهيئة:</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block mb-1">أ / التهيئة الفيزيائية:</strong>
+          وهي تقسيم القرص إلى مسارات، قطاعات، أسطوانات، وتتم هذه العملية من طرف الصانع ولا يمكن للمستخدم أن يقوم بها مرة أخرى.
+        </div>
+        <div class="p-3.5 rounded-xl bg-[#d5f5c2]/50 border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block mb-1">ب / التهيئة المنطقية:</strong>
+          وهي وضع نظام الملفات مثل <span class="font-mono font-bold" dir="ltr">(FAT, FAT32, NTFS)</span> ليتمكن نظام التشغيل من استخدام المساحة التخزينية في القرص الصلب.
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== الحصة الثانية: نظام التشغيل (مراحل التثبيت) ====== -->
+    <div class="p-3.5 rounded-2xl bg-[#a8e5e5]/50 border-2 border-[#1a3300]/20 flex items-center justify-between flex-wrap gap-2 mt-6">
+      <span class="font-extrabold text-sm sm:text-base text-[#1a3300]">📗 الجزء الثاني: نظام التشغيل (مراحل التثبيت)</span>
+      <span class="text-xs font-bold bg-white px-3 py-1 rounded-full border border-[#1a3300]/20 text-[#1a3300]">المدة: 01 ساعة</span>
+    </div>
+
+    <!-- وضعية الانطلاق 2 -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2 flex items-center gap-2">
+        <span class="text-blue-600">🎯</span> وضعية الانطلاق والإشكالية الثانية:
+      </h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        بعد التعرف على مفهوم نظام التشغيل وأغلب المفاهيم المتعلقة به،
+        <strong class="text-[#1a3300]">فما هي الخطوات التي تمر بها عملية تثبيت نظام التشغيل؟</strong>
+      </p>
+    </div>
+
+    <!-- مراحل تثبيت نظام التشغيل -->
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300]">مراحل تثبيت نظام التشغيل:</h3>
+      <p>يمكن تقسيم مراحل تثبيت نظام التشغيل إلى:</p>
+
+      <div class="p-4 rounded-xl bg-[#ffe95c]/40 border-2 border-[#1a3300]/15 space-y-1">
+        <strong class="text-[#1a3300] block text-base">1. الإعدادات قبل التثبيت:</strong>
+        <p>
+          من المعلوم أنه عند تشغيل الجهاز فإنه يقلع من القرص الصلب نظراً للترتيب الموجود في <strong>BIOS</strong>، فإذا أردنا إقلاع الجهاز من جهة أخرى (قرص مضغوط، ذاكرة متصلة بمنفذ USB ...) نقوم بتغيير إعدادات <strong>BIOS</strong> بالضغط على مفتاح <kbd class="px-2 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono text-xs font-bold">Suppr</kbd> أو <kbd class="px-2 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono text-xs font-bold">F2</kbd> بعد بدء تشغيل الجهاز (المفتاح يتغير من جهاز لآخر).
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#1a3300]/15 space-y-3">
+        <strong class="text-[#1a3300] block text-base">2. أثناء التثبيت:</strong>
+        <p>بعد تغيير الإقلاع نتبع الخطوات التالية:</p>
+        <ol class="space-y-2 pr-1">
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>1.</strong> وضع قرص <strong>Windows 7</strong> مثلاً في قارئ الأقراص.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>2.</strong> إعادة التشغيل ثم الضغط على أي مفتاح لما يطلب ذلك.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>3.</strong> اختيار لغة التثبيت عند ظهور النافذة (العربية، الفرنسية، الإنجليزية ...).</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>4.</strong> الموافقة على شروط استعمال البرنامج.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10">
+            <strong>5.</strong> اختيار نوع التثبيت:
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+              <div class="p-2 rounded bg-[#fcfaf5] border border-[#1a3300]/15 text-xs">• <strong>ترقية:</strong> (في حالة وجود نظام تشغيل سابق).</div>
+              <div class="p-2 rounded bg-[#d5f5c2]/50 border border-[#1a3300]/15 text-xs">• <strong>تخصيص:</strong> (تثبيت ويندوز جديد).</div>
+            </div>
+          </li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>6.</strong> اختيار أحد الأقراص <span class="font-mono font-bold" dir="ltr">(C, D, E …)</span> من أجل تثبيت النظام عليه ومن الأحسن تهيئته.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>7.</strong> تبدأ عملية التثبيت وسيعاد تشغيل الحاسوب تلقائياً.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>8.</strong> كتابة اسم المستخدم كما يمكن تزويده بكلمة مرور.</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>9.</strong> كتابة الرقم التسلسلي للويندوز (موجود على غلاف CD).</li>
+          <li class="p-2.5 rounded-lg bg-white border border-[#1a3300]/10"><strong>10.</strong> اختيار المنطقة الزمنية وضبط الوقت والتاريخ وإعدادات الشبكة ...</li>
+          <li class="p-2.5 rounded-lg bg-[#d5f5c2]/60 border border-[#1a3300]/20 font-bold"><strong>11.</strong> إعادة تشغيل الحاسوب تلقائياً وظهور سطح المكتب.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🎬</span>
+        2. فيديو الشرح
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    {YOUTUBE_ID ? (
+      <div 
+        id="video-facade-container"
+        class="relative rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black group cursor-pointer shadow-md select-none"
+        data-video-id={YOUTUBE_ID}
+      >
+        <img 
+          src={`https://img.youtube.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`} 
+          alt="غلاف فيديو شرح الوحدة 3: نظام التشغيل"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/35 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-3">
+          <button 
+            type="button" 
+            aria-label="تشغيل فيديو الشرح"
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#ff0000] group-hover:bg-[#cc0000] text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 active:scale-95 cursor-pointer"
+          >
+            <svg class="w-8 h-8 sm:w-9 sm:h-9 fill-current translate-x-0.5" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <span class="px-4 py-1.5 rounded-full bg-black/75 backdrop-blur-xs text-white text-xs sm:text-sm font-bold tracking-wide shadow-sm border border-white/20">
+            ▶ اضغط هنا لمشاهدة شرح الدرس
+          </span>
+        </div>
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-[#1a3300]/30 bg-white aspect-video flex flex-col items-center justify-center text-center gap-3 p-6">
+        <span class="text-5xl">🎬</span>
+        <p class="text-base font-extrabold text-[#1a3300]">فيديو الشرح سيُضاف قريباً</p>
+        <p class="text-xs text-[#1a3300]/70">يمكنك في الوقت الحالي تجربة محاكي البيوس والتثبيت التفاعلي في البطاقة السادسة أسفله.</p>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ 3. الدرس التفاعلي والأدوات ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#d5f5c2] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">⚡</span>
+        3. الدرس التفاعلي والأدوات
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- أداة 1: مصنف أنظمة التشغيل -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">أ / مصنّف أنظمة التشغيل التفاعلي:</h3>
+        <span class="text-xs text-[#1a3300]/70 font-bold">اضغط على أي نظام لمعرفة فئته وميزاته:</span>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-2 p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/10">
+        {osExamples.map(os => (
+          <button
+            type="button"
+            class="os-btn py-2 px-4 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] text-xs sm:text-sm font-mono font-bold text-[#1a3300] cursor-pointer transition-all hover:scale-105"
+            data-name={os.name}
+            data-type={os.type}
+            data-badge={os.badge}
+            data-desc={os.desc}
+          >
+            {os.name}
+          </button>
+        ))}
+      </div>
+
+      <div id="os-result" class="min-h-[68px] p-4 rounded-xl bg-white border-2 border-[#1a3300]/20 flex flex-col items-center justify-center text-center gap-1.5 text-sm text-[#1a3300]">
+        <span class="font-bold">اختر نظام تشغيل من الأعلى لعرض تصنيفه ومعلوماته</span>
+      </div>
+    </div>
+
+    <!-- أداة 2: مستكشف تقسيم القرص الصلب -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">ب / مستكشف تقسيم القرص الصلب (C: , D: , E:):</h3>
+        <span class="text-xs text-[#1a3300]/75">اضغط على أي قسم لمعرفة دوره والغرض منه:</span>
+      </div>
+
+      <!-- تمثيل بصري لتجزئات القرص الصلب -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button
+          type="button"
+          class="part-btn p-4 rounded-2xl bg-[#ffe95c]/60 border-2 border-[#1a3300] text-right cursor-pointer transition-all hover:-translate-y-0.5"
+          data-title="القسم الأساسي (C:)"
+          data-role="يحتوي على ملفات نظام التشغيل (Windows) ويتولى عملية إقلاع الحاسوب."
+          data-tip="عند إعادة تثبيت النظام تتم تهيئة هذا القسم فقط دون المساس بالأقسام الأخرى."
+        >
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-2xl">💿</span>
+            <span class="font-mono font-black text-sm px-2.5 py-0.5 rounded-full bg-white border border-[#1a3300]/20">Local Disk (C:)</span>
+          </div>
+          <div class="font-extrabold text-sm text-[#1a3300]">القسم الأساسي (النظام)</div>
+          <div class="text-[11px] text-[#1a3300]/75 mt-1">مسؤول عن الإقلاع وملفات النظام</div>
+        </button>
+
+        <button
+          type="button"
+          class="part-btn p-4 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] text-right cursor-pointer transition-all hover:-translate-y-0.5"
+          data-title="قسم البيانات الشخصية (D:)"
+          data-role="مخصص لحفظ وترتيب الملفات الشخصية والخاصة (وثائق، صور، مشاريع) بعيداً عن تجزئة النظام."
+          data-tip="يحمي ملفاتك الشخصية من الضياع في حال تعطل نظام التشغيل أو إعادة تثبيته في القسم C."
+        >
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-2xl">📁</span>
+            <span class="font-mono font-black text-sm px-2.5 py-0.5 rounded-full bg-[#fcfaf5] border border-[#1a3300]/20">Data (D:)</span>
+          </div>
+          <div class="font-extrabold text-sm text-[#1a3300]">قسم الملفات الشخصية</div>
+          <div class="text-[11px] text-[#1a3300]/75 mt-1">ترتيب وحفظ الملفات الخاصة</div>
+        </button>
+
+        <button
+          type="button"
+          class="part-btn p-4 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] text-right cursor-pointer transition-all hover:-translate-y-0.5"
+          data-title="قسم إضافي / نظام ثانٍ (E:)"
+          data-role="يتيح إمكانية تثبيت أكثر من نظام تشغيل واحد على نفس الحاسوب (مثلاً Windows في C و Linux في E)."
+          data-tip="يمكن استخدامه أيضاً كمساحة تخزين إضافية للأرشيف والنسخ الاحتياطي."
+        >
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-2xl">🐧</span>
+            <span class="font-mono font-black text-sm px-2.5 py-0.5 rounded-full bg-[#fcfaf5] border border-[#1a3300]/20">System 2 (E:)</span>
+          </div>
+          <div class="font-extrabold text-sm text-[#1a3300]">قسم نظام تشغيل إضافي</div>
+          <div class="text-[11px] text-[#1a3300]/75 mt-1">تثبيت أكثر من نظام تشغيل</div>
+        </button>
+      </div>
+
+      <div id="part-info-box" class="p-4 rounded-xl bg-[#d5f5c2]/50 border-2 border-[#1a3300]/20 space-y-1.5">
+        <h4 id="part-title" class="font-extrabold text-[#1a3300] text-sm sm:text-base">💿 القسم الأساسي (C:)</h4>
+        <p id="part-role" class="text-xs sm:text-sm text-[#1a3300]/90">يحتوي على ملفات نظام التشغيل (Windows) ويتولى عملية إقلاع الحاسوب.</p>
+        <p id="part-tip" class="text-xs font-bold text-[#1a3300]/75">💡 فائدة: عند إعادة تثبيت النظام تتم تهيئة هذا القسم فقط دون المساس بالأقسام الأخرى.</p>
+      </div>
+    </div>
+
+    <!-- أداة 3: مقارنة التهيئة الفيزيائية والمنطقية -->
+    <div class={`${boxCls} space-y-3`}>
+      <h3 class="font-extrabold text-[#1a3300]">جـ / مقارنة تفاعلية بين التهيئة الفيزيائية والتهيئة المنطقية:</h3>
+      <div class="flex gap-2">
+        <button type="button" id="tab-phys" class="fmt-tab flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-[#1a3300]/20 bg-[#ffe95c] text-[#1a3300] cursor-pointer">
+          ⚙️ التهيئة الفيزيائية
+        </button>
+        <button type="button" id="tab-logic" class="fmt-tab flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-[#1a3300]/20 bg-white text-[#1a3300] cursor-pointer">
+          🗂️ التهيئة المنطقية
+        </button>
+      </div>
+
+      <div id="panel-phys" class="p-4 rounded-xl bg-[#ffe95c]/35 border border-[#1a3300]/15 space-y-2 text-xs sm:text-sm text-[#1a3300]">
+        <div><strong>• المفهوم:</strong> تقسيم القرص فيزيائياً إلى <strong>مسارات (Tracks)</strong>، <strong>قطاعات (Sectors)</strong>، و<strong>أسطوانات (Cylinders)</strong>.</div>
+        <div><strong>• مَن يقوم بها؟</strong> تتم هذه العملية من طرف <strong>المصنع (الصانع)</strong> قبل بيع القرص.</div>
+        <div><strong>• هل يمكن للمستخدم إعادتها؟</strong> لا يمكن للمستخدم أن يقوم بها مرة أخرى.</div>
+      </div>
+
+      <div id="panel-logic" class="hidden p-4 rounded-xl bg-[#d5f5c2]/45 border border-[#1a3300]/15 space-y-2 text-xs sm:text-sm text-[#1a3300]">
+        <div><strong>• المفهوم:</strong> وضع <strong>نظام الملفات (File System)</strong> مثل <span class="font-mono font-bold">(FAT, FAT32, NTFS)</span> على القرص الصلب.</div>
+        <div><strong>• الهدف منها:</strong> لكي يتمكن نظام التشغيل من استخدام المساحة التخزينية في القرص الصلب وتخزين الملفات عليها.</div>
+        <div><strong>• متى نقوم بها؟</strong> يقوم بها المستخدم عند تثبيت نظام التشغيل أو إعداد أقسام القرص.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. الخريطة الذهنية ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffc09f] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🧠</span>
+        4. الخريطة الذهنية الشاملة للوحدة
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class={`${boxCls} space-y-4`}>
+      <div class="text-center">
+        <span class="inline-block px-6 py-3 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] font-extrabold text-base sm:text-lg text-[#1a3300] shadow-xs">
+          الوحدة 03: نظام التشغيل (Operating System)
+        </span>
+        <div class="w-0.5 h-5 bg-[#1a3300]/30 mx-auto"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs sm:text-sm text-[#1a3300]">
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#a8e5e5] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5">1. المفهوم والمميزات</strong>
+          <ul class="space-y-1">
+            <li>• <strong>وظائفه:</strong> بدء التشغيل، إدارة الموارد، تنظيم الملفات.</li>
+            <li>• <strong>مميزاته:</strong> وسيط بين المستخدم والحاسوب، واجهة بيانية سهلة، تشغيل عدة برامج معاً.</li>
+            <li>• <strong>حواسيب:</strong> Windows, Linux, MacOs, Unix, MS-DOS.</li>
+            <li>• <strong>هواتف:</strong> Android, iOS, Windows Phone.</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#ffe95c] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5">2. التثبيت والتقسيم</strong>
+          <ul class="space-y-1">
+            <li>• <strong>التثبيت:</strong> نسخ ملفات النظام بصفة دائمة من وسيط إقلاع (DVD / USB / شبكة).</li>
+            <li>• <strong>التقسيم:</strong> تجزئة القرص إلى أقسام افتراضية (C, D, E).</li>
+            <li>• <strong>القسم الأساسي:</strong> يحوي النظام ويتولى الإقلاع.</li>
+            <li>• <strong>أهدافه:</strong> ترتيب الملفات، عزل الملفات الشخصية، تعدد الأنظمة.</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#d5f5c2] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5">3. تهيئة القرص الصلب</strong>
+          <ul class="space-y-1">
+            <li>• <strong>التهيئة الفيزيائية:</strong> مسارات، قطاعات، أسطوانات (يقوم بها الصانع فقط).</li>
+            <li>• <strong>التهيئة المنطقية:</strong> وضع نظام الملفات لاستغلال المساحة التخزينية.</li>
+            <li>• <strong>أنظمة الملفات:</strong> FAT ، FAT32 ، NTFS.</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#fcfaf5] border-2 border-[#f6d0ff] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5">4. مراحل التثبيت</strong>
+          <ul class="space-y-1">
+            <li>• <strong>قبل التثبيت:</strong> الدخول لـ BIOS بـ (Suppr / F2) وتغيير الإقلاع الأول.</li>
+            <li>• <strong>أثناء التثبيت:</strong> وضع قرص النظام ← اللغة ← الشروط ← نوع التثبيت (ترقية/تخصيص) ← اختيار القرص وتهيئته ← نسخ الملفات ← اسم المستخدم والرقم التسلسلي والوقت ← سطح المكتب.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. التمارين التقييمية ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#f6d0ff] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">✍️</span>
+        5. التمارين وأسئلة التقويم المرحلي
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-sm text-[#1a3300]/80">اختبر مكتسباتك بالإجابة عن الأسئلة ذهنياً أو في كراسك، ثم اضغط على «إظهار الجواب» للتحقق:</p>
+
+    <div class="space-y-3">
+      {exercises.map((ex, i) => (
+        <details class="group rounded-2xl bg-white border-2 border-[#1a3300]/15 open:border-[#1a3300]/40 transition-colors">
+          <summary class="flex items-center justify-between gap-3 p-4 cursor-pointer list-none">
+            <span class="text-sm font-bold text-[#1a3300]">{i + 1}. {ex.q}</span>
+            <span class="shrink-0 px-3 py-1.5 rounded-xl bg-[#f0ebe0] group-open:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors">
+              <span class="group-open:hidden">إظهار الجواب</span><span class="hidden group-open:inline">إخفاء</span>
+            </span>
+          </summary>
+          <div class="mx-4 mb-4 p-3.5 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 text-xs sm:text-sm text-[#1a3300] leading-loose" set:html={ex.a} />
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ 6. محاكي البيوس وتثبيت نظام التشغيل ============ -->
+  <section id="part-6" class="scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-4 border-[#1a3300] p-5 sm:p-10 space-y-6 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-3xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl">💻</span>
+        6. برنامج محاكاة البيوس وتثبيت نظام التشغيل
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-xs sm:text-sm text-[#1a3300]/85 leading-relaxed">
+      <strong>التقويم التحصيلي التطبيقي:</strong> ادخل إلى إعدادات <strong>BIOS</strong> وغيّر قرص الإقلاع الأول، ثم تتبع خطوات تثبيت نظام التشغيل <strong>Windows 7</strong> خطوة بخطوة:
+    </p>
+
+    <!-- شاشة المحاكي التفاعلي -->
+    <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300] shadow-md bg-[#0c1424] text-white">
+      <!-- شريط عنوان المحاكي -->
+      <div class="bg-[#1a3300] px-4 py-2.5 flex items-center justify-between text-xs font-bold text-[#fcfaf5]">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ffe95c]"></span>
+          <span>محاكي تثبيت نظام التشغيل التفاعلي (BIOS + Windows 7 Setup)</span>
+        </div>
+        <span id="sim-step-counter" class="font-mono bg-white/15 px-2.5 py-0.5 rounded-full">المرحلة 1 / 9</span>
+      </div>
+
+      <!-- محتوى شاشة المحاكي -->
+      <div id="sim-screen" class="p-5 sm:p-8 min-h-[300px] flex flex-col justify-between gap-6">
+        <div id="sim-body" class="space-y-4">
+          <!-- يتم تحديثه ديناميكياً عبر السكربت -->
+        </div>
+
+        <!-- أزرار التحكم في المحاكي -->
+        <div class="flex items-center justify-between gap-3 pt-4 border-t border-white/15 flex-wrap">
+          <button
+            type="button"
+            id="sim-prev-btn"
+            class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold cursor-pointer disabled:opacity-40"
+          >
+            → الخطوة السابقة
+          </button>
+
+          <button
+            type="button"
+            id="sim-reset-btn"
+            class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 text-xs cursor-pointer"
+          >
+            ↺ إعادة من البداية
+          </button>
+
+          <button
+            type="button"
+            id="sim-next-btn"
+            class="px-6 py-2.5 rounded-xl bg-[#ffe95c] hover:bg-[#ffd900] text-[#1a3300] text-xs sm:text-sm font-extrabold cursor-pointer shadow-sm"
+          >
+            اضغط Suppr / F2 للدخول إلى BIOS ←
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- العمل المنزلي والبحث -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط التطبيقي 01 (استكشاف نظام التشغيل):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          افتح «جهاز الكمبيوتر» (Ce PC / Computer) في حاسوبك أو حاسوب المخبر، وسجّل: اسم وإصدار نظام التشغيل المثبت، عدد الأقسام الموجودة (C, D...)، ونوع نظام الملفات المستعمل في القرص الأساسي C.
+        </p>
+      </div>
+
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط التطبيقي 02 (ملخص خطوات التثبيت):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          لخّص في كراسك على شكل مخطط متسلسل أهم المحطات التي يقترحها برنامج تثبيت نظام التشغيل بدءاً من تغيير الإقلاع في BIOS إلى غاية ظهور سطح المكتب.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  summary::-webkit-details-marker { display: none; }
+</style>
+
+<script is:inline>
+  // 1. تفاعلية مصنف أنظمة التشغيل
+  const osBtns = document.querySelectorAll('.os-btn');
+  const osResult = document.getElementById('os-result');
+  osBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      osBtns.forEach(b => b.classList.remove('bg-[#ffe95c]', 'border-[#1a3300]'));
+      btn.classList.add('bg-[#ffe95c]', 'border-[#1a3300]');
+
+      const name = btn.getAttribute('data-name');
+      const type = btn.getAttribute('data-type');
+      const badge = btn.getAttribute('data-badge');
+      const desc = btn.getAttribute('data-desc');
+
+      const badgeCls = type === 'pc'
+        ? 'bg-blue-100 text-blue-900 border-blue-300'
+        : 'bg-emerald-100 text-emerald-900 border-emerald-300';
+
+      if (osResult) {
+        osResult.innerHTML = `
+          <div class="flex items-center justify-center gap-2 flex-wrap">
+            <span class="font-mono font-extrabold text-base text-[#1a3300]">${name}</span>
+            <span class="text-xs font-bold px-3 py-0.5 rounded-full border ${badgeCls}">${badge}</span>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/85">${desc}</p>
+        `;
+      }
+    });
+  });
+
+  // 2. تفاعلية مستكشف أقسام القرص الصلب
+  const partBtns = document.querySelectorAll('.part-btn');
+  const partTitle = document.getElementById('part-title');
+  const partRole = document.getElementById('part-role');
+  const partTip = document.getElementById('part-tip');
+  partBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      partBtns.forEach(b => {
+        b.classList.remove('bg-[#ffe95c]/60', 'border-[#1a3300]');
+        b.classList.add('bg-white', 'border-[#1a3300]/20');
+      });
+      btn.classList.remove('bg-white', 'border-[#1a3300]/20');
+      btn.classList.add('bg-[#ffe95c]/60', 'border-[#1a3300]');
+
+      if (partTitle) partTitle.textContent = '💿 ' + (btn.getAttribute('data-title') || '');
+      if (partRole) partRole.textContent = btn.getAttribute('data-role') || '';
+      if (partTip) partTip.textContent = '💡 فائدة: ' + (btn.getAttribute('data-tip') || '');
+    });
+  });
+
+  // 3. تفاعلية مقارنة التهيئة الفيزيائية والمنطقية
+  const tabPhys = document.getElementById('tab-phys');
+  const tabLogic = document.getElementById('tab-logic');
+  const panelPhys = document.getElementById('panel-phys');
+  const panelLogic = document.getElementById('panel-logic');
+
+  function setFmtTab(isPhys) {
+    panelPhys?.classList.toggle('hidden', !isPhys);
+    panelLogic?.classList.toggle('hidden', isPhys);
+    tabPhys?.classList.toggle('bg-[#ffe95c]', isPhys);
+    tabPhys?.classList.toggle('bg-white', !isPhys);
+    tabLogic?.classList.toggle('bg-[#d5f5c2]', !isPhys);
+    tabLogic?.classList.toggle('bg-white', isPhys);
+  }
+  tabPhys?.addEventListener('click', () => setFmtTab(true));
+  tabLogic?.addEventListener('click', () => setFmtTab(false));
+
+  // 4. محاكي البيوس وتثبيت ويندوز 7 التفاعلي
+  const simSteps = [
+    {
+      title: '1. بدء تشغيل الحاسوب (شاشة الإقلاع الأولية)',
+      actionText: 'اضغط Suppr أو F2 للدخول إلى BIOS ←',
+      html: `
+        <div class="font-mono text-xs sm:text-sm space-y-2 text-green-400 bg-black/60 p-4 rounded-xl border border-white/15">
+          <div>American Megatrends BIOS (C)</div>
+          <div>CPU: Intel(R) Core(TM) Processor</div>
+          <div>Memory Test: 4096M OK</div>
+          <div class="pt-3 text-yellow-300 font-bold animate-pulse">Press [DEL / Suppr] or [F2] to enter BIOS Setup...</div>
+        </div>
+        <p class="text-xs sm:text-sm text-white/90">
+          عند تشغيل الجهاز فإنه يقلع تلقائياً من القرص الصلب؛ لذا نضغط على مفتاح <strong>Suppr</strong> أو <strong>F2</strong> للدخول إلى إعدادات <strong>BIOS</strong> وتغيير ترتيب الإقلاع.
+        </p>
+      `
+    },
+    {
+      title: '2. إعدادات BIOS — تغيير قرص الإقلاع الأول',
+      actionText: 'اختر قرص DVD/USB واحفظ الإعدادات (F10) ←',
+      html: `
+        <div class="bg-[#002b80] p-4 rounded-xl border-2 border-gray-300 font-mono text-xs sm:text-sm space-y-2 text-white">
+          <div class="text-center font-bold border-b border-white/30 pb-1 text-yellow-300">BIOS SETUP UTILITY — BOOT MENU</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <div class="p-2 rounded bg-white/10">1st Boot Device: <span class="text-yellow-300 font-bold">[CD/DVD-ROM / USB]</span></div>
+            <div class="p-2 rounded bg-white/5 text-white/70">2nd Boot Device: [Hard Disk (HDD)]</div>
+          </div>
+          <div class="text-[11px] text-cyan-200 pt-2">F10: Save and Exit • Esc: Exit</div>
+        </div>
+        <p class="text-xs sm:text-sm text-white/90">
+          قمنا بوضع قرص <strong>Windows 7</strong> في قارئ الأقراص، وتغيير الإقلاع الأول في <strong>BIOS</strong> من القرص الصلب إلى قارئ الأقراص المضغوطة (أو منفذ USB) ثم الحفظ وإعادة التشغيل.
+        </p>
+      `
+    },
+    {
+      title: '3. إعادة التشغيل والإقلاع من قرص التثبيت',
+      actionText: 'اضغط على أي مفتاح لبدء التثبيت ←',
+      html: `
+        <div class="font-mono text-sm bg-black p-6 rounded-xl border border-white/20 text-center space-y-3">
+          <div class="text-white font-bold">Booting from CD/DVD...</div>
+          <div class="text-yellow-300 font-bold animate-pulse">Press any key to boot from CD or DVD . . .</div>
+        </div>
+        <p class="text-xs sm:text-sm text-white/90">
+          بعد إعادة التشغيل يطلب منا الحاسوب الضغط على أي مفتاح من لوحة المفاتيح للبدء في قراءة ملفات تثبيت النظام من القرص.
+        </p>
+      `
+    },
+    {
+      title: '4. اختيار لغة التثبيت والموافقة على الشروط',
+      actionText: 'الموافقة على الشروط والضغط على التالي ←',
+      html: `
+        <div class="bg-slate-800 p-4 rounded-xl border border-sky-400/40 space-y-3 text-xs sm:text-sm">
+          <div class="font-extrabold text-sky-300 text-base">🪟 تثبيت Windows 7 — اللغة وشروط الاستعمال</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="p-2 rounded bg-slate-900 border border-white/10">لغة التثبيت: <strong>العربية / الفرنسية / الإنجليزية</strong></div>
+            <div class="p-2 rounded bg-slate-900 border border-white/10">تنسيق الوقت والعملة: <strong>الجزائر</strong></div>
+            <div class="p-2 rounded bg-slate-900 border border-white/10">لوحة المفاتيح: <strong>العربية (101)</strong></div>
+          </div>
+          <div class="p-2.5 rounded bg-emerald-950/60 border border-emerald-400/30 text-emerald-200 font-bold">
+            ☑️ أوافق على شروط الترخيص واستعمال البرنامج (I accept the license terms)
+          </div>
+        </div>
+      `
+    },
+    {
+      title: '5. اختيار نوع التثبيت (ترقية أو تخصيص)',
+      actionText: 'اختيار «تخصيص» (تثبيت ويندوز جديد) ←',
+      html: `
+        <div class="bg-slate-800 p-4 rounded-xl border border-sky-400/40 space-y-3 text-xs sm:text-sm">
+          <div class="font-extrabold text-sky-300">ما نوع التثبيت الذي تريده؟</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-white/15">
+              <strong class="block text-white mb-1">1. ترقية (Upgrade)</strong>
+              <span class="text-white/75 text-xs">في حالة وجود نظام تشغيل سابق والاحتفاظ بالملفات والبرامج.</span>
+            </div>
+            <div class="p-3 rounded-xl bg-sky-950 border-2 border-yellow-400">
+              <strong class="block text-yellow-300 mb-1">2. تخصيص (Custom / Personnalisé) ✓</strong>
+              <span class="text-white/90 text-xs">تثبيت نسخة ويندوز جديدة على القسم المختار.</span>
+            </div>
+          </div>
+        </div>
+      `
+    },
+    {
+      title: '6. اختيار أحد الأقراص (C, D, E...) وتهيئته',
+      actionText: 'تهيئة القسم C والبدء في التثبيت ←',
+      html: `
+        <div class="bg-slate-800 p-4 rounded-xl border border-sky-400/40 space-y-3 text-xs sm:text-sm">
+          <div class="font-extrabold text-sky-300">أين تريد تثبيت Windows؟</div>
+          <div class="space-y-1.5 font-mono text-xs">
+            <div class="p-2.5 rounded bg-sky-900 border-2 border-yellow-400 flex justify-between">
+              <span>💿 القرص 0 القسم 1: النظام (C:) — الأساسي</span>
+              <span class="text-yellow-300 font-bold">NTFS (محدد للتثبيت)</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-white/10 flex justify-between text-white/75">
+              <span>📁 القرص 0 القسم 2: الملفات الشخصية (D:)</span>
+              <span>NTFS</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-white/10 flex justify-between text-white/75">
+              <span>💽 القرص 0 القسم 3: إضافي (E:)</span>
+              <span>NTFS</span>
+            </div>
+          </div>
+          <p class="text-xs text-amber-200">• نختار القسم الأساسي <strong>(C:)</strong> لتثبيت النظام عليه ومن الأحسن تهيئته (Format) بنظام <strong>NTFS</strong>.</p>
+        </div>
+      `
+    },
+    {
+      title: '7. نسخ الملفات وتثبيت النظام وإعادة التشغيل',
+      actionText: 'متابعة بعد إعادة التشغيل التلقائي ←',
+      html: `
+        <div class="bg-slate-800 p-4 rounded-xl border border-sky-400/40 space-y-3 text-xs sm:text-sm">
+          <div class="font-extrabold text-sky-300">جاري تثبيت Windows...</div>
+          <ul class="space-y-1.5 text-xs">
+            <li class="text-emerald-300">✔ نسخ ملفات Windows (100%)</li>
+            <li class="text-emerald-300">✔ توسيع ملفات Windows (100%)</li>
+            <li class="text-emerald-300">✔ تثبيت الميزات والتحديثات (100%)</li>
+            <li class="text-yellow-300 font-bold">🔄 إكمال التثبيت... سيعاد تشغيل الحاسوب تلقائياً.</li>
+          </ul>
+        </div>
+      `
+    },
+    {
+      title: '8. اسم المستخدم، الرقم التسلسلي، والوقت والشبكة',
+      actionText: 'إتمام الإعدادات والدخول لسطح المكتب ←',
+      html: `
+        <div class="bg-slate-800 p-4 rounded-xl border border-sky-400/40 space-y-2.5 text-xs sm:text-sm">
+          <div class="font-extrabold text-sky-300">إعدادات المستخدم والنظام النهائية:</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="p-2.5 rounded bg-slate-900 border border-white/15">
+              <strong class="block text-yellow-300">1. حساب المستخدم:</strong>
+              كتابة اسم المستخدم ويمكن تزويده بكلمة مرور.
+            </div>
+            <div class="p-2.5 rounded bg-slate-900 border border-white/15">
+              <strong class="block text-yellow-300">2. الرقم التسلسلي:</strong>
+              كتابة الرقم التسلسلي للويندوز (الموجود على غلاف CD).
+            </div>
+            <div class="p-2.5 rounded bg-slate-900 border border-white/15">
+              <strong class="block text-yellow-300">3. الوقت والشبكة:</strong>
+              اختيار المنطقة الزمنية وضبط الوقت والتاريخ وإعدادات الشبكة.
+            </div>
+          </div>
+        </div>
+      `
+    },
+    {
+      title: '9. اكتمال التثبيت وظهور سطح المكتب!',
+      actionText: '🎉 اكتملت المراحل بنجاح',
+      html: `
+        <div class="bg-gradient-to-br from-sky-700 to-blue-900 p-6 rounded-xl border-2 border-emerald-300 text-center space-y-3">
+          <div class="text-4xl">🖥️✨</div>
+          <div class="text-lg font-extrabold text-white">مرحباً بك في سطح المكتب (Windows 7 Desktop)</div>
+          <p class="text-xs sm:text-sm text-sky-100 max-w-xl mx-auto">
+            أحسنت! بعد إعادة تشغيل الحاسوب تلقائياً ظهر سطح المكتب وأصبح الحاسوب جاهزاً للعمل وتشغيل البرامج المختلفة.
+          </p>
+        </div>
+      `
+    }
+  ];
+
+  let currentSimStep = 0;
+  const simBody = document.getElementById('sim-body');
+  const simCounter = document.getElementById('sim-step-counter');
+  const simPrevBtn = document.getElementById('sim-prev-btn');
+  const simNextBtn = document.getElementById('sim-next-btn');
+  const simResetBtn = document.getElementById('sim-reset-btn');
+
+  function renderSimStep() {
+    const step = simSteps[currentSimStep];
+    if (!step || !simBody) return;
+    simBody.innerHTML = `
+      <h3 class="text-base sm:text-lg font-extrabold text-[#ffe95c]">${step.title}</h3>
+      ${step.html}
+    `;
+    if (simCounter) simCounter.textContent = `المرحلة ${currentSimStep + 1} / ${simSteps.length}`;
+    if (simPrevBtn) simPrevBtn.disabled = currentSimStep === 0;
+    if (simNextBtn) {
+      simNextBtn.textContent = step.actionText;
+      simNextBtn.disabled = currentSimStep === simSteps.length - 1;
+      simNextBtn.classList.toggle('opacity-60', currentSimStep === simSteps.length - 1);
+    }
+  }
+
+  simNextBtn?.addEventListener('click', () => {
+    if (currentSimStep < simSteps.length - 1) {
+      currentSimStep++;
+      renderSimStep();
+    }
+  });
+
+  simPrevBtn?.addEventListener('click', () => {
+    if (currentSimStep > 0) {
+      currentSimStep--;
+      renderSimStep();
+    }
+  });
+
+  simResetBtn?.addEventListener('click', () => {
+    currentSimStep = 0;
+    renderSimStep();
+  });
+
+  renderSimStep();
+
+  // تفعيل مشغل الفيديو عند الضغط
+  const videoFacade = document.getElementById('video-facade-container');
+  videoFacade?.addEventListener('click', () => {
+    const vidId = videoFacade.getAttribute('data-video-id');
+    if (!vidId) return;
+    videoFacade.innerHTML = `
+      <iframe 
+        src="https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0" 
+        class="w-full h-full" 
+        title="فيديو شرح الوحدة 3: نظام التشغيل"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+        allowfullscreen>
+      </iframe>
+    `;
+    videoFacade.classList.remove('cursor-pointer', 'group');
+  }, { once: true });
+</script>

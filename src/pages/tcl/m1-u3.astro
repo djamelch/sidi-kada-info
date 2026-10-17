@@ -1,0 +1,9 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Lesson03 from '../../components/lessons/Lesson03.astro';
+import { ACADEMIC_INFO } from '../../data/curriculum';
+---
+
+<Layout title={`الوحدة 3: نظام التشغيل — ${ACADEMIC_INFO.highSchool}`} currentStream="tcl">
+  <Lesson03 stream="tcl" />
+</Layout>

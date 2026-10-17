@@ -101,12 +101,13 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcst-m1-u3',
             unitNumber: 3,
-            title: 'نظام التشغيل والإقلاع',
-            shortDesc: 'وظائف نظام التشغيل، إعدادات BIOS/UEFI وإدارة الملفات والأقراص.',
+            title: 'نظام التشغيل',
+            shortDesc: 'تعريف نظام التشغيل ومميزاته، تقسيم وتهيئة القرص الصلب، إعدادات BIOS ومراحل التثبيت.',
             slug: '/tcst/m1-u3',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 6
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           },
           {
             id: 'tcst-m1-u4',
@@ -304,12 +305,13 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcl-m1-u3',
             unitNumber: 3,
-            title: 'نظام التشغيل وإدارة الملفات',
-            shortDesc: 'سطح المكتب، النوافذ، تنظيم المجلدات الرقمية والبحث السريع.',
+            title: 'نظام التشغيل',
+            shortDesc: 'تعريف نظام التشغيل ومميزاته، تقسيم وتهيئة القرص الصلب، إعدادات BIOS ومراحل التثبيت.',
             slug: '/tcl/m1-u3',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 5
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           },
           {
             id: 'tcl-m1-u4',
