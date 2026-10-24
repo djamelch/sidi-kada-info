@@ -112,19 +112,30 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcst-m1-u4',
             unitNumber: 4,
+            title: 'لوحة التحكم',
+            shortDesc: 'مركز إعدادات وتخصيص الحاسوب: خصائص العرض، إعدادات الفأرة، اللغة والمنطقة، إزالة البرامج، وإدارة حسابات المستخدمين.',
+            slug: '/tcst/m1-u4',
+            term: 1,
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
+          },
+          {
+            id: 'tcst-m1-u5',
+            unitNumber: 5,
             title: 'حماية الحاسوب وأمن البيانات',
             shortDesc: 'مخاطر البرمجيات الخبيثة، جدار الحماية، والنسخ الاحتياطي وتجميد النظام.',
-            slug: '/tcst/m1-u4',
+            slug: '/tcst/m1-u5',
             term: 1,
             status: 'planned',
             estimatedMinutes: 5
           },
           {
-            id: 'tcst-m1-u5',
-            unitNumber: 5,
+            id: 'tcst-m1-u6',
+            unitNumber: 6,
             title: 'الشبكة المحلية وتشارك الموارد',
             shortDesc: 'مكونات الشبكة، أصنافها وطوبولوجياتها، ومشاركة الملفات والطابعات.',
-            slug: '/tcst/m1-u5',
+            slug: '/tcst/m1-u6',
             term: 1,
             status: 'planned',
             estimatedMinutes: 7
@@ -316,19 +327,30 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcl-m1-u4',
             unitNumber: 4,
+            title: 'لوحة التحكم',
+            shortDesc: 'تخصيص بيئة العمل: خصائص الشاشة والعرض، إعدادات الفأرة، التاريخ واللغة، إزالة البرامج، وإدارة حسابات المستخدمين.',
+            slug: '/tcl/m1-u4',
+            term: 1,
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
+          },
+          {
+            id: 'tcl-m1-u5',
+            unitNumber: 5,
             title: 'حماية البيانات والأمن الرقمي',
             shortDesc: 'كلمات المرور، الوقاية من الفيروسات، وحماية الخصوصية الشخصية.',
-            slug: '/tcl/m1-u4',
+            slug: '/tcl/m1-u5',
             term: 1,
             status: 'planned',
             estimatedMinutes: 5
           },
           {
-            id: 'tcl-m1-u5',
-            unitNumber: 5,
+            id: 'tcl-m1-u6',
+            unitNumber: 6,
             title: 'الشبكة المحلية ومشاركة الموارد',
             shortDesc: 'أصناف الشبكات، مشاركة الطابعات والملفات بين الأجهزة.',
-            slug: '/tcl/m1-u5',
+            slug: '/tcl/m1-u6',
             term: 1,
             status: 'planned',
             estimatedMinutes: 6

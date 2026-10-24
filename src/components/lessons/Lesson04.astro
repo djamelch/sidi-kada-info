@@ -1,0 +1,1399 @@
+---
+/**
+ * الوحدة 4: لوحة التحكم (Panneau de configuration) — المصدر المعتمد لمحتوى الدرس.
+ * المرجع المعتمد: وثائق الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
+ * «04- لوحة التحكم.docx / .pdf» و «04- وثيقة التلميذ لوحة التحكم.pdf» و «مذكرة لوحة التحكم.docx»
+ *
+ * إعدادات الأستاذ (تُغيَّر هنا فقط):
+ *  - YOUTUBE_ID: معرّف فيديو الشرح على يوتيوب (اتركه فارغاً إلى أن يجهز الفيديو).
+ *  - HOMEWORK_SOLUTION_PUBLISHED: لنشر أو حجب حل العمل المنزلي.
+ */
+const YOUTUBE_ID = '';
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/memo-04.pdf';
+const pdfDownloadName = 'لوحة_التحكم_الوحدة_04.pdf';
+
+const parts = [
+  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'الدرس (PDF)', desc: 'نص الدرس الكامل المعتمد، المسارات الرسمية، وتحميل ملف PDF' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح لوحة التحكم وتخصيص إعدادات الحاسوب بالصوت والصورة' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'مستكشف لوحة التحكم + اختبار المسارات + مصفوفة الحسابات' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام لوحة التحكم ووظائفها' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#f6d0ff]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي والتحصيلي مع الإجابات النموذجية' },
+  { id: 'part-6', icon: '💻', color: 'bg-[#ffe95c]', title: 'محاكي لوحة التحكم', desc: 'محاكي واقعي تفاعلي لنافذة Control Panel وإنجاز الإعدادات الحية' },
+];
+
+const exercises = [
+  {
+    q: 'ما هو تعريف لوحة التحكم (Panneau de configuration)؟ وما دورها الأساسي؟',
+    a: '<strong>لوحة التحكم (Panneau de configuration):</strong> هي برنامج رئيسي مثبت ومدمج مع نظام التشغيل، يُعتبر <strong>مركز إعدادات الحاسوب</strong>، حيث يتيح للمستخدم ضبط وتخصيص كافة الخصائص البرمجية والمادية للجهاز وإدارتها بدقة.'
+  },
+  {
+    q: 'كيف نصل إلى لوحة التحكم في نظام التشغيل Windows؟ اذكر طريقتين على الأقل.',
+    a: '1. <strong>الطريقة المباشرة:</strong> الضغط على قائمة إبدأ (<strong>Démarrer / Start</strong>) ثم اختيار لوحة التحكم (<strong>Panneau de configuration / Control Panel</strong>).<br/>2. <strong>عبر نافذة التشغيل (Exécuter):</strong> الضغط على المفتاحين <kbd class="px-1.5 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono text-xs font-bold">Win + R</kbd> وكتابة الأمر <span class="font-mono font-bold" dir="ltr">control</span> ثم الضغط على <kbd class="px-1.5 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono text-xs font-bold">Entrée</kbd>.<br/>3. <strong>طريقة البحث:</strong> كتابة "لوحة التحكم" أو "Control Panel" في شريط البحث بقائمة إبدأ.'
+  },
+  {
+    q: 'ما هو المسار المتبع لتخصيص خصائص العرض والشاشة من لوحة التحكم؟ وما هي الطريقة المختصرة لذلك؟',
+    a: '• <strong>من لوحة التحكم:</strong> Démarrer ➔ Panneau de configuration ➔ Apparence et personnalisation (المظهر والطابع الشخصي) ➔ Personnalisation (تخصيص).<br/>• <strong>الطريقة المختصرة:</strong> النقر بالزر الأيمن للفأرة على أي مكان فارغ في سطح المكتب واختيار أمر «<strong>Personnaliser</strong>».<br/>• <strong>ما يمكن تغييره:</strong> خلفية سطح المكتب (Arrière-plan du bureau)، ألوان النوافذ (Couleur de la fenêtre)، شاشة التوقف (Écran de veille)، ودقة الشاشة (Résolution).'
+  },
+  {
+    q: 'ما هي أهم الإعدادات التي يمكن تعديلها للفأرة (Souris) من لوحة التحكم؟',
+    a: 'المسار: Démarrer ➔ Panneau de configuration ➔ Matériel et audio ➔ Souris.<br/>الإعدادات الثلاثة الأساسية هي:<br/>1. <strong>التبديل بين أزرار الفأرة</strong> (Permuter les boutons principaux) لملاءمة أصحاب اليد اليسرى (Gauchers).<br/>2. <strong>التحكم في سرعة النقر المزدوج</strong> (Vitesse du double-clic).<br/>3. <strong>تغيير شكل مؤشر الفأرة وسرعته</strong> (Pointeurs).'
+  },
+  {
+    q: 'كيف نقوم بإضافة لغة جديدة (مثل العربية) إلى لوحة المفاتيح؟',
+    a: 'من لوحة التحكم نختار: <strong>Horloge, langue et région</strong> (الساعة واللغة والمنطقة) ➔ ثم <strong>Région et langue</strong> ➔ تظهر نافذة نختار منها تبويب لوحات المفاتيح واللغات (<strong>Claviers et langues</strong>) ➔ نضغط على زر <strong>Modifier les claviers</strong> ➔ نضغط على <strong>Ajouter</strong> ونختار اللغة المطلوبة (مثل العربية الجزائرية Clavier Arabe 101/102) ➔ ثم نضغط <strong>Appliquer</strong> ثم <strong>OK</strong>.'
+  },
+  {
+    q: 'لماذا يجب إلغاء تثبيت البرامج من خيار «Désinstaller un programme» بدلاً من حذف مجلدها أو أيقونتها مباشرة؟',
+    a: 'لأن مجرد حذف الأيقونة أو المجلد يترك ملفات النظام المشتركة ومفاتيح التسجيل (Registre) عالقة في القرص الصلب مما يؤدي إلى تراكم النفايات الرقمية وثقل النظام. بينما خيار «<strong>Désinstaller un programme</strong>» يقوم بحذف البرنامج ومخلفاته جذرياً وبشكل آمن وسليم.'
+  },
+  {
+    q: 'ما هو حساب المستخدم (Compte d\'utilisateur)؟ وما هي أنواع الحسابات الثلاثة؟',
+    a: '• <strong>حساب المستخدم:</strong> هو سجل يوفر لكل مستخدم برامجه، ملفاته، مجلداته، وواجهته الخاصة به في التعامل مع نفس جهاز الحاسوب دون التأثير على ملفات الآخرين.<br/>• <strong>أنواع الحسابات:</strong><br/>1. <strong>حساب المسؤول (Administrateur):</strong> يملك كافة الصلاحيات في إدارة النظام، تثبيت البرامج، وتعديل إعدادات باقي الحسابات.<br/>2. <strong>حساب المستخدم القياسي / المحدود (Standard / Limited User):</strong> يستعمل البرامج ويحفظ ملفاته لكنه لا يستطيع تعديل ملفات النظام الحساسة أو تثبيت برامج تؤثر على بقية المستخدمين.<br/>3. <strong>حساب الضيف (Invité / Guest):</strong> مخصص للمستخدمين المؤقتين بصلاحيات دنيا وبدون كلمة سر.'
+  }
+];
+
+const cpSections = [
+  {
+    id: 'display',
+    title: 'إعدادات العرض وخصائصه',
+    french: 'Apparence et personnalisation ➔ Personnalisation',
+    icon: '🖥️',
+    color: 'bg-[#ffe95c]',
+    summary: 'تغيير المظهر العام وسطح المكتب',
+    details: 'تغيير خلفية سطح المكتب (Arrière-plan du bureau)، ألوان النوافذ (Couleur de la fenêtre)، شاشة التوقف (Écran de veille)، وتعديل دقة الشاشة (Résolution). يمكن الوصول السريع إليها بالنقر بالزر الأيمن على سطح المكتب واختيار Personnaliser.'
+  },
+  {
+    id: 'mouse',
+    title: 'إعدادات الفأرة',
+    french: 'Matériel et audio ➔ Souris',
+    icon: '🖱️',
+    color: 'bg-[#d5f5c2]',
+    summary: 'ضبط الأزرار والمؤشر والسرعة',
+    details: 'تخصيص الفأرة لمستخدمي اليد اليسرى عبر التبديل بين الزر الأيمن والأيسر (Permuter les boutons)، التحكم في سرعة النقر المزدوج (Vitesse du double-clic)، وتغيير شكل مؤشر الفأرة وسرعته وحركته.'
+  },
+  {
+    id: 'region',
+    title: 'الساعة واللغة والمنطقة',
+    french: 'Horloge, langue et région ➔ Région et langue',
+    icon: '🌍',
+    color: 'bg-[#a8e5e5]',
+    summary: 'ضبط الوقت وإضافة لغات الإدخال',
+    details: 'التحكم في إعدادات التاريخ، الوقت، والمنطقة الزمنية (Fuseau horaire)، وإضافة أو حذف لغات الكتابة من لوحة المفاتيح (مثل إضافة لوحة مفاتيح عربية أو فرنسية) وتحديد لغة الواجهة.'
+  },
+  {
+    id: 'programs',
+    title: 'إلغاء تثبيت البرامج',
+    french: 'Programmes ➔ Désinstaller un programme',
+    icon: '📦',
+    color: 'bg-[#ffc09f]',
+    summary: 'إزالة التطبيقات والبرامج بأمان',
+    details: 'إلغاء تثبيت البرامج والتطبيقات وإزالتها تماماً من النظام والقرص الصلب ومفاتيح السجل، بدلاً من حذف الأيقونة الذي يبقي مخلفات تثقل أداء الحاسوب.'
+  },
+  {
+    id: 'accounts',
+    title: 'حسابات المستخدمين',
+    french: 'Comptes et protection des utilisateurs ➔ Comptes d\'utilisateurs',
+    icon: '👥',
+    color: 'bg-[#f6d0ff]',
+    summary: 'إدارة وتأمين حسابات المستخدمين',
+    details: 'توفير بيئة مستقلة لكل مستخدم (ملفات، مجلدات، تخصيصات). يشمل: إنشاء حساب جديد، تغيير الاسم، إنشاء كلمة سر، تغيير صورة الحساب، وحذف الحساب مع تحديد نوعه (مسؤول، قياسي، ضيف).'
+  }
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 4</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#ffe95c] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 4: لوحة التحكم (Panneau de configuration)
+      </h1>
+      <p class="text-sm sm:text-base text-[#1a3300]/80 font-medium">
+        مركز إعدادات الحاسوب: خصائص العرض، إعدادات الفأرة، الخيارات الإقليمية واللغة، إزالة تثبيت البرامج، وإدارة حسابات المستخدمين.
+      </p>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للانتقال المباشر إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p, i) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ 1. الدرس (PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        1. نص الدرس المعتمد
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a href={pdfHref} download={pdfDownloadName}
+         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold flex items-center gap-2 shadow-xs">
+        <span>⬇</span> تحميل وثيقة الدرس بصيغة PDF
+      </a>
+      <a href={pdfHref} target="_blank" rel="noopener"
+         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold flex items-center gap-2">
+        <span>👁</span> معاينة وقراءة وثيقة الدرس (PDF)
+      </a>
+    </div>
+
+    <!-- بطاقة رأس المذكرة الرسمية -->
+    <div class="p-3.5 rounded-2xl bg-[#ffe95c]/50 border-2 border-[#1a3300]/20 flex items-center justify-between flex-wrap gap-2">
+      <span class="font-extrabold text-sm sm:text-base text-[#1a3300]">⚙️ الكفاءة المستهدفة: ينجز بعض عمليات التحكم وضبط الإعدادات في الحاسوب</span>
+      <span class="text-xs font-bold bg-white px-3 py-1 rounded-full border border-[#1a3300]/20 text-[#1a3300]">المدة: 01 ساعة</span>
+    </div>
+
+    <!-- وضعية الانطلاق والإشكالية -->
+    <div class={boxCls}>
+      <h3 class="font-extrabold text-[#1a3300] mb-2 flex items-center gap-2">
+        <span class="text-amber-600 text-lg">🎯</span> وضعية الانطلاق والإشكالية:
+      </h3>
+      <p class="text-sm text-[#1a3300]/90 leading-loose">
+        بعد تثبيتنا لنظام التشغيل على جهاز الحاسوب، أردنا تخصيص بعض الإعدادات الشخصية؛ كضبط خلفية الشاشة، وتعديل سرعة الفأرة، وتغيير الوقت والتاريخ، وإضافة اللغة العربية للوحة المفاتيح، فضلاً عن حذف البرامج غير المرغوبة، وإنشاء حسابات مستقلة لكل فرد في العائلة أو المخبر.
+        <br />
+        <strong class="text-[#1a3300]">الإشكالية:</strong> ما هي الأداة الرئيسية المسؤولة عن تخصيص إعدادات الحاسوب؟ وكيف نقوم بإنجاز مختلف هذه العمليات من خلالها؟
+      </p>
+    </div>
+
+    <!-- 1- تعريف لوحة التحكم -->
+    <div class={`${boxCls} space-y-4 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300] flex items-center gap-2">
+        <span>1-</span> تعريف لوحة التحكم (Panneau de configuration):
+      </h3>
+
+      <div class="p-4 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+        <p>
+          <strong>لوحة التحكم (Panneau de configuration):</strong> هي برنامج رئيسي مثبت ومدمج مع نظام التشغيل، يعتبر <span class="bg-[#ffe95c] px-2 py-0.5 rounded font-black text-[#1a3300]">مركز إعدادات الحاسوب</span> الذي يسمح بضبط وتخصيص كافة الخصائص البرمجية والمادية للجهاز وإدارتها بكفاءة وأمان.
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-[#a8e5e5]/30 border border-[#1a3300]/15 space-y-2">
+        <strong class="text-[#1a3300] block mb-1">طرق فتح لوحة التحكم (في ويندوز 7 وويندوز الحديث):</strong>
+        <ul class="space-y-2 pr-1 text-xs sm:text-sm">
+          <li class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-[#1a3300]">الطريقة 1 (المباشرة):</span>
+            <span class="inline-flex items-center gap-1 font-mono bg-white px-2.5 py-1 rounded-lg border border-[#1a3300]/20 font-bold" dir="ltr">
+              Démarrer (إبدأ) ➔ Panneau de configuration (لوحة التحكم)
+            </span>
+          </li>
+          <li class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-[#1a3300]">الطريقة 2 (أمر التشغيل السريع):</span>
+            <span>الضغط على المفتاحين <kbd class="px-1.5 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono font-bold">Win + R</kbd> وكتابة الأمر <code class="font-mono bg-white px-2 py-0.5 rounded border border-[#1a3300]/20 font-bold text-blue-700">control</code> ثم الضغط على <kbd class="px-1.5 py-0.5 bg-white rounded border border-[#1a3300]/30 font-mono font-bold">Entrée</kbd>.</span>
+          </li>
+          <li class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-[#1a3300]">الطريقة 3 (البحث السريع):</span>
+            <span>كتابة <strong>"لوحة التحكم"</strong> أو <strong>"Control Panel"</strong> في حقل البحث بقائمة إبدأ.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2- البرامج والمزايا التي تقدمها لوحة التحكم -->
+    <div class={`${boxCls} space-y-5 text-sm text-[#1a3300]/90 leading-loose`}>
+      <h3 class="font-extrabold text-base text-[#1a3300] border-b border-[#1a3300]/15 pb-2">
+        2- البرامج والمزايا الخمس الأساسية التي تقدمها لوحة التحكم:
+      </h3>
+
+      <!-- 2.1 إعدادات العرض وخصائصه -->
+      <div class="p-4 rounded-2xl bg-[#ffe95c]/25 border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="font-extrabold text-[#1a3300] text-sm sm:text-base flex items-center gap-2">
+            <span>🖥️</span> أ. إعدادات العرض وخصائصه (Affichage / Personnalisation):
+          </h4>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20" dir="ltr">Apparence et personnalisation</span>
+        </div>
+
+        <div class="text-xs sm:text-sm bg-white p-3 rounded-xl border border-[#1a3300]/15 space-y-1">
+          <strong class="text-[#1a3300] block">المسار المتبع من لوحة التحكم:</strong>
+          <div class="font-mono text-xs bg-[#fcfaf5] p-2 rounded-lg border border-[#1a3300]/15 text-[#1a3300] font-bold" dir="ltr">
+            Démarrer ➔ Panneau de configuration ➔ Apparence et personnalisation (المظهر والطابع الشخصي) ➔ Personnalisation (تخصيص)
+          </div>
+          <p class="text-xs text-[#1a3300]/80 pt-1">
+            💡 <strong>طريقة مختصرة:</strong> نضغط بالزر الأيمن للفأرة على أي مكان فارغ بسطح المكتب ونختار أمر «<strong>Personnaliser</strong>».
+          </p>
+        </div>
+
+        <div>
+          <strong class="text-[#1a3300] block mb-1.5">ما يمكن تغييره وتخصيصه في العرض:</strong>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-bold">
+            <div class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15 flex items-center gap-2">
+              <span class="text-lg">🖼️</span>
+              <div>
+                <div>خلفية سطح المكتب</div>
+                <div class="font-mono text-[10px] text-[#1a3300]/60" dir="ltr">Arrière-plan du bureau</div>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15 flex items-center gap-2">
+              <span class="text-lg">🎨</span>
+              <div>
+                <div>ألوان النوافذ والإطارات</div>
+                <div class="font-mono text-[10px] text-[#1a3300]/60" dir="ltr">Couleur de la fenêtre</div>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15 flex items-center gap-2">
+              <span class="text-lg">💤</span>
+              <div>
+                <div>شاشة التوقف ودقة الشاشة</div>
+                <div class="font-mono text-[10px] text-[#1a3300]/60" dir="ltr">Écran de veille / Résolution</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.2 إعدادات الفأرة -->
+      <div class="p-4 rounded-2xl bg-[#d5f5c2]/35 border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="font-extrabold text-[#1a3300] text-sm sm:text-base flex items-center gap-2">
+            <span>🖱️</span> ب. إعدادات الفأرة (Souris / Mouse Settings):
+          </h4>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20" dir="ltr">Matériel et audio ➔ Souris</span>
+        </div>
+
+        <div class="text-xs sm:text-sm bg-white p-3 rounded-xl border border-[#1a3300]/15 space-y-1">
+          <strong class="text-[#1a3300] block">المسار المتبع من لوحة التحكم:</strong>
+          <div class="font-mono text-xs bg-[#fcfaf5] p-2 rounded-lg border border-[#1a3300]/15 text-[#1a3300] font-bold" dir="ltr">
+            Démarrer ➔ Panneau de configuration ➔ Matériel et audio (الأجهزة والصوت) ➔ Souris (الفأرة)
+          </div>
+        </div>
+
+        <div>
+          <strong class="text-[#1a3300] block mb-1.5">الإجراءات الثلاثة الأساسية لتخصيص الفأرة:</strong>
+          <ul class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm font-medium">
+            <li class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15">
+              <strong class="block text-[#1a3300] mb-0.5">1. التبديل بين أزرار الفأرة:</strong>
+              تبديل مهام الزر الأيمن والأيسر لتسهيل الاستخدام لمستخدمي اليد اليسرى (Gauchers).
+            </li>
+            <li class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15">
+              <strong class="block text-[#1a3300] mb-0.5">2. سرعة النقر المزدوج:</strong>
+              ضبط سرعة النقر المزدوج (Vitesse du double-clic) بين بطيء وسريع لفتح المجلدات.
+            </li>
+            <li class="p-2.5 rounded-xl bg-white border border-[#1a3300]/15">
+              <strong class="block text-[#1a3300] mb-0.5">3. شكل وسرعة المؤشر:</strong>
+              تغيير مظهر السهم (Pointeurs) وسرعة تحركه على الشاشة وإضافة أثر للحركة.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2.3 الخيارات الإقليمية وخيارات اللغة -->
+      <div class="p-4 rounded-2xl bg-[#a8e5e5]/35 border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="font-extrabold text-[#1a3300] text-sm sm:text-base flex items-center gap-2">
+            <span>🌍</span> جـ. الخيارات الإقليمية وخيارات اللغة (Région et langue):
+          </h4>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20" dir="ltr">Horloge, langue et région</span>
+        </div>
+
+        <div class="text-xs sm:text-sm bg-white p-3 rounded-xl border border-[#1a3300]/15 space-y-1">
+          <strong class="text-[#1a3300] block">المسار المتبع من لوحة التحكم:</strong>
+          <div class="font-mono text-xs bg-[#fcfaf5] p-2 rounded-lg border border-[#1a3300]/15 text-[#1a3300] font-bold" dir="ltr">
+            Démarrer ➔ Panneau de configuration ➔ Horloge, langue et région (الساعة واللغة والمنطقة) ➔ Région et langue
+          </div>
+        </div>
+
+        <div>
+          <strong class="text-[#1a3300] block mb-1.5">ما يمكن تغييره وإعداده:</strong>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div class="p-3 rounded-xl bg-white border border-[#1a3300]/15 space-y-1">
+              <strong class="text-[#1a3300] block">⏰ الوقت والتاريخ والمنطقة الزمنية:</strong>
+              ضبط الساعة، اليوم، الشهر، السنة، واختيار المنطقة الزمنية المناسبة للمنطقة الجغرافية (GMT+1 للجزائر).
+            </div>
+            <div class="p-3 rounded-xl bg-white border border-[#1a3300]/15 space-y-1">
+              <strong class="text-[#1a3300] block">⌨️ إضافة أو حذف لغة من لوحة المفاتيح:</strong>
+              تثبيت لوحة المفاتيح العربية (Clavier Arabe 101/102) أو الفرنسية أو الإنجليزية للتبديل بينها عبر زري <kbd class="px-1 py-0.5 bg-gray-100 rounded font-mono text-xs font-bold">Alt + Shift</kbd>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.4 إزالة تثبيت برنامج -->
+      <div class="p-4 rounded-2xl bg-[#ffc09f]/35 border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="font-extrabold text-[#1a3300] text-sm sm:text-base flex items-center gap-2">
+            <span>📦</span> د. إزالة تثبيت برنامج (Désinstaller un programme):
+          </h4>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20" dir="ltr">Programmes et fonctionnalités</span>
+        </div>
+
+        <div class="text-xs sm:text-sm bg-white p-3 rounded-xl border border-[#1a3300]/15 space-y-1">
+          <strong class="text-[#1a3300] block">المسار المتبع من لوحة التحكم:</strong>
+          <div class="font-mono text-xs bg-[#fcfaf5] p-2 rounded-lg border border-[#1a3300]/15 text-[#1a3300] font-bold" dir="ltr">
+            Démarrer ➔ Panneau de configuration ➔ Programmes ➔ Désinstaller un programme (إلغاء تثبيت البرامج)
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white border border-[#1a3300]/15 text-xs sm:text-sm space-y-1.5">
+          <p>
+            • <strong>الهدف:</strong> إلغاء تثبيت البرامج والتطبيقات وإزالتها تماماً من النظام لتحرير مساحة القرص الصلب والحفاظ على استقرار الحاسوب.
+          </p>
+          <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 font-bold">
+            ⚠️ <strong>تنبيه بيداغوجي هام:</strong> حذف أيقونة البرنامج أو اختصاره من سطح المكتب (Supprimer) لا يعني حذف البرنامج من الحاسوب! بل يجب حتماً إزالته عبر نافذة «Désinstaller un programme».
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.5 حسابات المستخدمين -->
+      <div class="p-4 rounded-2xl bg-[#f6d0ff]/35 border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="font-extrabold text-[#1a3300] text-sm sm:text-base flex items-center gap-2">
+            <span>👥</span> هـ. حسابات المستخدمين (Comptes d'utilisateurs):
+          </h4>
+          <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20" dir="ltr">Comptes et protection des utilisateurs</span>
+        </div>
+
+        <div class="text-xs sm:text-sm bg-white p-3 rounded-xl border border-[#1a3300]/15 space-y-1">
+          <strong class="text-[#1a3300] block">المسار المتبع من لوحة التحكم:</strong>
+          <div class="font-mono text-xs bg-[#fcfaf5] p-2 rounded-lg border border-[#1a3300]/15 text-[#1a3300] font-bold" dir="ltr">
+            Démarrer ➔ Panneau de configuration ➔ Comptes et protection des utilisateurs ➔ Comptes d'utilisateurs (حسابات المستخدمين)
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-white border border-[#1a3300]/15 text-xs sm:text-sm space-y-2">
+          <p>
+            • <strong>مفهوم حساب المستخدم:</strong> يوفر الحساب لكل مستخدم برامجه، ملفاته، مجلداته وواجهته الخاصة به في التعامل مع نفس الجهاز دون التأثير على ملفات الآخرين.
+          </p>
+          <p>
+            • <strong>العمليات الممكن إنجازها على الحسابات:</strong>
+            <span class="font-bold text-[#1a3300]">إنشاء حساب جديد — تغيير اسم الحساب — إنشاء كلمة سر للحساب — تغيير صورة الحساب — حذف حساب.</span>
+          </p>
+        </div>
+
+        <div>
+          <strong class="text-[#1a3300] block mb-1.5">أنواع حسابات المستخدمين الثلاثة:</strong>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs sm:text-sm">
+            <div class="p-3 rounded-xl bg-white border-2 border-red-300 space-y-1">
+              <div class="flex items-center gap-1.5 font-bold text-red-700">
+                <span>👑</span> 1. الحساب المسؤول
+              </div>
+              <div class="font-mono text-[11px] text-gray-500 font-bold" dir="ltr">Administrateur</div>
+              <p class="text-xs text-[#1a3300]/80 pt-1">له صلاحيات كاملة ومطلقة على الحاسوب: تثبيت البرامج، ضبط إعدادات النظام، وإدارة وتعديل حسابات بقية المستخدمين.</p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-white border-2 border-blue-300 space-y-1">
+              <div class="flex items-center gap-1.5 font-bold text-blue-700">
+                <span>👤</span> 2. الحساب القياسي (المحدود)
+              </div>
+              <div class="font-mono text-[11px] text-gray-500 font-bold" dir="ltr">Standard / Limited User</div>
+              <p class="text-xs text-[#1a3300]/80 pt-1">يستعمل البرامج ويحفظ ملفاته ومستنداته، لكن لا يمكنه تعديل إعدادات النظام الحساسة أو تثبيت برامج تؤثر على بقية المستخدمين.</p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-white border-2 border-emerald-300 space-y-1">
+              <div class="flex items-center gap-1.5 font-bold text-emerald-700">
+                <span>🚪</span> 3. حساب الضيف
+              </div>
+              <div class="font-mono text-[11px] text-gray-500 font-bold" dir="ltr">Invité / Guest</div>
+              <p class="text-xs text-[#1a3300]/80 pt-1">حساب مخصص للاستخدام المؤقت والسريع دون كلمة مرور، وتُمسح نشاطاته ومؤقتاته عند الخروج، ولا يملك أي صلاحيات تغيير.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 2. فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🎬</span>
+        2. فيديو الشرح
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    {YOUTUBE_ID ? (
+      <div 
+        id="video-facade-container"
+        class="relative rounded-2xl overflow-hidden border-2 border-[#1a3300] aspect-video bg-black group cursor-pointer shadow-md select-none"
+        data-video-id={YOUTUBE_ID}
+      >
+        <img 
+          src={`https://img.youtube.com/vi/${YOUTUBE_ID}/maxresdefault.jpg`} 
+          alt="غلاف فيديو شرح الوحدة 4: لوحة التحكم"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/35 group-hover:bg-black/20 transition-colors flex flex-col items-center justify-center gap-3">
+          <button 
+            type="button" 
+            aria-label="تشغيل فيديو الشرح"
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#ff0000] group-hover:bg-[#cc0000] text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 active:scale-95 cursor-pointer"
+          >
+            <svg class="w-8 h-8 sm:w-9 sm:h-9 fill-current translate-x-0.5" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <span class="px-4 py-1.5 rounded-full bg-black/75 backdrop-blur-xs text-white text-xs sm:text-sm font-bold tracking-wide shadow-sm border border-white/20">
+            ▶ اضغط هنا لمشاهدة شرح لوحة التحكم
+          </span>
+        </div>
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-[#1a3300]/30 bg-white aspect-video flex flex-col items-center justify-center text-center gap-3 p-6">
+        <span class="text-5xl">🎬</span>
+        <p class="text-base font-extrabold text-[#1a3300]">فيديو الشرح العملي للوحة التحكم</p>
+        <p class="text-xs text-[#1a3300]/70 max-w-md">
+          يمكنك في الوقت الحالي تجربة <strong>محاكي لوحة التحكم التفاعلي الحي</strong> في البطاقة السادسة أسفله لتطبيق جميع إعدادات الشاشة، الفأرة، اللغة، البرامج، والحسابات بنفسك!
+        </p>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ 3. الدرس التفاعلي والأدوات ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#d5f5c2] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">⚡</span>
+        3. الدرس التفاعلي والأدوات الاستكشافية
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- أداة 1: مستكشف أقسام لوحة التحكم -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">أ / مستكشف أقسام لوحة التحكم (اضغط على أي قسم لعرض تفاصيله):</h3>
+        <span class="text-xs text-[#1a3300]/75 font-bold">5 أقسام أساسية مقررة</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+        {cpSections.map((sec, idx) => (
+          <button
+            type="button"
+            class={`cp-tab-btn p-3 rounded-2xl border-2 border-[#1a3300]/20 hover:border-[#1a3300] text-center cursor-pointer transition-all hover:-translate-y-0.5 ${idx === 0 ? 'bg-[#ffe95c] border-[#1a3300]' : 'bg-white'}`}
+            data-id={sec.id}
+            data-title={sec.title}
+            data-french={sec.french}
+            data-details={sec.details}
+            data-color={sec.color}
+          >
+            <span class="text-2xl block mb-1">{sec.icon}</span>
+            <div class="font-extrabold text-xs text-[#1a3300] leading-tight">{sec.title}</div>
+            <div class="text-[10px] text-[#1a3300]/65 mt-0.5 font-medium">{sec.summary}</div>
+          </button>
+        ))}
+      </div>
+
+      <div id="cp-details-box" class="p-4 sm:p-5 rounded-2xl bg-[#ffe95c]/35 border-2 border-[#1a3300]/20 space-y-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 id="cp-det-title" class="font-extrabold text-sm sm:text-base text-[#1a3300]">🖥️ إعدادات العرض وخصائصه</h4>
+          <span id="cp-det-french" class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-white border border-[#1a3300]/20 text-[#1a3300]" dir="ltr">
+            Apparence et personnalisation ➔ Personnalisation
+          </span>
+        </div>
+        <p id="cp-det-text" class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          تغيير خلفية سطح المكتب (Arrière-plan du bureau)، ألوان النوافذ (Couleur de la fenêtre)، شاشة التوقف (Écran de veille)، وتعديل دقة الشاشة (Résolution). يمكن الوصول السريع إليها بالنقر بالزر الأيمن على سطح المكتب واختيار Personnaliser.
+        </p>
+      </div>
+    </div>
+
+    <!-- أداة 2: اختبار المسارات السريعة (تحدي أين تذهب؟) -->
+    <div class={`${boxCls} space-y-4`}>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h3 class="font-extrabold text-[#1a3300]">ب / تحدي المسارات السريعة: أين تذهب إذا أردت...؟</h3>
+        <span class="text-xs text-[#1a3300]/70 font-bold">اختر المسار المناسب للتحقق من إجابتك:</span>
+      </div>
+
+      <div class="space-y-3" id="path-challenge-container">
+        <!-- سؤال 1 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+          <div class="text-xs sm:text-sm font-extrabold text-[#1a3300]">
+            1. زميلك يكتب بيده اليسرى، ويريد جعل الزر الأيمن للفأرة هو الزر الرئيسي للاختيار والنقر. أين يتوجه؟
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="true">
+              ✓ Matériel et audio ➔ Souris
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ Apparence et personnalisation
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ Programmes et fonctionnalités
+            </button>
+          </div>
+          <div class="path-feedback text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- سؤال 2 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+          <div class="text-xs sm:text-sm font-extrabold text-[#1a3300]">
+            2. قمت بتثبيت لعبة وأصبحت تستهلك مساحة كبيرة وتسبب بطء الجهاز، وتريد حذفها نهائياً من القرص الصلب. أين تتجه؟
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ سحب الأيقونة إلى سلة المهملات
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="true">
+              ✓ Programmes ➔ Désinstaller un programme
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ Comptes d'utilisateurs
+            </button>
+          </div>
+          <div class="path-feedback text-xs font-bold hidden"></div>
+        </div>
+
+        <!-- سؤال 3 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+          <div class="text-xs sm:text-sm font-extrabold text-[#1a3300]">
+            3. الحاسوب يكتب باللغة الفرنسية فقط وتريد كتابة بحث باللغة العربية عبر لوحة المفاتيح. أين تتجه؟
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ Personnaliser ➔ Arrière-plan
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="false">
+              ✗ Matériel et audio ➔ Clavier
+            </button>
+            <button type="button" class="path-btn p-2 rounded-lg bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c]/50 text-xs font-bold text-right" data-correct="true">
+              ✓ Horloge, langue et région ➔ Région et langue
+            </button>
+          </div>
+          <div class="path-feedback text-xs font-bold hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- أداة 3: مصفوفة صلاحيات حسابات المستخدمين -->
+    <div class={`${boxCls} space-y-4`}>
+      <h3 class="font-extrabold text-[#1a3300]">جـ / مصفوفة صلاحيات حسابات المستخدمين (المسؤول vs القياسي vs الضيف):</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs sm:text-sm border-collapse text-right">
+          <thead>
+            <tr class="bg-[#1a3300] text-[#fcfaf5]">
+              <th class="p-3 rounded-tr-xl border border-white/20">الصلاحية / العملية</th>
+              <th class="p-3 border border-white/20 text-center">حساب المسؤول (Admin)</th>
+              <th class="p-3 border border-white/20 text-center">حساب قياسي (Standard)</th>
+              <th class="p-3 rounded-tl-xl border border-white/20 text-center">حساب الضيف (Guest)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#1a3300]/15 bg-white">
+            <tr>
+              <td class="p-3 font-bold border border-[#1a3300]/15">تشغيل البرامج وحفظ الملفات الخاصة</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ نعم</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ نعم</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ نعم (مؤقتاً)</td>
+            </tr>
+            <tr class="bg-[#fcfaf5]">
+              <td class="p-3 font-bold border border-[#1a3300]/15">تثبيت برامج جديدة لكافة المستخدمين</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ مسموح</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ ممنوع</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ ممنوع</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold border border-[#1a3300]/15">تعديل ملفات وإعدادات النظام الحساسة</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ صلاحية كاملة</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ لا يملك صلاحية</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ ممنوع تماماً</td>
+            </tr>
+            <tr class="bg-[#fcfaf5]">
+              <td class="p-3 font-bold border border-[#1a3300]/15">إنشاء وحذف وتعديل حسابات المستخدمين الآخرين</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ تحكم شامل</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ حسابه فقط</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-red-600 font-extrabold text-base">✗ بدون صلاحية</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold border border-[#1a3300]/15">وضع كلمة سر خاصة للحساب</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ نعم</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-emerald-700 font-extrabold text-base">✓ نعم</td>
+              <td class="p-3 text-center border border-[#1a3300]/15 text-gray-500 font-bold">لا (بدون كلمة سر)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. الخريطة الذهنية ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#ffc09f] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">🧠</span>
+        4. الخريطة الذهنية الشاملة للوحة التحكم
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class={`${boxCls} space-y-4`}>
+      <div class="text-center">
+        <span class="inline-block px-6 py-3 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] font-extrabold text-base sm:text-lg text-[#1a3300] shadow-xs">
+          لوحة التحكم (Panneau de configuration) — مركز إعدادات الحاسوب
+        </span>
+        <div class="w-0.5 h-5 bg-[#1a3300]/30 mx-auto"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-[#1a3300]">
+        <!-- فرع 1 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border-2 border-[#ffe95c] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5 text-[#1a3300]">1. خصائص العرض</strong>
+          <div class="text-[10px] font-mono font-bold text-gray-500">Personnalisation</div>
+          <ul class="space-y-1 font-medium">
+            <li>• خلفية سطح المكتب.</li>
+            <li>• ألوان النوافذ.</li>
+            <li>• شاشة التوقف.</li>
+            <li>• دقة الشاشة (Résolution).</li>
+            <li>• زر الفأرة الأيمن ➔ Personnaliser.</li>
+          </ul>
+        </div>
+
+        <!-- فرع 2 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border-2 border-[#d5f5c2] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5 text-[#1a3300]">2. إعدادات الفأرة</strong>
+          <div class="text-[10px] font-mono font-bold text-gray-500">Souris</div>
+          <ul class="space-y-1 font-medium">
+            <li>• التبديل بين الزرين (لمستخدمي اليد اليسرى).</li>
+            <li>• سرعة النقر المزدوج (Double-clic).</li>
+            <li>• شكل وسرعة مؤشر الفأرة (Pointeurs).</li>
+          </ul>
+        </div>
+
+        <!-- فرع 3 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border-2 border-[#a8e5e5] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5 text-[#1a3300]">3. اللغة والمنطقة</strong>
+          <div class="text-[10px] font-mono font-bold text-gray-500">Région et langue</div>
+          <ul class="space-y-1 font-medium">
+            <li>• الوقت والتاريخ.</li>
+            <li>• المنطقة الزمنية (Fuseau).</li>
+            <li>• إضافة/حذف لغات لوحة المفاتيح (عربية/فرنسية).</li>
+            <li>• اختصار: Alt + Shift.</li>
+          </ul>
+        </div>
+
+        <!-- فرع 4 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border-2 border-[#ffc09f] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5 text-[#1a3300]">4. إزالة البرامج</strong>
+          <div class="text-[10px] font-mono font-bold text-gray-500">Désinstaller prog.</div>
+          <ul class="space-y-1 font-medium">
+            <li>• إلغاء تثبيت البرامج نهائياً.</li>
+            <li>• تحرير مساحة القرص.</li>
+            <li>• تنظيف ملفات النظام ومفاتيح السجل.</li>
+            <li>• حذف الأيقونة لا يكفي!</li>
+          </ul>
+        </div>
+
+        <!-- فرع 5 -->
+        <div class="p-3.5 rounded-xl bg-[#fcfaf5] border-2 border-[#f6d0ff] space-y-2">
+          <strong class="block text-sm font-extrabold border-b border-[#1a3300]/10 pb-1.5 text-[#1a3300]">5. حسابات المستخدمين</strong>
+          <div class="text-[10px] font-mono font-bold text-gray-500">Comptes d'utilisateurs</div>
+          <ul class="space-y-1 font-medium">
+            <li>• استقلالية الملفات والواجهة.</li>
+            <li>• إنشاء وتعديل وحذف الحسابات.</li>
+            <li>• كلمة المرور والصورة.</li>
+            <li>• الأنواع: مسؤول / قياسي / ضيف.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. التمارين التقييمية ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-[#f6d0ff] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">✍️</span>
+        5. التمارين وأسئلة التقويم المرحلي
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-sm text-[#1a3300]/80">
+      اختبر مكتسباتك بإجابة الأسئلة شفوياً أو في كراسك، ثم اضغط على زر «إظهار الجواب» للتأكد:
+    </p>
+
+    <div class="space-y-3">
+      {exercises.map((ex, i) => (
+        <details class="group rounded-2xl bg-white border-2 border-[#1a3300]/15 open:border-[#1a3300]/40 transition-colors">
+          <summary class="flex items-center justify-between gap-3 p-4 cursor-pointer list-none">
+            <span class="text-sm font-bold text-[#1a3300]">{i + 1}. {ex.q}</span>
+            <span class="shrink-0 px-3 py-1.5 rounded-xl bg-[#f0ebe0] group-open:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors">
+              <span class="group-open:hidden">إظهار الجواب</span><span class="hidden group-open:inline">إخفاء</span>
+            </span>
+          </summary>
+          <div class="mx-4 mb-4 p-3.5 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 text-xs sm:text-sm text-[#1a3300] leading-loose" set:html={ex.a} />
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ 6. محاكي لوحة التحكم ============ -->
+  <section id="part-6" class="scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-4 border-[#1a3300] p-5 sm:p-10 space-y-6 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <h2 class="text-xl sm:text-3xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl">💻</span>
+        6. برنامج محاكاة لوحة التحكم التفاعلي (Windows Control Panel Simulator)
+      </h2>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <p class="text-xs sm:text-sm text-[#1a3300]/85 leading-relaxed">
+      <strong>التطبيق العملي الحي:</strong> هذه محاكاة تفاعلية حقيقية لنافذة <strong>لوحة التحكم (Control Panel)</strong>. يمكنك النقر على الأقسام المختلفة لتجربة تغيير خلفية الشاشة، إعدادات الفأرة، إضافة لغة، تجربة إزالة البرامج، أو إنشاء حساب مستخدم جديد:
+    </p>
+
+    <!-- نافذة المحاكي -->
+    <div class="rounded-2xl overflow-hidden border-2 border-[#1a3300] shadow-xl bg-white text-[#1a3300]">
+      <!-- شريط العنوان للنافذة -->
+      <div class="bg-[#244b7a] text-white px-4 py-2.5 flex items-center justify-between text-xs font-bold select-none">
+        <div class="flex items-center gap-2">
+          <span class="text-base">⚙️</span>
+          <span id="sim-window-title">Panneau de configuration (لوحة التحكم)</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-yellow-400 block" title="تصغير"></span>
+          <span class="w-3 h-3 rounded-full bg-green-400 block" title="تكبير"></span>
+          <span class="w-3 h-3 rounded-full bg-red-400 block" title="إغلاق"></span>
+        </div>
+      </div>
+
+      <!-- شريط العنوان والمسار والتنقل -->
+      <div class="bg-[#f0f4f9] border-b border-[#1a3300]/15 px-4 py-2 flex items-center justify-between gap-2 text-xs flex-wrap">
+        <div class="flex items-center gap-2">
+          <button type="button" id="sim-home-btn" class="px-2.5 py-1 rounded bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] font-bold text-[#1a3300] flex items-center gap-1 cursor-pointer">
+            <span>🏠</span> الرئيسية
+          </button>
+          <span class="text-gray-400 font-mono">/</span>
+          <span id="sim-breadcrumb" class="font-bold text-[#1a3300]">لوحة التحكم ➔ الصفحة الرئيسية</span>
+        </div>
+        <div class="text-[11px] text-gray-500 font-medium">
+          طريقة العرض: <strong>الفئات (Catégories)</strong>
+        </div>
+      </div>
+
+      <!-- الشاشة الداخلية للمحاكي -->
+      <div id="sim-main-content" class="p-4 sm:p-6 min-h-[360px] bg-[#fbfcfd]">
+
+        <!-- الواجهة الرئيسية: أيقونات الفئات الخمس -->
+        <div id="sim-view-home" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 1. العرض -->
+          <button type="button" class="sim-card-btn p-4 rounded-xl bg-white border-2 border-[#1a3300]/15 hover:border-[#1a3300] hover:bg-[#ffe95c]/20 text-right cursor-pointer transition-all flex items-start gap-3" data-target="display">
+            <span class="text-3xl p-2 rounded-xl bg-[#ffe95c] border border-[#1a3300]/20">🖥️</span>
+            <div>
+              <div class="font-extrabold text-sm text-[#1a3300]">المظهر والطابع الشخصي (العرض)</div>
+              <div class="font-mono text-[11px] text-blue-700 font-bold" dir="ltr">Apparence et personnalisation</div>
+              <div class="text-xs text-[#1a3300]/70 mt-1">تغيير خلفية سطح المكتب، شاشة التوقف، ألوان النوافذ، ودقة الشاشة.</div>
+            </div>
+          </button>
+
+          <!-- 2. الفأرة -->
+          <button type="button" class="sim-card-btn p-4 rounded-xl bg-white border-2 border-[#1a3300]/15 hover:border-[#1a3300] hover:bg-[#d5f5c2]/30 text-right cursor-pointer transition-all flex items-start gap-3" data-target="mouse">
+            <span class="text-3xl p-2 rounded-xl bg-[#d5f5c2] border border-[#1a3300]/20">🖱️</span>
+            <div>
+              <div class="font-extrabold text-sm text-[#1a3300]">الأجهزة والصوت (إعدادات الفأرة)</div>
+              <div class="font-mono text-[11px] text-blue-700 font-bold" dir="ltr">Matériel et audio ➔ Souris</div>
+              <div class="text-xs text-[#1a3300]/70 mt-1">التبديل بين الزرين لمستخدمي اليد اليسرى، سرعة النقر المزدوج، وشكل المؤشر.</div>
+            </div>
+          </button>
+
+          <!-- 3. اللغة والمنطقة -->
+          <button type="button" class="sim-card-btn p-4 rounded-xl bg-white border-2 border-[#1a3300]/15 hover:border-[#1a3300] hover:bg-[#a8e5e5]/30 text-right cursor-pointer transition-all flex items-start gap-3" data-target="region">
+            <span class="text-3xl p-2 rounded-xl bg-[#a8e5e5] border border-[#1a3300]/20">🌍</span>
+            <div>
+              <div class="font-extrabold text-sm text-[#1a3300]">الساعة واللغة والمنطقة</div>
+              <div class="font-mono text-[11px] text-blue-700 font-bold" dir="ltr">Horloge, langue et région</div>
+              <div class="text-xs text-[#1a3300]/70 mt-1">ضبط التاريخ والوقت، وإضافة أو حذف لغات الكتابة من لوحة المفاتيح.</div>
+            </div>
+          </button>
+
+          <!-- 4. البرامج والميزات -->
+          <button type="button" class="sim-card-btn p-4 rounded-xl bg-white border-2 border-[#1a3300]/15 hover:border-[#1a3300] hover:bg-[#ffc09f]/30 text-right cursor-pointer transition-all flex items-start gap-3" data-target="programs">
+            <span class="text-3xl p-2 rounded-xl bg-[#ffc09f] border border-[#1a3300]/20">📦</span>
+            <div>
+              <div class="font-extrabold text-sm text-[#1a3300]">البرامج (إلغاء تثبيت برنامج)</div>
+              <div class="font-mono text-[11px] text-blue-700 font-bold" dir="ltr">Programmes et fonctionnalités</div>
+              <div class="text-xs text-[#1a3300]/70 mt-1">إلغاء تثبيت البرامج نهائياً وتحرير مساحة القرص الصلب بأمان.</div>
+            </div>
+          </button>
+
+          <!-- 5. حسابات المستخدمين -->
+          <button type="button" class="sim-card-btn p-4 rounded-xl bg-white border-2 border-[#1a3300]/15 hover:border-[#1a3300] hover:bg-[#f6d0ff]/30 text-right cursor-pointer transition-all flex items-start gap-3 md:col-span-2" data-target="accounts">
+            <span class="text-3xl p-2 rounded-xl bg-[#f6d0ff] border border-[#1a3300]/20">👥</span>
+            <div>
+              <div class="font-extrabold text-sm text-[#1a3300]">حسابات المستخدمين وأمان العائلة</div>
+              <div class="font-mono text-[11px] text-blue-700 font-bold" dir="ltr">Comptes d'utilisateurs</div>
+              <div class="text-xs text-[#1a3300]/70 mt-1">إنشاء حسابات جديدة، تعيين كلمات المرور، وتحديد أنواع الحسابات (مسؤول / قياسي / ضيف).</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- تطبيق فرعي 1: تخصيص العرض -->
+        <div id="sim-view-display" class="hidden space-y-4">
+          <div class="p-3 bg-white rounded-xl border border-[#1a3300]/15 flex items-center justify-between flex-wrap gap-2">
+            <strong class="text-sm font-bold text-[#1a3300]">🖥️ تخصيص خلفية سطح المكتب وشاشة التوقف:</strong>
+            <span class="text-xs text-gray-500">جرب اختيار خلفية لتشاهد التغيير فوراً في الشاشة المصغرة:</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- معاينة الشاشة المصغرة -->
+            <div class="p-4 rounded-2xl bg-gray-900 border-2 border-[#1a3300] flex flex-col items-center justify-center">
+              <div id="sim-desktop-preview" class="w-full aspect-video rounded-lg border border-white/20 bg-cover bg-center flex flex-col justify-between p-2 text-white text-[10px] shadow-inner transition-all duration-300" style="background-image: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                <div class="flex items-center gap-1">
+                  <span class="text-xs">📁</span> <span>ملفاتي</span>
+                </div>
+                <div class="text-center font-bold bg-black/40 px-2 py-0.5 rounded backdrop-blur-xs self-center">
+                  معاينة سطح المكتب الحية
+                </div>
+                <div class="flex items-center justify-between bg-black/60 px-2 py-1 rounded">
+                  <span>Démarrer</span>
+                  <span>10:30</span>
+                </div>
+              </div>
+              <span class="text-[11px] text-white/70 mt-2">شاشة العرض الافتراضية للويندوز</span>
+            </div>
+
+            <!-- خيارات الخلفيات -->
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-[#1a3300] block">اختر نمط خلفية سطح المكتب:</span>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" class="sim-bg-opt p-2.5 rounded-xl border-2 border-[#1a3300] bg-white text-xs font-bold text-right" data-bg="linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)">
+                  🌊 بحري كلاسيكي
+                </button>
+                <button type="button" class="sim-bg-opt p-2.5 rounded-xl border-2 border-gray-200 bg-white text-xs font-bold text-right" data-bg="linear-gradient(135deg, #134e5e 0%, #71b280 100%)">
+                  🌿 غابة خضراء
+                </button>
+                <button type="button" class="sim-bg-opt p-2.5 rounded-xl border-2 border-gray-200 bg-white text-xs font-bold text-right" data-bg="linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)">
+                  🌅 غروب دافئ
+                </button>
+                <button type="button" class="sim-bg-opt p-2.5 rounded-xl border-2 border-gray-200 bg-white text-xs font-bold text-right" data-bg="linear-gradient(135deg, #2b5876 0%, #4e4376 100%)">
+                  🌌 ليل وسماء رقمية
+                </button>
+              </div>
+
+              <div class="pt-2">
+                <span class="text-xs font-bold text-[#1a3300] block mb-1">شاشة التوقف (Écran de veille):</span>
+                <select id="sim-screensaver-select" class="w-full text-xs p-2 rounded-lg border border-[#1a3300]/20 bg-white">
+                  <option value="none">بدون (Aucun)</option>
+                  <option value="ribbons">أشرطة متحركة (Rubans)</option>
+                  <option value="bubbles">فقاعات (Bulles)</option>
+                  <option value="text3d">نص ثلاثي الأبعاد: ثانوية الأمير عبد القادر</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- تطبيق فرعي 2: إعدادات الفأرة -->
+        <div id="sim-view-mouse" class="hidden space-y-4">
+          <div class="p-3 bg-white rounded-xl border border-[#1a3300]/15 flex items-center justify-between flex-wrap gap-2">
+            <strong class="text-sm font-bold text-[#1a3300]">🖱️ خصائص الفأرة (Propriétés de la souris):</strong>
+            <span class="text-xs text-gray-500">جرب الإعدادات ولاحظ تأثيرها المباشر:</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-3 bg-white p-4 rounded-xl border border-[#1a3300]/15">
+              <strong class="text-xs font-bold text-[#1a3300] block">1. تكوين الأزرار (أصحاب اليد اليسرى):</strong>
+              <label class="flex items-center gap-2 cursor-pointer text-xs p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15">
+                <input type="checkbox" id="sim-mouse-swap" class="rounded accent-[#1a3300] w-4 h-4" />
+                <span>تبديل الأزرار الأساسية والثانوية (Permuter les boutons)</span>
+              </label>
+              <p id="sim-mouse-swap-status" class="text-[11px] text-gray-600">
+                الحالة الحالية: <strong>الزر الأيسر</strong> هو زر النقر الرئيسي (الوضع العادي).
+              </p>
+
+              <hr class="border-gray-200" />
+
+              <strong class="text-xs font-bold text-[#1a3300] block">2. سرعة النقر المزدوج (Vitesse du double-clic):</strong>
+              <div class="flex items-center gap-2 text-xs">
+                <span>بطيء</span>
+                <input type="range" id="sim-mouse-speed" min="1" max="5" value="3" class="flex-1 accent-[#1a3300]" />
+                <span>سريع</span>
+              </div>
+            </div>
+
+            <!-- صندوق اختبار النقر المزدوج -->
+            <div class="p-4 rounded-xl bg-[#d5f5c2]/30 border-2 border-[#1a3300]/20 flex flex-col items-center justify-center text-center gap-2">
+              <strong class="text-xs font-bold text-[#1a3300]">منطقة اختبار النقر المزدوج:</strong>
+              <button type="button" id="sim-folder-test" class="w-16 h-16 rounded-2xl bg-white border-2 border-[#1a3300]/20 flex items-center justify-center text-3xl shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                📁
+              </button>
+              <span id="sim-folder-status" class="text-xs font-bold text-[#1a3300]">انقر مرتين بسرعة لفتح المجلد</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- تطبيق فرعي 3: اللغة والمنطقة -->
+        <div id="sim-view-region" class="hidden space-y-4">
+          <div class="p-3 bg-white rounded-xl border border-[#1a3300]/15 flex items-center justify-between flex-wrap gap-2">
+            <strong class="text-sm font-bold text-[#1a3300]">🌍 إعدادات اللغة ولوحة المفاتيح (Région et langue):</strong>
+            <span class="text-xs text-gray-500">إضافة لغة جديدة للوحة المفاتيح وضبط التوقيت:</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-3 bg-white p-4 rounded-xl border border-[#1a3300]/15">
+              <strong class="text-xs font-bold text-[#1a3300] block">قائمة لغات الإدخال المثبتة حالياً:</strong>
+              <ul id="sim-lang-list" class="space-y-1.5 text-xs">
+                <li class="p-2 rounded bg-gray-50 border border-gray-200 flex items-center justify-between">
+                  <span class="font-bold">Français (France) — AZERTY</span>
+                  <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-mono">FR</span>
+                </li>
+              </ul>
+
+              <button type="button" id="sim-add-arabic-btn" class="w-full py-2 px-3 rounded-lg bg-[#ffe95c] hover:bg-[#ffd900] text-[#1a3300] text-xs font-extrabold cursor-pointer transition-colors shadow-xs">
+                ➕ إضافة لوحة المفاتيح: العربية (الجزائر - Clavier Arabe 101)
+              </button>
+            </div>
+
+            <div class="space-y-3 bg-white p-4 rounded-xl border border-[#1a3300]/15">
+              <strong class="text-xs font-bold text-[#1a3300] block">⏰ الوقت والتاريخ والمنطقة الزمنية:</strong>
+              <div class="p-3 rounded-lg bg-[#fcfaf5] border border-gray-200 space-y-1 text-xs">
+                <div>التاريخ: <strong class="font-mono" id="sim-clock-date">2026-10-24</strong></div>
+                <div>الوقت: <strong class="font-mono text-base text-blue-700" id="sim-clock-time">22:30:00</strong></div>
+                <div>المنطقة الزمنية: <strong>(UTC+01:00) غرب وسط إفريقيا (الجزائر)</strong></div>
+              </div>
+              <p class="text-[11px] text-[#1a3300]/70">
+                💡 مفتاح الاختصار للتبديل السريع بين لغات لوحة المفاتيح: <kbd class="px-1.5 py-0.5 bg-gray-100 rounded font-mono font-bold">Alt + Shift</kbd>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- تطبيق فرعي 4: البرامج والميزات -->
+        <div id="sim-view-programs" class="hidden space-y-4">
+          <div class="p-3 bg-white rounded-xl border border-[#1a3300]/15 flex items-center justify-between flex-wrap gap-2">
+            <strong class="text-sm font-bold text-[#1a3300]">📦 إلغاء تثبيت البرامج (Désinstaller un programme):</strong>
+            <span class="text-xs text-gray-500">اختر برنامجاً واضغط «إلغاء التثبيت» لإزالته جذرياً:</span>
+          </div>
+
+          <div class="bg-white rounded-xl border border-[#1a3300]/15 overflow-hidden">
+            <div class="p-2.5 bg-gray-100 border-b border-gray-200 flex items-center justify-between text-xs">
+              <button type="button" id="sim-uninstall-btn" disabled class="px-4 py-1.5 rounded bg-red-600 disabled:opacity-40 text-white font-bold cursor-pointer transition-opacity">
+                🗑️ إلغاء التثبيت (Désinstaller)
+              </button>
+              <span id="sim-selected-app-name" class="text-xs text-gray-500 font-bold">حدد برنامجاً من القائمة أدناه</span>
+            </div>
+
+            <ul id="sim-apps-list" class="divide-y divide-gray-100 text-xs">
+              <li class="sim-app-row p-3 flex items-center justify-between hover:bg-blue-50 cursor-pointer" data-name="Game Bar Toolbar v2.1" data-size="145 Mo">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🎮</span>
+                  <div>
+                    <div class="font-bold text-[#1a3300]">Game Bar Toolbar v2.1 (شريط أدوات غير مرغوب فيه)</div>
+                    <div class="text-[10px] text-gray-500">الناشر: Unknown • الحجم: 145 Mo</div>
+                  </div>
+                </div>
+                <span class="text-xs text-gray-400">مثبت</span>
+              </li>
+
+              <li class="sim-app-row p-3 flex items-center justify-between hover:bg-blue-50 cursor-pointer" data-name="VLC Media Player 3.0" data-size="85 Mo">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🎬</span>
+                  <div>
+                    <div class="font-bold text-[#1a3300]">VLC Media Player 3.0</div>
+                    <div class="text-[10px] text-gray-500">الناشر: VideoLAN • الحجم: 85 Mo</div>
+                  </div>
+                </div>
+                <span class="text-xs text-gray-400">مثبت</span>
+              </li>
+
+              <li class="sim-app-row p-3 flex items-center justify-between hover:bg-blue-50 cursor-pointer" data-name="Old Browser Plugin 2022" data-size="210 Mo">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🧩</span>
+                  <div>
+                    <div class="font-bold text-[#1a3300]">Old Browser Plugin 2022 (إضافة قديمة غير مستعملة)</div>
+                    <div class="text-[10px] text-gray-500">الناشر: Legacy Tools • الحجم: 210 Mo</div>
+                  </div>
+                </div>
+                <span class="text-xs text-gray-400">مثبت</span>
+              </li>
+            </ul>
+          </div>
+          <p id="sim-uninstall-log" class="text-xs font-bold text-emerald-700 min-h-[20px]"></p>
+        </div>
+
+        <!-- تطبيق فرعي 5: حسابات المستخدمين -->
+        <div id="sim-view-accounts" class="hidden space-y-4">
+          <div class="p-3 bg-white rounded-xl border border-[#1a3300]/15 flex items-center justify-between flex-wrap gap-2">
+            <strong class="text-sm font-bold text-[#1a3300]">👥 إدارة حسابات المستخدمين (Comptes d'utilisateurs):</strong>
+            <span class="text-xs text-gray-500">إنشاء حساب جديد وتعيين كلمة المرور والصلاحية:</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- قائمة الحسابات -->
+            <div class="bg-white p-4 rounded-xl border border-[#1a3300]/15 space-y-3">
+              <strong class="text-xs font-bold text-[#1a3300] block">الحسابات المسجلة على هذا الحاسوب:</strong>
+              <div id="sim-users-list" class="space-y-2">
+                <div class="p-3 rounded-lg bg-[#ffe95c]/30 border border-[#1a3300]/15 flex items-center gap-3">
+                  <span class="text-2xl p-1 bg-white rounded-full">👑</span>
+                  <div>
+                    <div class="font-bold text-xs text-[#1a3300]">الأستاذ شلابي (المسؤول الرئيسي)</div>
+                    <div class="text-[10px] text-gray-600 font-bold">Administrateur • محمي بكلمة مرور</div>
+                  </div>
+                </div>
+
+                <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-3">
+                  <span class="text-2xl p-1 bg-white rounded-full">👤</span>
+                  <div>
+                    <div class="font-bold text-xs text-[#1a3300]">تلميذ المخبر (Étudiant)</div>
+                    <div class="text-[10px] text-blue-700 font-bold">Utilisateur standard • حساب قياسي</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- نموذج إنشاء حساب جديد -->
+            <div class="bg-white p-4 rounded-xl border border-[#1a3300]/15 space-y-2.5">
+              <strong class="text-xs font-bold text-[#1a3300] block">➕ إنشاء حساب مستخدم جديد:</strong>
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-0.5">اسم الحساب الجديد:</label>
+                <input type="text" id="sim-new-user-name" placeholder="مثال: أحمد، فاطمة..." class="w-full text-xs p-2 rounded border border-gray-300" />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-0.5">نوع الحساب والصلاحية:</label>
+                <select id="sim-new-user-type" class="w-full text-xs p-2 rounded border border-gray-300 bg-white">
+                  <option value="standard">حساب قياسي (Utilisateur standard) — موصى به</option>
+                  <option value="admin">حساب مسؤول (Administrateur) — صلاحيات كاملة</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-600 mb-0.5">كلمة المرور (اختيارية):</label>
+                <input type="password" id="sim-new-user-pass" placeholder="••••••••" class="w-full text-xs p-2 rounded border border-gray-300" />
+              </div>
+
+              <button type="button" id="sim-create-user-btn" class="w-full py-2 px-3 rounded-lg bg-[#1a3300] hover:bg-[#2a5200] text-white text-xs font-extrabold cursor-pointer transition-colors shadow-xs">
+                إنشاء الحساب وحفظ الإعدادات
+              </button>
+              <p id="sim-user-created-msg" class="text-xs font-bold text-emerald-700 min-h-[16px] text-center"></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- العمل المنزلي والنشاط التطبيقي -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط التطبيقي 01 (استكشاف لوحة التحكم):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          افتح لوحة التحكم في حاسوبك الشخصي أو حاسوب المخبر، وتعرف على البرامج المثبتة لديك، ثم تحقق من لغات لوحة المفاتيح المتاحة، وسجّل في كراسك عدد حسابات المستخدمين الموجودة وصلاحية كل حساب.
+        </p>
+      </div>
+
+      <div class={`${boxCls} space-y-2`}>
+        <strong class="block text-[#1a3300]">• النشاط التطبيقي 02 (مخطط سير العمليات):</strong>
+        <p class="text-xs sm:text-sm text-[#1a3300]/90 leading-loose">
+          لخّص في جدول منظم المسار المتبع لكل عملية من العمليات الخمس: (تغيير خلفية الشاشة — تبديل أزرار الفأرة — إضافة لغة عربية — إلغاء تثبيت برنامج — إنشاء حساب مستخدم جديد).
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  summary::-webkit-details-marker { display: none; }
+</style>
+
+<script is:inline>
+  // ================= 1. مستكشف أقسام لوحة التحكم (القسم 3) =================
+  const cpTabBtns = document.querySelectorAll('.cp-tab-btn');
+  const cpDetTitle = document.getElementById('cp-det-title');
+  const cpDetFrench = document.getElementById('cp-det-french');
+  const cpDetText = document.getElementById('cp-det-text');
+  const cpDetailsBox = document.getElementById('cp-details-box');
+
+  cpTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      cpTabBtns.forEach(b => {
+        b.classList.remove('bg-[#ffe95c]', 'border-[#1a3300]');
+        b.classList.add('bg-white');
+      });
+      btn.classList.remove('bg-white');
+      btn.classList.add('bg-[#ffe95c]', 'border-[#1a3300]');
+
+      const title = btn.getAttribute('data-title') || '';
+      const french = btn.getAttribute('data-french') || '';
+      const details = btn.getAttribute('data-details') || '';
+
+      if (cpDetTitle) cpDetTitle.textContent = title;
+      if (cpDetFrench) cpDetFrench.textContent = french;
+      if (cpDetText) cpDetText.textContent = details;
+    });
+  });
+
+  // ================= 2. تحدي المسارات السريعة =================
+  const pathBtns = document.querySelectorAll('.path-btn');
+  pathBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.space-y-2');
+      if (!parent) return;
+      const feedback = parent.querySelector('.path-feedback');
+      const siblings = parent.querySelectorAll('.path-btn');
+      const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+      siblings.forEach(b => b.classList.remove('bg-emerald-100', 'bg-red-100', 'border-emerald-500', 'border-red-500'));
+
+      if (isCorrect) {
+        btn.classList.add('bg-emerald-100', 'border-emerald-500');
+        if (feedback) {
+          feedback.textContent = ' أحسنت! هذا هو المسار الرسمي الصحيح للعملية.';
+          feedback.className = 'path-feedback text-xs font-bold text-emerald-700 block';
+        }
+      } else {
+        btn.classList.add('bg-red-100', 'border-red-500');
+        if (feedback) {
+          feedback.textContent = '❌ مسار غير صحيح، حاول مراجعة خطوات الدرس بالأعلى!';
+          feedback.className = 'path-feedback text-xs font-bold text-red-600 block';
+        }
+      }
+    });
+  });
+
+  // ================= 3. محاكي لوحة التحكم التفاعلي (القسم 6) =================
+  const simBreadcrumb = document.getElementById('sim-breadcrumb');
+  const simWindowTitle = document.getElementById('sim-window-title');
+  const simHomeBtn = document.getElementById('sim-home-btn');
+
+  const simViews = {
+    home: document.getElementById('sim-view-home'),
+    display: document.getElementById('sim-view-display'),
+    mouse: document.getElementById('sim-view-mouse'),
+    region: document.getElementById('sim-view-region'),
+    programs: document.getElementById('sim-view-programs'),
+    accounts: document.getElementById('sim-view-accounts')
+  };
+
+  const viewTitles = {
+    home: { breadcrumb: 'لوحة التحكم ➔ الصفحة الرئيسية', title: 'Panneau de configuration (لوحة التحكم)' },
+    display: { breadcrumb: 'لوحة التحكم ➔ المظهر والطابع الشخصي ➔ العرض', title: 'Personnalisation (تخصيص العرض)' },
+    mouse: { breadcrumb: 'لوحة التحكم ➔ الأجهزة والصوت ➔ الفأرة', title: 'Propriétés de la souris (خصائص الفأرة)' },
+    region: { breadcrumb: 'لوحة التحكم ➔ الساعة واللغة والمنطقة', title: 'Région et langue (المنطقة واللغة)' },
+    programs: { breadcrumb: 'لوحة التحكم ➔ البرامج والميزات ➔ إلغاء التثبيت', title: 'Désinstaller un programme (إلغاء التثبيت)' },
+    accounts: { breadcrumb: 'لوحة التحكم ➔ حسابات المستخدمين', title: 'Comptes d\'utilisateurs (حسابات المستخدمين)' }
+  };
+
+  function switchSimView(viewKey) {
+    Object.keys(simViews).forEach(key => {
+      const el = simViews[key];
+      if (el) {
+        if (key === viewKey) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      }
+    });
+
+    const info = viewTitles[viewKey] || viewTitles.home;
+    if (simBreadcrumb) simBreadcrumb.textContent = info.breadcrumb;
+    if (simWindowTitle) simWindowTitle.textContent = info.title;
+  }
+
+  // أزرار بطاقات الفئات في الواجهة الرئيسية للمحاكي
+  document.querySelectorAll('.sim-card-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target');
+      if (target) switchSimView(target);
+    });
+  });
+
+  // زر الرئيسية في شريط التنقل
+  simHomeBtn?.addEventListener('click', () => switchSimView('home'));
+
+  // تفاعلية العرض: تغيير الخلفية
+  const simDesktopPreview = document.getElementById('sim-desktop-preview');
+  document.querySelectorAll('.sim-bg-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.sim-bg-opt').forEach(b => {
+        b.classList.remove('border-[#1a3300]', 'bg-gray-100');
+        b.classList.add('border-gray-200', 'bg-white');
+      });
+      opt.classList.remove('border-gray-200', 'bg-white');
+      opt.classList.add('border-[#1a3300]', 'bg-gray-100');
+
+      const bg = opt.getAttribute('data-bg');
+      if (simDesktopPreview && bg) {
+        simDesktopPreview.style.backgroundImage = bg;
+      }
+    });
+  });
+
+  // تفاعلية الفأرة: تبديل الأزرار واختبار النقر
+  const simMouseSwap = document.getElementById('sim-mouse-swap');
+  const simMouseSwapStatus = document.getElementById('sim-mouse-swap-status');
+  const simFolderTest = document.getElementById('sim-folder-test');
+  const simFolderStatus = document.getElementById('sim-folder-status');
+
+  simMouseSwap?.addEventListener('change', (e) => {
+    const isSwapped = e.target.checked;
+    if (simMouseSwapStatus) {
+      simMouseSwapStatus.innerHTML = isSwapped
+        ? 'الحالة الحالية: <strong class="text-blue-700">الزر الأيمن</strong> هو زر النقر الأساسي (وضع مستخدمي اليد اليسرى).'
+        : 'الحالة الحالية: <strong>الزر الأيسر</strong> هو زر النقر الأساسي (الوضع العادي).';
+    }
+  });
+
+  let folderOpened = false;
+  simFolderTest?.addEventListener('dblclick', () => {
+    folderOpened = !folderOpened;
+    if (simFolderTest) {
+      simFolderTest.textContent = folderOpened ? '📂' : '📁';
+    }
+    if (simFolderStatus) {
+      simFolderStatus.textContent = folderOpened
+        ? ' تم فتح المجلد بنجاح بالنقر المزدوج!'
+        : '📁 تم إغلاق المجلد.';
+      simFolderStatus.className = folderOpened ? 'text-xs font-bold text-emerald-700' : 'text-xs font-bold text-[#1a3300]';
+    }
+  });
+
+  // تفاعلية اللغة: إضافة العربية
+  const simAddArabicBtn = document.getElementById('sim-add-arabic-btn');
+  const simLangList = document.getElementById('sim-lang-list');
+  let arabicAdded = false;
+
+  simAddArabicBtn?.addEventListener('click', () => {
+    if (!arabicAdded && simLangList) {
+      const li = document.createElement('li');
+      li.className = 'p-2 rounded bg-emerald-50 border border-emerald-300 flex items-center justify-between text-emerald-950 font-bold animate-pulse';
+      li.innerHTML = `
+        <span>العربية (الجزائر) — Clavier Arabe 101</span>
+        <span class="text-[10px] bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded font-mono">AR</span>
+      `;
+      simLangList.appendChild(li);
+      arabicAdded = true;
+      simAddArabicBtn.textContent = ' تم تثبيت وإضافة اللغة العربية بنجاح في النظام!';
+      simAddArabicBtn.classList.remove('bg-[#ffe95c]', 'hover:bg-[#ffd900]');
+      simAddArabicBtn.classList.add('bg-emerald-100', 'text-emerald-900', 'border', 'border-emerald-400');
+      simAddArabicBtn.setAttribute('disabled', 'true');
+    }
+  });
+
+  // تحديث الساعة الحية في المحاكي
+  function updateSimClock() {
+    const clockTime = document.getElementById('sim-clock-time');
+    const clockDate = document.getElementById('sim-clock-date');
+    const now = new Date();
+    if (clockTime) clockTime.textContent = now.toTimeString().split(' ')[0];
+    if (clockDate) clockDate.textContent = now.toISOString().split('T')[0];
+  }
+  setInterval(updateSimClock, 1000);
+  updateSimClock();
+
+  // تفاعلية إزالة البرامج
+  let selectedApp = null;
+  const simAppRows = document.querySelectorAll('.sim-app-row');
+  const simUninstallBtn = document.getElementById('sim-uninstall-btn');
+  const simSelectedAppName = document.getElementById('sim-selected-app-name');
+  const simUninstallLog = document.getElementById('sim-uninstall-log');
+
+  simAppRows.forEach(row => {
+    row.addEventListener('click', () => {
+      simAppRows.forEach(r => r.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-600'));
+      row.classList.add('bg-blue-100', 'border-l-4', 'border-blue-600');
+      selectedApp = row;
+      const appName = row.getAttribute('data-name') || '';
+      if (simSelectedAppName) simSelectedAppName.textContent = `المحدد: ${appName}`;
+      if (simUninstallBtn) simUninstallBtn.removeAttribute('disabled');
+      if (simUninstallLog) simUninstallLog.textContent = '';
+    });
+  });
+
+  simUninstallBtn?.addEventListener('click', () => {
+    if (selectedApp) {
+      const appName = selectedApp.getAttribute('data-name') || '';
+      const appSize = selectedApp.getAttribute('data-size') || '';
+      selectedApp.remove();
+      selectedApp = null;
+      if (simSelectedAppName) simSelectedAppName.textContent = 'حدد برنامجاً من القائمة أدناه';
+      simUninstallBtn.setAttribute('disabled', 'true');
+      if (simUninstallLog) {
+        simUninstallLog.textContent = ` تم إلغاء تثبيت «${appName}» بنجاح وتحرير مساحة ${appSize} من القرص الصلب.`;
+      }
+    }
+  });
+
+  // تفاعلية حسابات المستخدمين: إنشاء حساب جديد
+  const simCreateUserBtn = document.getElementById('sim-create-user-btn');
+  const simNewUserName = document.getElementById('sim-new-user-name');
+  const simNewUserType = document.getElementById('sim-new-user-type');
+  const simUsersList = document.getElementById('sim-users-list');
+  const simUserCreatedMsg = document.getElementById('sim-user-created-msg');
+
+  simCreateUserBtn?.addEventListener('click', () => {
+    const name = (simNewUserName?.value || '').trim();
+    if (!name) {
+      if (simUserCreatedMsg) {
+        simUserCreatedMsg.textContent = 'يرجى كتابة اسم للحساب الجديد أولاً!';
+        simUserCreatedMsg.className = 'text-xs font-bold text-red-600 min-h-[16px] text-center';
+      }
+      return;
+    }
+
+    const type = simNewUserType?.value || 'standard';
+    const typeLabel = type === 'admin' ? 'Administrateur • حساب مسؤول' : 'Utilisateur standard • حساب قياسي';
+    const icon = type === 'admin' ? '👑' : '👤';
+
+    if (simUsersList) {
+      const div = document.createElement('div');
+      div.className = 'p-3 rounded-lg bg-emerald-50 border border-emerald-300 flex items-center gap-3 animate-pulse';
+      div.innerHTML = `
+        <span class="text-2xl p-1 bg-white rounded-full">${icon}</span>
+        <div>
+          <div class="font-bold text-xs text-emerald-950">${name}</div>
+          <div class="text-[10px] text-emerald-800 font-bold">${typeLabel} • تم إنشاؤه للتو</div>
+        </div>
+      `;
+      simUsersList.appendChild(div);
+    }
+
+    if (simUserCreatedMsg) {
+      simUserCreatedMsg.textContent = ` تم إنشاء الحساب «${name}» بنجاح وتجهيز بيئته المستقلة.`;
+      simUserCreatedMsg.className = 'text-xs font-bold text-emerald-700 min-h-[16px] text-center';
+    }
+
+    if (simNewUserName) simNewUserName.value = '';
+    const passInput = document.getElementById('sim-new-user-pass');
+    if (passInput) passInput.value = '';
+  });
+</script>

@@ -39,7 +39,7 @@ const stream = STREAMS_DATA.tcl;
             المعامل: <span class="font-mono text-[#cb5521] font-black text-sm">2</span> • الحجم: <span class="font-mono font-bold">2</span> سا/أسبوع
           </div>
           <div class="bg-[#fcfaf5] border-2 border-[#1a3300]/15 px-4 py-2 rounded-2xl font-bold shadow-xs">
-            المجموع: <span class="font-mono font-bold">3</span> مجالات • <span class="font-mono font-bold">11</span> وحدة تعليمية
+            المجموع: <span class="font-mono font-bold">{stream.domains.length}</span> مجالات • <span class="font-mono font-bold">{stream.domains.reduce((acc, d) => acc + d.units.length, 0)}</span> وحدة تعليمية
           </div>
         </div>
       </div>
