@@ -19,10 +19,14 @@ const { stream } = Astro.props;
 const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
 
 const pdfHref = '/docs/memo-04.pdf';
-const pdfDownloadName = 'لوحة_التحكم_الوحدة_04.pdf';
+const pdfDownloadName = 'مذكرة_لوحة_التحكم_الوحدة_04.pdf';
+
+const studentPdfHref = '/docs/student-04.pdf';
+const studentPdfDownloadName = 'وثيقة_التلميذ_لوحة_التحكم_الوحدة_04.pdf';
+const studentHtmlHref = '/docs/student-04.html';
 
 const parts = [
-  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'الدرس (PDF)', desc: 'نص الدرس الكامل المعتمد، المسارات الرسمية، وتحميل ملف PDF' },
+  { id: 'part-1', icon: '📝', color: 'bg-[#ffe95c]', title: 'وثيقة التلميذ والدرس (PDF)', desc: 'تحميل وثيقة التلميذ للطباعة (فراغات للتعبئة) + نص الدرس والمذكرة الكاملة' },
   { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح لوحة التحكم وتخصيص إعدادات الحاسوب بالصوت والصورة' },
   { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'مستكشف لوحة التحكم + اختبار المسارات + مصفوفة الحسابات' },
   { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام لوحة التحكم ووظائفها' },
@@ -138,6 +142,53 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
       </p>
     </div>
 
+    <!-- شريط التحميل السريع لوثائق الدرس الرسمية (وثيقة التلميذ ومذكرة الأستاذ) -->
+    <div class="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#ffe95c]/50 via-white to-[#a8e5e5]/40 border-2 border-[#1a3300] shadow-sm">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">جاهز للتحميل والطباعة</span>
+            <h2 class="text-base sm:text-lg font-black text-[#1a3300] flex items-center gap-1.5">
+              <span>📥</span> وثائق الدرس الرسمية المعتمدة (2026-2027)
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/80 font-medium">
+            متوفرة للطباعة والتوزيع: <strong>وثيقة التلميذ</strong> (نسخة الفراغات والأنشطة) + <strong>مطبوعة A4 الفورية</strong> + <strong>مذكرة الأستاذ الشاملة</strong>.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+          <!-- وثيقة التلميذ زر رئيسي بارز -->
+          <a
+            href={studentPdfHref}
+            download={studentPdfDownloadName}
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة التلميذ الرسمية PDF للطباعة والتوزيع"
+          >
+            <span>🎒</span> تحميل وثيقة التلميذ (PDF)
+          </a>
+          <!-- مطبوعة A4 -->
+          <a
+            href={studentHtmlHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-2.5 px-3.5 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/40 text-[#1a3300] text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-colors"
+            title="فتح مطبوعة التلميذ المحسنة قياس A4 للطباعة المباشرة"
+          >
+            <span>🖨️</span> مطبوعة A4 للطباعة
+          </a>
+          <!-- مذكرة الأستاذ -->
+          <a
+            href={pdfHref}
+            download={pdfDownloadName}
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل مذكرة الأستاذ الشاملة مع الحلول والشرح الكامل"
+          >
+            <span>👨‍🏫</span> مذكرة الأستاذ (PDF)
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- فهرس البطاقات -->
     <div id="cards-hub" class="scroll-mt-24 space-y-4">
       <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
@@ -165,25 +216,298 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
 
-  <!-- ============ 1. الدرس (PDF) ============ -->
+  <!-- ============ 1. وثائق الدرس (وثيقة التلميذ + مذكرة الأستاذ) ============ -->
   <section id="part-1" class={sectionCls}>
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
       <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
         <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
-        1. نص الدرس المعتمد
+        1. وثائق الدرس الرسمية (وثيقة التلميذ + مذكرة الأستاذ)
       </h2>
       <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
     </div>
 
-    <div class="flex flex-wrap gap-3">
-      <a href={pdfHref} download={pdfDownloadName}
-         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold flex items-center gap-2 shadow-xs">
-        <span>⬇</span> تحميل وثيقة الدرس بصيغة PDF
-      </a>
-      <a href={pdfHref} target="_blank" rel="noopener"
-         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold flex items-center gap-2">
-        <span>👁</span> معاينة وقراءة وثيقة الدرس (PDF)
-      </a>
+    <!-- شبكة بطاقات الوثائق الرسمية: وثيقة التلميذ ومذكرة الأستاذ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- بطاقة 1: وثيقة التلميذ (Fiche de l'Élève) -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm flex flex-col justify-between space-y-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 bg-[#ffe95c] border-b-2 border-r-2 border-[#1a3300] px-3 py-1 text-[11px] font-black text-[#1a3300] rounded-br-xl shadow-xs">
+          نسخة النشاط وتعبئة الفراغات
+        </div>
+        <div class="space-y-2 pt-2">
+          <div class="flex items-center gap-3">
+            <span class="w-12 h-12 rounded-xl bg-[#ffe95c] border-2 border-[#1a3300]/30 flex items-center justify-center text-2xl shadow-xs">🎒</span>
+            <div>
+              <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">وثيقة التلميذ (Fiche de l'Élève)</h3>
+              <p class="text-xs text-[#1a3300]/70 font-bold">الوحدة 04: لوحة التحكم — ثانوية سيدي قادة</p>
+            </div>
+          </div>
+          <p class="text-xs text-[#1a3300]/85 leading-relaxed">
+            المطبوعة الرسمية الموجهة للتلميذ للطباعة والتوزيع داخل القسم؛ تتضمن الإشكالية، المفاهيم، المسارات، والجداول مع فراغات (<span class="font-mono font-bold text-amber-700">..........</span>) للتدوين والمشاركة أثناء الحصة الصفية.
+          </p>
+        </div>
+
+        <div class="space-y-2 pt-3 border-t border-[#1a3300]/10">
+          <div class="flex flex-wrap gap-2">
+            <a
+              href={studentPdfHref}
+              download={studentPdfDownloadName}
+              class="flex-1 py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-xs font-black flex items-center justify-center gap-1.5 shadow-xs transition-transform hover:-translate-y-0.5"
+            >
+              <span>⬇</span> تحميل وثيقة التلميذ (PDF)
+            </a>
+            <a
+              href={studentHtmlHref}
+              target="_blank"
+              rel="noopener"
+              class="py-2.5 px-3.5 rounded-xl bg-[#fcfaf5] hover:bg-[#eee8da] border-2 border-[#1a3300]/30 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <span>🖨️</span> فتح مطبوعة A4 للطباعة
+            </a>
+            <a
+              href={studentPdfHref}
+              target="_blank"
+              rel="noopener"
+              class="py-2.5 px-3 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5"
+            >
+              <span>👁</span> معاينة PDF
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- بطاقة 2: مذكرة الأستاذ (Fiche Pédagogique) -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/30 shadow-sm flex flex-col justify-between space-y-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 bg-[#a8e5e5] border-b-2 border-r-2 border-[#1a3300]/30 px-3 py-1 text-[11px] font-black text-[#1a3300] rounded-br-xl shadow-xs">
+          نسخة الأستاذ الشاملة
+        </div>
+        <div class="space-y-2 pt-2">
+          <div class="flex items-center gap-3">
+            <span class="w-12 h-12 rounded-xl bg-[#a8e5e5] border-2 border-[#1a3300]/30 flex items-center justify-center text-2xl shadow-xs">👨‍🏫</span>
+            <div>
+              <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">مذكرة الدرس البيداغوجية</h3>
+              <p class="text-xs text-[#1a3300]/70 font-bold">الأستاذ شلابي جمال الدين — معلوماتية 2026-2027</p>
+            </div>
+          </div>
+          <p class="text-xs text-[#1a3300]/85 leading-relaxed">
+            المذكرة التربوية الشاملة للدرس؛ تتضمن الكفاءات المستهدفة والمؤشرات، سير الحصة بالتفصيل، الشروحات النظرية الكاملة، والأجوبة والحلول النموذجية لكافة الأنشطة والتقويمات.
+          </p>
+        </div>
+
+        <div class="space-y-2 pt-3 border-t border-[#1a3300]/10">
+          <div class="flex flex-wrap gap-2">
+            <a
+              href={pdfHref}
+              download={pdfDownloadName}
+              class="flex-1 py-2.5 px-4 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-black flex items-center justify-center gap-1.5 shadow-xs transition-transform hover:-translate-y-0.5"
+            >
+              <span>⬇</span> تحميل مذكرة الأستاذ (PDF)
+            </a>
+            <a
+              href={pdfHref}
+              target="_blank"
+              rel="noopener"
+              class="py-2.5 px-3.5 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5"
+            >
+              <span>👁</span> معاينة المذكرة (PDF)
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- استعراض وثيقة التلميذ التفاعلية (مع خيار إظهار الإجابات / تفريغ الفراغات) -->
+    <div class="p-5 sm:p-6 rounded-2xl bg-white border-2 border-[#1a3300]/25 shadow-sm space-y-5">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-[#ffe95c] border border-[#1a3300]/30 flex items-center justify-center text-base">📋</span>
+            <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">
+              استعراض وتعبئة وثيقة التلميذ تفاعلياً:
+            </h3>
+          </div>
+          <p class="text-xs text-[#1a3300]/75 mt-1 font-medium">
+            تطابق المطبوعة الورقية الموزعة على التلاميذ. يمكنك التمرن على ملء الفراغات ذاتياً ثم كشف الإجابات النموذجية.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            id="toggle-student-answers-btn"
+            type="button"
+            class="py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-xs font-black text-[#1a3300] flex items-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5 cursor-pointer"
+          >
+            <span id="toggle-answers-icon">👁️</span>
+            <span id="toggle-answers-text">إظهار الإجابات النموذجية في الفراغات</span>
+          </button>
+          <a
+            href={studentHtmlHref}
+            target="_blank"
+            rel="noopener"
+            class="py-2.5 px-3.5 rounded-xl bg-[#fcfaf5] hover:bg-[#eee8da] border-2 border-[#1a3300]/30 text-xs font-bold text-[#1a3300] flex items-center gap-1.5 transition-colors"
+          >
+            <span>🖨️</span> طباعة A4
+          </a>
+        </div>
+      </div>
+
+      <!-- محتوى ورقة التلميذ التفاعلية -->
+      <div class="p-4 sm:p-5 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 space-y-4 text-xs sm:text-sm text-[#1a3300]/90 leading-relaxed">
+        
+        <!-- ترويسة الورقة -->
+        <div class="p-3 rounded-lg bg-white border border-[#1a3300]/15 flex flex-wrap items-center justify-between gap-3 text-xs font-bold">
+          <div>ثانوية الأمير عبد القادر – سيدي قادة</div>
+          <div class="text-[#1a3300] font-black">الوحدة 04: لوحة التحكم (Panneau de configuration)</div>
+          <div>الأستاذ: شلابي جمال الدين</div>
+        </div>
+
+        <!-- معلومات التلميذ -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold p-2.5 bg-white rounded-lg border border-[#1a3300]/15">
+          <div>اللقب والاسم: <span class="text-[#1a3300]/40 font-mono">...........................</span></div>
+          <div>القسم: <span class="text-[#1a3300]/40 font-mono">...............</span></div>
+          <div>الفوج: <span class="text-[#1a3300]/40 font-mono">.......</span></div>
+          <div>السنة الدراسية: <span class="text-[#1a3300]">2026 - 2027</span></div>
+        </div>
+
+        <!-- 1. تعريف لوحة التحكم -->
+        <div class="space-y-2 bg-white p-3.5 rounded-xl border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block text-sm">1. مفهوم لوحة التحكم (Panneau de configuration) وطرق فتحها:</strong>
+          <p>
+            لوحة التحكم هي برنامج رئيسي مدمج مع نظام التشغيل، يُعتبر 
+            <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="مركز إعدادات وتخصيص الحاسوب" data-placeholder="[ .................................................... ]">[ .................................................... ]</span>
+            ، حيث يتيح للمستخدم ضبط وتخصيص كافة الخصائص المادية والبرمجية وإدارتها بأمان.
+          </p>
+          <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/10 text-xs space-y-1">
+            <div><strong>طرق فتحها:</strong></div>
+            <div>• المسار المباشر: قائمة إبدأ (Démarrer) ➔ <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="لوحة التحكم (Panneau de configuration)" data-placeholder="[ ................................................................ ]">[ ................................................................ ]</span></div>
+            <div>• أمر التشغيل السريع: المفتاحين <kbd class="px-1 bg-white rounded border border-[#1a3300]/20">Win + R</kbd> وكتابة الأمر: <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="control" data-placeholder="[ ..................... ]">[ ..................... ]</span> ثم الضغط على Entrée.</div>
+          </div>
+        </div>
+
+        <!-- 2. البرامج والمزايا الأساسية -->
+        <div class="space-y-3 bg-white p-3.5 rounded-xl border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block text-sm">2. البرامج والمزايا الخمس الأساسية التي تقدمها لوحة التحكم:</strong>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            
+            <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 space-y-1.5">
+              <div class="font-black text-[#1a3300] flex items-center justify-between">
+                <span>🖥️ أ. إعدادات العرض (Affichage / Personnalisation)</span>
+              </div>
+              <div class="text-xs">
+                المسار: <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 text-[11px] transition-colors" data-answer="Apparence et personnalisation ➔ Personnalisation" data-placeholder="[ ..................................................................... ]">[ ..................................................................... ]</span>
+              </div>
+              <div class="text-[11px] text-[#1a3300]/80">
+                ما يمكن تخصيصه: خلفية سطح المكتب، ألوان النوافذ، شاشة التوقف، ودقة الشاشة.
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 space-y-1.5">
+              <div class="font-black text-[#1a3300] flex items-center justify-between">
+                <span>🖱️ ب. إعدادات الفأرة (Propriétés de la souris)</span>
+              </div>
+              <div class="text-xs">
+                المسار: <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 text-[11px] transition-colors" data-answer="Matériel et audio ➔ Souris" data-placeholder="[ ..................................................................... ]">[ ..................................................................... ]</span>
+              </div>
+              <div class="text-[11px] text-[#1a3300]/80">
+                المهام الثلاث: 1. التبديل لأصحاب اليد اليسرى 2. ضبط سرعة النقر المزدوج 3. تغيير شكل المؤشر وسرعته.
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 space-y-1.5">
+              <div class="font-black text-[#1a3300] flex items-center justify-between">
+                <span>🌍 جـ. الساعة واللغة والمنطقة (Région et langue)</span>
+              </div>
+              <div class="text-xs">
+                المسار: <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 text-[11px] transition-colors" data-answer="Horloge, langue et région ➔ Région et langue" data-placeholder="[ ..................................................................... ]">[ ..................................................................... ]</span>
+              </div>
+              <div class="text-[11px] text-[#1a3300]/80">
+                ما يضبط: التاريخ والوقت والمنطقة الزمنية، وإضافة اللغة العربية للوحة المفاتيح عبر تبويب <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 text-[11px] transition-colors" data-answer="Claviers et langues" data-placeholder="[ ........................... ]">[ ........................... ]</span>.
+              </div>
+            </div>
+
+            <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 space-y-1.5">
+              <div class="font-black text-[#1a3300] flex items-center justify-between">
+                <span>📦 د. إزالة تثبيت البرامج (Désinstaller un programme)</span>
+              </div>
+              <div class="text-xs">
+                المسار: <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 text-[11px] transition-colors" data-answer="Programmes ➔ Désinstaller un programme" data-placeholder="[ ..................................................................... ]">[ ..................................................................... ]</span>
+              </div>
+              <div class="text-[11px] text-[#1a3300]/80">
+                الأهمية: إزالة البرنامج تماماً من القرص وسجل النظام، وحذف الأيقونة لا يعني حذف البرنامج أبداً!
+              </div>
+            </div>
+
+          </div>
+
+          <!-- هـ. حسابات المستخدمين -->
+          <div class="p-3 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 space-y-2">
+            <div class="font-black text-[#1a3300]">
+              👥 هـ. حسابات المستخدمين (Comptes d'utilisateurs):
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-right border-collapse border border-[#1a3300]/20 bg-white">
+                <thead>
+                  <tr class="bg-[#1a3300] text-[#fcfaf5]">
+                    <th class="p-2 border border-[#1a3300]/20 font-black">نوع الحساب</th>
+                    <th class="p-2 border border-[#1a3300]/20 font-black">الاسم الفرنسي</th>
+                    <th class="p-2 border border-[#1a3300]/20 font-black">مستوى الصلاحيات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-2 border border-[#1a3300]/20 font-bold">1. حساب المسؤول</td>
+                    <td class="p-2 border border-[#1a3300]/20 font-mono text-[11px]" dir="ltr">Administrateur</td>
+                    <td class="p-2 border border-[#1a3300]/20">
+                      <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="تحكم وصلاحيات كاملة في تثبيت البرامج وإدارة النظام والحسابات" data-placeholder="[ .................................................................................................... ]">[ .................................................................................................... ]</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-[#1a3300]/20 font-bold">2. حساب قياسي</td>
+                    <td class="p-2 border border-[#1a3300]/20 font-mono text-[11px]" dir="ltr">Standard User</td>
+                    <td class="p-2 border border-[#1a3300]/20">
+                      <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="استخدام البرامج وحفظ الملفات دون المساس بإعدادات النظام الحساسة" data-placeholder="[ .................................................................................................... ]">[ .................................................................................................... ]</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 border border-[#1a3300]/20 font-bold">3. حساب الضيف</td>
+                    <td class="p-2 border border-[#1a3300]/20 font-mono text-[11px]" dir="ltr">Invité / Guest</td>
+                    <td class="p-2 border border-[#1a3300]/20">
+                      <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-dashed border-amber-300 transition-colors" data-answer="استخدام مؤقت وسريع دون كلمة مرور ودون حفظ دائم" data-placeholder="[ .................................................................................................... ]">[ .................................................................................................... ]</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. نشاط المسارات السريعة -->
+        <div class="space-y-2 bg-white p-3.5 rounded-xl border border-[#1a3300]/15">
+          <strong class="text-[#1a3300] block text-sm">3. نشاط تطبيقي: تحدي تحديد المسار المناسب في لوحة التحكم:</strong>
+          <div class="space-y-1.5 text-xs">
+            <div class="p-2 rounded bg-[#fcfaf5] border border-[#1a3300]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <span>1. جعل زر الفأرة الأيمن هو الزر الرئيسي للاختيار والنقر:</span>
+              <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors text-left" dir="ltr" data-answer="Matériel et audio ➔ Souris" data-placeholder="[ ........................................................... ]">[ ........................................................... ]</span>
+            </div>
+            <div class="p-2 rounded bg-[#fcfaf5] border border-[#1a3300]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <span>2. إزالة برنامج أو لعبة تالفة تستهلك مساحة كبيرة:</span>
+              <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors text-left" dir="ltr" data-answer="Programmes ➔ Désinstaller un programme" data-placeholder="[ ........................................................... ]">[ ........................................................... ]</span>
+            </div>
+            <div class="p-2 rounded bg-[#fcfaf5] border border-[#1a3300]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <span>3. إضافة لوحة مفاتيح باللغة العربية لكتابة بحث:</span>
+              <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors text-left" dir="ltr" data-answer="Horloge, langue et région ➔ Région et langue" data-placeholder="[ ........................................................... ]">[ ........................................................... ]</span>
+            </div>
+            <div class="p-2 rounded bg-[#fcfaf5] border border-[#1a3300]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <span>4. إنشاء حساب مستقل ومحمي بكلمة سر لأخيك:</span>
+              <span class="student-blank font-mono font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-dashed border-amber-300 transition-colors text-left" dir="ltr" data-answer="Comptes et protection des utilisateurs ➔ Comptes d'utilisateurs" data-placeholder="[ ........................................................... ]">[ ........................................................... ]</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <!-- بطاقة رأس المذكرة الرسمية -->
@@ -1395,5 +1719,35 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
     if (simNewUserName) simNewUserName.value = '';
     const passInput = document.getElementById('sim-new-user-pass');
     if (passInput) passInput.value = '';
+  });
+
+  // تفاعلية وثيقة التلميذ: إظهار / إخفاء الإجابات النموذجية في الفراغات
+  const toggleStudentAnswersBtn = document.getElementById('toggle-student-answers-btn');
+  const toggleAnswersText = document.getElementById('toggle-answers-text');
+  const toggleAnswersIcon = document.getElementById('toggle-answers-icon');
+  let showingStudentAnswers = false;
+
+  toggleStudentAnswersBtn?.addEventListener('click', () => {
+    showingStudentAnswers = !showingStudentAnswers;
+    const blanks = document.querySelectorAll('.student-blank');
+    blanks.forEach((b) => {
+      const el = b as HTMLElement;
+      if (showingStudentAnswers) {
+        el.textContent = el.getAttribute('data-answer') || '';
+        el.classList.add('bg-emerald-100', 'text-emerald-950', 'border-emerald-400', 'font-black');
+        el.classList.remove('bg-amber-50', 'text-amber-800', 'border-amber-300');
+      } else {
+        el.textContent = el.getAttribute('data-placeholder') || '[ ................................ ]';
+        el.classList.remove('bg-emerald-100', 'text-emerald-950', 'border-emerald-400', 'font-black');
+        el.classList.add('bg-amber-50', 'text-amber-800', 'border-amber-300');
+      }
+    });
+
+    if (toggleAnswersText) {
+      toggleAnswersText.textContent = showingStudentAnswers ? 'إخفاء الإجابات (تفريغ الفراغات للمراجعة والطباعة)' : 'إظهار الإجابات النموذجية في الفراغات';
+    }
+    if (toggleAnswersIcon) {
+      toggleAnswersIcon.textContent = showingStudentAnswers ? '🙈' : '👁️';
+    }
   });
 </script>

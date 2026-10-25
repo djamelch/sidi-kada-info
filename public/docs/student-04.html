@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وثيقة التلميذ (مطبوعة A4) — الوحدة 04: لوحة التحكم</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page {
+    size: A4 portrait;
+    margin: 6mm 8mm;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #f1f5f9;
+    color: #1a3300;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page-sheet {
+    width: 210mm;
+    min-height: 290mm;
+    max-height: 295mm;
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8mm 9mm;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Header */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a3300;
+    padding-bottom: 5px;
+    margin-bottom: 6px;
+  }
+  .doc-header .school-info {
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #1a3300;
+  }
+  .doc-header .badge-unit {
+    background: #ffe95c;
+    border: 2px solid #1a3300;
+    padding: 4px 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .doc-header .badge-unit h1 {
+    font-size: 15px;
+    font-weight: 900;
+    color: #1a3300;
+  }
+  .doc-header .badge-unit span {
+    font-size: 10px;
+    font-weight: 700;
+    color: #1a3300;
+  }
+  .doc-header .qr-box {
+    text-align: center;
+  }
+  .doc-header .qr-box img, .doc-header .qr-box svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Student Info Bar */
+  .student-bar {
+    display: flex;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1.5px solid #94a3b8;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  /* Section Styling */
+  .sec-box {
+    border: 1.5px solid #1a3300;
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    background: #ffffff;
+  }
+  .sec-title {
+    background: #ffe95c;
+    color: #1a3300;
+    font-size: 11.5px;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #1a3300;
+    margin-bottom: 4px;
+  }
+
+  .dots-line {
+    border-bottom: 1px dotted #64748b;
+    display: inline-block;
+    min-width: 140px;
+    height: 13px;
+  }
+
+  .fill-box {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin-top: 4px;
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+
+  /* Grid for 5 Features */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  .feat-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 5px 6px;
+    background: #fcfaf5;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .feat-card.full-width {
+    grid-column: span 2;
+  }
+  .feat-card .feat-title {
+    font-weight: 900;
+    font-size: 10.5px;
+    color: #1a3300;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+  }
+  .feat-path {
+    font-family: monospace;
+    font-size: 9px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: #0f172a;
+    display: inline-block;
+    margin: 2px 0;
+  }
+
+  /* Accounts Table */
+  .table-mini {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+    margin-top: 3px;
+    text-align: center;
+  }
+  .table-mini th {
+    background: #1a3300;
+    color: #ffffff;
+    padding: 3px 4px;
+    border: 1px solid #94a3b8;
+    font-weight: 800;
+  }
+  .table-mini td {
+    padding: 3px 4px;
+    border: 1px solid #cbd5e1;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .doc-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1.5px solid #1a3300;
+    padding-top: 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  @media print {
+    body { background: transparent; padding: 0; }
+    .page-sheet { border: none; box-shadow: none; border-radius: 0; padding: 0; width: 100%; height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-sheet">
+
+  <!-- الرأس الرسمي للوثيقة -->
+  <div>
+    <header class="doc-header">
+      <div class="school-info">
+        <div>الجمهورية الجزائرية الديمقراطية الشعبية — وزارة التربية الوطنية</div>
+        <div>ثانوية الأمير عبد القادر – سيدي قادة (ولاية معسكر)</div>
+        <div>الأستاذ: شلابي جمال الدين • مادة المعلوماتية 2026 - 2027</div>
+      </div>
+
+      <div class="badge-unit">
+        <h1>الوحدة 04: لوحة التحكم</h1>
+        <span>Panneau de configuration / Control Panel</span>
+      </div>
+
+      <div class="qr-box">
+        <!-- رمز QRsvg موجه إلى المنصة الرقمية -->
+        <svg viewBox="0 0 100 100" class="w-12 h-12" style="shape-rendering: crispEdges;">
+          <rect width="100" height="100" fill="#ffffff"/>
+          <!-- أنماط QR -->
+          <rect x="5" y="5" width="26" height="26" fill="#1a3300"/>
+          <rect x="8" y="8" width="20" height="20" fill="#ffffff"/>
+          <rect x="12" y="12" width="12" height="12" fill="#1a3300"/>
+          
+          <rect x="69" y="5" width="26" height="26" fill="#1a3300"/>
+          <rect x="72" y="8" width="20" height="20" fill="#ffffff"/>
+          <rect x="76" y="12" width="12" height="12" fill="#1a3300"/>
+          
+          <rect x="5" y="69" width="26" height="26" fill="#1a3300"/>
+          <rect x="8" y="72" width="20" height="20" fill="#ffffff"/>
+          <rect x="12" y="76" width="12" height="12" fill="#1a3300"/>
+
+          <rect x="36" y="10" width="5" height="5" fill="#1a3300"/>
+          <rect x="45" y="15" width="5" height="5" fill="#1a3300"/>
+          <rect x="55" y="10" width="5" height="5" fill="#1a3300"/>
+          <rect x="36" y="25" width="5" height="5" fill="#1a3300"/>
+          <rect x="48" y="30" width="5" height="5" fill="#1a3300"/>
+          <rect x="15" y="45" width="5" height="5" fill="#1a3300"/>
+          <rect x="25" y="55" width="5" height="5" fill="#1a3300"/>
+          <rect x="40" y="45" width="20" height="20" fill="#ffe95c" stroke="#1a3300" stroke-width="2"/>
+          <text x="50" y="59" font-size="10" font-weight="900" text-anchor="middle" fill="#1a3300">QR</text>
+          <rect x="70" y="40" width="5" height="5" fill="#1a3300"/>
+          <rect x="85" y="45" width="5" height="5" fill="#1a3300"/>
+          <rect x="75" y="60" width="5" height="5" fill="#1a3300"/>
+          <rect x="40" y="75" width="5" height="5" fill="#1a3300"/>
+          <rect x="55" y="85" width="5" height="5" fill="#1a3300"/>
+          <rect x="70" y="75" width="5" height="5" fill="#1a3300"/>
+          <rect x="85" y="85" width="5" height="5" fill="#1a3300"/>
+        </svg>
+        <div style="font-size: 8px; font-weight: 800; color: #1a3300;">مسح للمحاكي الحي</div>
+      </div>
+    </header>
+
+    <!-- شريط معلومات التلميذ -->
+    <div class="student-bar">
+      <div>اللقب والاسم: <span class="dots-line" style="min-width:180px;"></span></div>
+      <div>القسم: <span class="dots-line" style="min-width:90px;"></span></div>
+      <div>الفوج: <span class="dots-line" style="min-width:60px;"></span></div>
+      <div>التاريخ: ...... / ...... / 2026 م</div>
+    </div>
+
+    <!-- 1. تعريف لوحة التحكم وطرق فتحها -->
+    <div class="sec-box">
+      <div class="sec-title">1. مفهوم لوحة التحكم (Panneau de configuration) وطرق فتحها:</div>
+      <p style="font-size: 10.5px; line-height: 1.6;">
+        لوحة التحكم هي برنامج رئيسي مدمج مع نظام التشغيل، يُعتبر <strong>مركز إعدادات الحاسوب</strong>، حيث يتيح للمستخدم ضبط وتخصيص كافة الخصائص المادية (العتاد) والبرمجية وإدارتها بأمان.
+      </p>
+      <div class="fill-box" style="margin-top: 3px; background: #fffdf5;">
+        <strong>طرق فتح لوحة التحكم في نظام Windows:</strong><br/>
+        1. <strong>المسار المباشر:</strong> قائمة إبدأ (Démarrer) ➔ <span class="dots-line" style="min-width:220px;"></span><br/>
+        2. <strong>أمر التشغيل السريع:</strong> الضغط على زري <kbd style="background:#eee; padding:1px 4px; border-radius:3px;">Win + R</kbd> وكتابة الأمر: <span style="font-family:monospace; font-weight:bold; color:#1d4ed8;">control</span> ثم الضغط على Entrée.
+      </div>
+    </div>
+
+    <!-- 2. البرامج والمزايا الخمس الأساسية -->
+    <div class="sec-box">
+      <div class="sec-title">2. البرامج والمزايا الأساسية التي تقدمها لوحة التحكم:</div>
+      
+      <div class="features-grid">
+
+        <!-- أ. العرض -->
+        <div class="feat-card">
+          <div class="feat-title">
+            <span>🖥️ أ. إعدادات العرض وخصائصه</span>
+            <span style="font-size:9px; color:#475569;">Personnalisation</span>
+          </div>
+          <div><strong>المسار:</strong> <span class="feat-path">Démarrer ➔ Panneau de conf. ➔ Apparence et personnalisation ➔ Personnalisation</span></div>
+          <div style="font-size:9.5px; color:#334155; margin-top:2px;">
+            💡 <em>طريقة سريعة:</em> زر أيمن بسطح المكتب ➔ <strong>Personnaliser</strong>.<br/>
+            <strong>ما يمكن تخصيصه:</strong><br/>
+            • خلفية سطح المكتب (Arrière-plan du bureau).<br/>
+            • ألوان النوافذ (Couleur de la fenêtre).<br/>
+            • شاشة التوقف (Écran de veille) ودقة الشاشة (Résolution).
+          </div>
+        </div>
+
+        <!-- ب. الفأرة -->
+        <div class="feat-card">
+          <div class="feat-title">
+            <span>🖱️ ب. إعدادات الفأرة (Souris)</span>
+            <span style="font-size:9px; color:#475569;">Propriétés de la souris</span>
+          </div>
+          <div><strong>المسار:</strong> <span class="feat-path">Démarrer ➔ Panneau de conf. ➔ Matériel et audio ➔ Souris</span></div>
+          <div style="font-size:9.5px; color:#334155; margin-top:2px;">
+            <strong>المهام الثلاث الأساسية:</strong><br/>
+            1. التبديل بين الزرين (Permuter les boutons) لمساعدة مستخدمي اليد اليسرى (Gauchers).<br/>
+            2. ضبط سرعة النقر المزدوج (Vitesse du double-clic).<br/>
+            3. تغيير شكل وسرعة مؤشر الفأرة (Pointeurs).
+          </div>
+        </div>
+
+        <!-- جـ. اللغة والمنطقة -->
+        <div class="feat-card">
+          <div class="feat-title">
+            <span>🌍 جـ. الساعة واللغة والمنطقة</span>
+            <span style="font-size:9px; color:#475569;">Région et langue</span>
+          </div>
+          <div><strong>المسار:</strong> <span class="feat-path">Démarrer ➔ Panneau de conf. ➔ Horloge, langue et région ➔ Région et langue</span></div>
+          <div style="font-size:9.5px; color:#334155; margin-top:2px;">
+            <strong>ما يمكن ضبطه وإعداده:</strong><br/>
+            • ضبط الوقت والتاريخ والمنطقة الزمنية (GMT+1 الجزائر).<br/>
+            • إضافة أو حذف لغات الإدخال في لوحة المفاتيح (Claviers et langues ➔ Modifier les claviers ➔ Ajouter: العربية 101).<br/>
+            💡 اختصار التبديل السريع بين لغات الكتابة: <kbd style="background:#eee; padding:1px 3px; border-radius:3px;">Alt + Shift</kbd>.
+          </div>
+        </div>
+
+        <!-- د. إزالة البرامج -->
+        <div class="feat-card">
+          <div class="feat-title">
+            <span>📦 د. إزالة تثبيت برنامج</span>
+            <span style="font-size:9px; color:#475569;">Désinstaller un programme</span>
+          </div>
+          <div><strong>المسار:</strong> <span class="feat-path">Démarrer ➔ Panneau de conf. ➔ Programmes ➔ Désinstaller un programme</span></div>
+          <div style="font-size:9.5px; color:#334155; margin-top:2px;">
+            <strong>الهدف والأهمية:</strong><br/>
+            إلغاء تثبيت البرامج نهائياً من القرص الصلب وسجل النظام (Registre) لتحرير المساحة التخزينية بأمان.<br/>
+            ⚠️ <strong>تنبيه:</strong> حذف أيقونة البرنامج من سطح المكتب لا يعني حذفه من الحاسوب إطلاقاً!
+          </div>
+        </div>
+
+        <!-- هـ. حسابات المستخدمين -->
+        <div class="feat-card full-width">
+          <div class="feat-title">
+            <span>👥 هـ. حسابات المستخدمين (Comptes d'utilisateurs)</span>
+            <span style="font-size:9px; color:#475569;">Comptes et protection des utilisateurs</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; gap:10px; font-size:9.5px;">
+            <div style="flex:1;">
+              <strong>المسار:</strong> <span class="feat-path">Démarrer ➔ Panneau de conf. ➔ Comptes d'utilisateurs</span><br/>
+              <strong>مفهوم الحساب:</strong> يوفر لكل مستخدم برامجه وملفاته وواجهته المستقلة على نفس الجهاز دون التأثير على ملفات الآخرين.<br/>
+              <strong>العمليات:</strong> إنشاء حساب جديد - تغيير الاسم - كلمة السر - تغيير الصورة - حذف حساب.
+            </div>
+            <div style="flex:1;">
+              <table class="table-mini">
+                <thead>
+                  <tr>
+                    <th>نوع الحساب</th>
+                    <th>الاسم بالفرنسية</th>
+                    <th>مستوى الصلاحيات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. حساب المسؤول</strong></td>
+                    <td dir="ltr" style="font-family:monospace;">Administrateur</td>
+                    <td>تحكم كامل في تثبيت البرامج وإعدادات النظام والحسابات.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. حساب قياسي</strong></td>
+                    <td dir="ltr" style="font-family:monospace;">Standard User</td>
+                    <td>تشغيل البرامج وحفظ الملفات دون تعديل إعدادات النظام الحساسة.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. حساب الضيف</strong></td>
+                    <td dir="ltr" style="font-family:monospace;">Invité / Guest</td>
+                    <td>استخدام مؤقت وسريع دون كلمة سر ودون حفظ دائم للبيانات.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3. نشاط تطبيقي: تحدي المسارات السريعة -->
+    <div class="sec-box">
+      <div class="sec-title">3. نشاط تطبيقي (تحدي المسار الصحيح): صل كل مهمة بالقسم المناسب في لوحة التحكم:</div>
+      <table class="table-mini" style="font-size:10px;">
+        <thead>
+          <tr>
+            <th style="width:50%; text-align:right; padding-right:8px;">المهمة المراد إنجازها على الحاسوب</th>
+            <th style="width:50%; text-align:right; padding-right:8px;">القسم المناسب في لوحة التحكم (Panneau de configuration)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:right; padding:4px 8px;">1. جعل زر الفأرة الأيمن هو الزر الرئيسي للاختيار والنقر.</td>
+            <td style="text-align:right; padding:4px 8px;">➔ [ ............................................................................ ]</td>
+          </tr>
+          <tr>
+            <td style="text-align:right; padding:4px 8px;">2. إزالة لعبة تالفة تستهلك مساحة كبيرة في القرص C.</td>
+            <td style="text-align:right; padding:4px 8px;">➔ [ ............................................................................ ]</td>
+          </tr>
+          <tr>
+            <td style="text-align:right; padding:4px 8px;">3. إضافة لوحة مفاتيح عربية لكتابة بحث في معالج النصوص.</td>
+            <td style="text-align:right; padding:4px 8px;">➔ [ ............................................................................ ]</td>
+          </tr>
+          <tr>
+            <td style="text-align:right; padding:4px 8px;">4. إنشاء مساحة عمل خاصة بأخيك محمية برقم سري.</td>
+            <td style="text-align:right; padding:4px 8px;">➔ [ ............................................................................ ]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- تذييل الوثيقة -->
+  <footer class="doc-footer">
+    <div>رابط الدرس والمحاكي التفاعلي على الويب: <strong>https://chalabi-info.vercel.app/tcst/m1-u4</strong></div>
+    <div>ثانوية الأمير عبد القادر – سيدي قادة | الأستاذ شلابي جمال الدين</div>
+    <div>الصفحة 1 / 1 (وثيقة الحفظ والمراجعة)</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
