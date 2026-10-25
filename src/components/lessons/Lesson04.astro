@@ -22,15 +22,16 @@ const pdfHref = '/docs/memo-04.pdf';
 const pdfDownloadName = 'مذكرة_لوحة_التحكم_الوحدة_04.pdf';
 
 const studentPdfHref = '/docs/student-04.pdf';
-const studentPdfDownloadName = 'وثيقة_التلميذ_لوحة_التحكم_الوحدة_04.pdf';
+const studentPdfDownloadName = '04-  وثيقة التلميذ لوحة التحكم.pdf';
 const studentHtmlHref = '/docs/student-04.html';
 
 const parts = [
-  { id: 'part-1', icon: '📝', color: 'bg-[#ffe95c]', title: 'وثيقة التلميذ والدرس (PDF)', desc: 'تحميل وثيقة التلميذ للطباعة (فراغات للتعبئة) + نص الدرس والمذكرة الكاملة' },
+  { id: 'part-student', icon: '🎒', color: 'bg-[#ffe95c]', title: 'وثيقة التلميذ', desc: 'المطبوعة الرسمية للتلميذ (04- وثيقة التلميذ لوحة التحكم.pdf) للطباعة والتعبئة + عارض PDF مدمج' },
+  { id: 'part-1', icon: '📄', color: 'bg-[#d5f5c2]', title: 'مذكرة الدرس (PDF)', desc: 'نص الدرس المعتمد والمذكرة البيداغوجية الشاملة للأستاذ مع الحلول' },
   { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح لوحة التحكم وتخصيص إعدادات الحاسوب بالصوت والصورة' },
-  { id: 'part-3', icon: '⚡', color: 'bg-[#d5f5c2]', title: 'الدرس التفاعلي', desc: 'مستكشف لوحة التحكم + اختبار المسارات + مصفوفة الحسابات' },
-  { id: 'part-4', icon: '🧠', color: 'bg-[#ffc09f]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام لوحة التحكم ووظائفها' },
-  { id: 'part-5', icon: '✍️', color: 'bg-[#f6d0ff]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي والتحصيلي مع الإجابات النموذجية' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#ffc09f]', title: 'الدرس التفاعلي', desc: 'مستكشف لوحة التحكم + اختبار المسارات + مصفوفة الحسابات' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#f6d0ff]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام لوحة التحكم ووظائفها' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#a8e5e5]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي والتحصيلي مع الإجابات النموذجية' },
   { id: 'part-6', icon: '💻', color: 'bg-[#ffe95c]', title: 'محاكي لوحة التحكم', desc: 'محاكي واقعي تفاعلي لنافذة Control Panel وإنجاز الإعدادات الحية' },
 ];
 
@@ -216,105 +217,79 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
 
-  <!-- ============ 1. وثائق الدرس (وثيقة التلميذ + مذكرة الأستاذ) ============ -->
-  <section id="part-1" class={sectionCls}>
+  <!-- ============ بطاقة وثيقة التلميذ (مستقلة بالكامل) ============ -->
+  <section id="part-student" class={sectionCls}>
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
-      <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300] flex items-center gap-3">
-        <span class="w-10 h-10 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
-        1. وثائق الدرس الرسمية (وثيقة التلميذ + مذكرة الأستاذ)
-      </h2>
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🎒</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">المطبوعة الرسمية للتلميذ</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            وثيقة التلميذ (Fiche de l'Élève)
+          </h2>
+        </div>
+      </div>
       <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
     </div>
 
-    <!-- شبكة بطاقات الوثائق الرسمية: وثيقة التلميذ ومذكرة الأستاذ -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-      <!-- بطاقة 1: وثيقة التلميذ (Fiche de l'Élève) -->
-      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm flex flex-col justify-between space-y-4 relative overflow-hidden">
-        <div class="absolute top-0 left-0 bg-[#ffe95c] border-b-2 border-r-2 border-[#1a3300] px-3 py-1 text-[11px] font-black text-[#1a3300] rounded-br-xl shadow-xs">
-          نسخة النشاط وتعبئة الفراغات
-        </div>
-        <div class="space-y-2 pt-2">
-          <div class="flex items-center gap-3">
-            <span class="w-12 h-12 rounded-xl bg-[#ffe95c] border-2 border-[#1a3300]/30 flex items-center justify-center text-2xl shadow-xs">🎒</span>
-            <div>
-              <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">وثيقة التلميذ (Fiche de l'Élève)</h3>
-              <p class="text-xs text-[#1a3300]/70 font-bold">الوحدة 04: لوحة التحكم — ثانوية سيدي قادة</p>
-            </div>
+    <!-- بطاقة معلومات وتحميل وثيقة التلميذ -->
+    <div class="p-5 sm:p-6 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm space-y-4">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-[#ffe95c] text-[#1a3300] border border-[#1a3300]/30 shadow-xs">04-  وثيقة التلميذ لوحة التحكم.pdf</span>
+            <span class="text-xs text-neutral-500 font-bold bg-neutral-100 px-2 py-0.5 rounded-md">406 KB</span>
           </div>
-          <p class="text-xs text-[#1a3300]/85 leading-relaxed">
-            المطبوعة الرسمية الموجهة للتلميذ للطباعة والتوزيع داخل القسم؛ تتضمن الإشكالية، المفاهيم، المسارات، والجداول مع فراغات (<span class="font-mono font-bold text-amber-700">..........</span>) للتدوين والمشاركة أثناء الحصة الصفية.
+          <p class="text-xs sm:text-sm text-[#1a3300]/85 font-medium leading-relaxed">
+            المطبوعة الرسمية المعتمدة لطلاب السنة الأولى ثانوي؛ تتضمن وضعية الانطلاق، تعريف لوحة التحكم، المسارات، وجداول المقارنة مع فراغات (<span class="font-mono text-amber-700 font-bold">..........</span>) للتدوين والتفاعل أثناء الحصة والمراجعة.
           </p>
         </div>
-
-        <div class="space-y-2 pt-3 border-t border-[#1a3300]/10">
-          <div class="flex flex-wrap gap-2">
-            <a
-              href={studentPdfHref}
-              download={studentPdfDownloadName}
-              class="flex-1 py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-xs font-black flex items-center justify-center gap-1.5 shadow-xs transition-transform hover:-translate-y-0.5"
-            >
-              <span>⬇</span> تحميل وثيقة التلميذ (PDF)
-            </a>
-            <a
-              href={studentHtmlHref}
-              target="_blank"
-              rel="noopener"
-              class="py-2.5 px-3.5 rounded-xl bg-[#fcfaf5] hover:bg-[#eee8da] border-2 border-[#1a3300]/30 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <span>🖨️</span> فتح مطبوعة A4 للطباعة
-            </a>
-            <a
-              href={studentPdfHref}
-              target="_blank"
-              rel="noopener"
-              class="py-2.5 px-3 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5"
-            >
-              <span>👁</span> معاينة PDF
-            </a>
-          </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto shrink-0">
+          <a
+            href={studentPdfHref}
+            download={studentPdfDownloadName}
+            class="flex-1 sm:flex-none py-3 px-5 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة التلميذ الأصلية بصيغة PDF"
+          >
+            <span>⬇</span> تحميل وثيقة التلميذ (PDF)
+          </a>
+          <a
+            href={studentHtmlHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-3 px-4 rounded-xl bg-[#fcfaf5] hover:bg-[#eee8da] border-2 border-[#1a3300]/30 text-[#1a3300] text-sm font-bold flex items-center justify-center gap-2 transition-colors"
+            title="فتح مطبوعة A4 مهيأة للطباعة المباشرة على الورق"
+          >
+            <span>🖨️</span> فتح نسخة الطباعة A4
+          </a>
+          <a
+            href={studentPdfHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-3 px-4 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/20 text-[#1a3300] text-sm font-bold flex items-center justify-center gap-2"
+            title="معاينة الوثيقة في نافذة جديدة"
+          >
+            <span>🔍</span> فتح في نافذة جديدة
+          </a>
         </div>
       </div>
+    </div>
 
-      <!-- بطاقة 2: مذكرة الأستاذ (Fiche Pédagogique) -->
-      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/30 shadow-sm flex flex-col justify-between space-y-4 relative overflow-hidden">
-        <div class="absolute top-0 left-0 bg-[#a8e5e5] border-b-2 border-r-2 border-[#1a3300]/30 px-3 py-1 text-[11px] font-black text-[#1a3300] rounded-br-xl shadow-xs">
-          نسخة الأستاذ الشاملة
-        </div>
-        <div class="space-y-2 pt-2">
-          <div class="flex items-center gap-3">
-            <span class="w-12 h-12 rounded-xl bg-[#a8e5e5] border-2 border-[#1a3300]/30 flex items-center justify-center text-2xl shadow-xs">👨‍🏫</span>
-            <div>
-              <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">مذكرة الدرس البيداغوجية</h3>
-              <p class="text-xs text-[#1a3300]/70 font-bold">الأستاذ شلابي جمال الدين — معلوماتية 2026-2027</p>
-            </div>
-          </div>
-          <p class="text-xs text-[#1a3300]/85 leading-relaxed">
-            المذكرة التربوية الشاملة للدرس؛ تتضمن الكفاءات المستهدفة والمؤشرات، سير الحصة بالتفصيل، الشروحات النظرية الكاملة، والأجوبة والحلول النموذجية لكافة الأنشطة والتقويمات.
-          </p>
-        </div>
-
-        <div class="space-y-2 pt-3 border-t border-[#1a3300]/10">
-          <div class="flex flex-wrap gap-2">
-            <a
-              href={pdfHref}
-              download={pdfDownloadName}
-              class="flex-1 py-2.5 px-4 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs font-black flex items-center justify-center gap-1.5 shadow-xs transition-transform hover:-translate-y-0.5"
-            >
-              <span>⬇</span> تحميل مذكرة الأستاذ (PDF)
-            </a>
-            <a
-              href={pdfHref}
-              target="_blank"
-              rel="noopener"
-              class="py-2.5 px-3.5 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/20 text-[#1a3300] text-xs font-bold flex items-center justify-center gap-1.5"
-            >
-              <span>👁</span> معاينة المذكرة (PDF)
-            </a>
-          </div>
-        </div>
+    <!-- عارض PDF مدمج ومباشر لوثيقة التلميذ -->
+    <div class="rounded-2xl border-2 border-[#1a3300]/25 overflow-hidden bg-white shadow-sm space-y-0">
+      <div class="p-3 bg-[#1a3300] text-[#fcfaf5] flex items-center justify-between text-xs font-bold">
+        <span class="flex items-center gap-2">
+          <span>📄</span> معاينة مباشرة للملف: «04- وثيقة التلميذ لوحة التحكم.pdf»
+        </span>
+        <a href={studentPdfHref} target="_blank" rel="noopener" class="text-[#ffe95c] hover:underline flex items-center gap-1 font-mono">
+          <span>عرض ملء الشاشة</span> ↗
+        </a>
       </div>
-
+      <iframe
+        src={`${studentPdfHref}#toolbar=1&navpanes=0`}
+        class="w-full h-[620px] bg-neutral-50 border-0"
+        title="عارض وثيقة التلميذ PDF"
+      ></iframe>
     </div>
 
     <!-- استعراض وثيقة التلميذ التفاعلية (مع خيار إظهار الإجابات / تفريغ الفراغات) -->
@@ -508,6 +483,34 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- ============ بطاقة مذكرة الدرس (PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#d5f5c2] border-2 border-[#1a3300]/30 flex items-center justify-center text-2xl shadow-xs">👨‍🏫</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">مذكرة الأستاذ والدرس الكامل</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            مذكرة الدرس البيداغوجية (نص الدرس المعتمد)
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- أزرار تحميل المذكرة -->
+    <div class="flex flex-wrap items-center gap-3">
+      <a href={pdfHref} download={pdfDownloadName}
+         class="py-3 px-5 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-sm font-bold flex items-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5">
+        <span>⬇</span> تحميل مذكرة الدرس بصيغة PDF
+      </a>
+      <a href={pdfHref} target="_blank" rel="noopener"
+         class="py-3 px-5 rounded-xl bg-white border-2 border-[#1a3300]/20 hover:bg-[#f0ebe0] text-[#1a3300] text-sm font-bold flex items-center gap-2">
+        <span>👁</span> معاينة وقراءة مذكرة الأستاذ (PDF)
+      </a>
     </div>
 
     <!-- بطاقة رأس المذكرة الرسمية -->
