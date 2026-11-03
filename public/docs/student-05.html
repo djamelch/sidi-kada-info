@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وثيقة التلميذ (مطبوعة A4) — الوحدة 05: حماية الحاسوب</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page {
+    size: A4 portrait;
+    margin: 6mm 8mm;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #f1f5f9;
+    color: #1a3300;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page-sheet {
+    width: 210mm;
+    min-height: 290mm;
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 8mm 9mm;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Header */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a3300;
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+  }
+  .doc-header .school-info {
+    text-align: right;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .doc-header .title-badge {
+    text-align: center;
+    background: #ffe95c;
+    border: 2px solid #1a3300;
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+  .doc-header .title-badge h1 {
+    font-size: 14px;
+    font-weight: 900;
+    color: #1a3300;
+  }
+  .doc-header .title-badge span {
+    font-size: 10px;
+    font-weight: 700;
+    color: #1a3300;
+  }
+  .doc-header .student-info {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  /* Section Box */
+  .section-box {
+    border: 1.5px solid #1a3300;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    background: #fcfaf5;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a3300;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed rgba(26,51,0,0.25);
+    padding-bottom: 3px;
+  }
+  .section-title .num {
+    background: #ffe95c;
+    border: 1px solid #1a3300;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+  }
+
+  p, li {
+    font-size: 11px;
+    line-height: 1.45;
+    color: #1a3300;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .card-item {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+  .card-item strong {
+    font-size: 11px;
+    color: #1a3300;
+  }
+  .card-item span {
+    font-size: 10px;
+    color: #475569;
+  }
+
+  .fill-line {
+    display: inline-block;
+    border-bottom: 1px dotted #1a3300;
+    min-width: 150px;
+    margin: 0 4px;
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #1a3300;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 999;
+  }
+
+  @media print {
+    body { background: transparent; padding: 0; }
+    .page-sheet { border: none; box-shadow: none; border-radius: 0; padding: 0; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ طباعة المطبوعة (A4)</button>
+
+<div class="page-sheet">
+
+  <!-- الترويسة -->
+  <div class="doc-header">
+    <div class="school-info">
+      <div>ثانوية الأمير عبد القادر – سيدي قادة</div>
+      <div>السنة الدراسية: 2026 / 2027</div>
+      <div>الأستاذ: شلابي جمال الدين</div>
+    </div>
+    <div class="title-badge">
+      <h1>الوحدة 05: حماية الحاسوب</h1>
+      <span>المجال التعلمي 1: بيئة التعامل مع الحاسوب • 1AS</span>
+    </div>
+    <div class="student-info">
+      <div>اللقب والاسم: .................................</div>
+      <div>القسم: 1 ج م ................ الفوج: ......</div>
+      <div>التاريخ: ...... / ...... / 2026 م</div>
+    </div>
+  </div>
+
+  <!-- 1. البرامج الضارة -->
+  <div class="section-box">
+    <div class="section-title">
+      <span class="num">1</span>
+      <span>مفهوم البرامج الضارة (Malwares):</span>
+    </div>
+    <p>
+      هي <strong>برامج خبيثة</strong> صُممت لإلحاق الضرر بالحاسوب، أو سرقة البيانات، أو تعطيل النظام، أو الوصول غير المصرح به إلى موارد الجهاز.
+    </p>
+  </div>
+
+  <!-- 2. أنواع البرامج الضارة -->
+  <div class="section-box">
+    <div class="section-title">
+      <span class="num">2</span>
+      <span>أهم أنواع البرامج الضارة (Malwares):</span>
+    </div>
+    <div class="grid-2">
+      <div class="card-item">
+        <strong>🦠 الفيروسات (Viruses):</strong>
+        <span>برامج طفيلية تلتصق بالملفات التنفيذية وتتكاثر عند فتح الملف المصاب.</span>
+      </div>
+      <div class="card-item">
+        <strong>🔒 برامج الفدية (Ransomware):</strong>
+        <span>برمجيات تشفر ملفات الضحية وتطلب مبالغ مالية مقابل فك التشفير.</span>
+      </div>
+      <div class="card-item">
+        <strong>🕵️ برامج التجسس (Spyware):</strong>
+        <span>برامج تعمل خفية لجمع معلومات المستخدم وكلمات مروره وسرقتها.</span>
+      </div>
+      <div class="card-item">
+        <strong>🐴 أحصنة طروادة (Trojans):</strong>
+        <span>برامج تتنكر كأدوات مفيدة أو ألعاب وتخفي ثغرة لاختراق الجهاز.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. فيروس الحاسوب وخصائصه -->
+  <div class="section-box">
+    <div class="section-title">
+      <span class="num">3</span>
+      <span>تعريف الفيروس وخصائصه الحيوية:</span>
+    </div>
+    <p>
+      هو برنامج صممه مبرمجون محترفون ليلحق الضرر بجهاز الحاسوب ونظام التشغيل وما عليه من برامج وبيانات.
+    </p>
+    <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:4px 8px; margin-top:4px;">
+      <strong style="font-size:10.5px;">⭐ من أبرز خصائص الفيروسات:</strong>
+      <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:700; margin-top:2px;">
+        <span>1. الانتشار الذاتي والسريع والتكاثر</span>
+        <span>2. القدرة العالية على التخفي</span>
+        <span>3. القدرة على تخريب وحذف البيانات</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. أنواع الفيروسات -->
+  <div class="section-box">
+    <div class="section-title">
+      <span class="num">4</span>
+      <span>بعض أنواع الفيروسات حسب الهدف المستهدف:</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="card-item">
+        <strong>💾 فيروس قطاع الإقلاع (Boot Sector Virus):</strong>
+        <span>يستهدف قطاع بدء التشغيل بالقرص الصلب ويعطل إقلاع نظام التشغيل.</span>
+      </div>
+      <div class="card-item">
+        <strong>📁 فيروسات الملفات (File Infector Virus):</strong>
+        <span>يلتصق بالملفات التنفيذية ذات الامتداد (.exe أو .com) وينشط عند تشغيلها.</span>
+      </div>
+      <div class="card-item">
+        <strong>📝 فيروس الماكرو (Macro Virus):</strong>
+        <span>يستهدف ملفات البرامج المكتبية (Word, Excel) باستغلال أكواد الماكرو المدمجة.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. مضاد البرامج الضارة -->
+  <div class="section-box">
+    <div class="section-title">
+      <span class="num">5</span>
+      <span>مضاد البرامج الضارة (Anti-Malware):</span>
+    </div>
+    <p>
+      هو برنامج أمني متطور يهدف إلى حماية الأجهزة الرقمية من جميع أنواع البرمجيات الضارة واكتشافها وعزلها وإزالتها.
+    </p>
+    <div style="margin-top:3px; font-size:10.5px;">
+      <strong>أمثلة شائعة:</strong> Microsoft Defender (مدمج في Windows) — Kaspersky — Bitdefender — Norton — Avast.
+    </div>
+  </div>
+
+  <!-- 6. طرق الوقاية -->
+  <div class="section-box" style="margin-bottom:0;">
+    <div class="section-title">
+      <span class="num">6</span>
+      <span>طرق الوقاية وتأمين الحاسوب:</span>
+    </div>
+    <div class="grid-2" style="font-size:10.5px; font-weight:600;">
+      <div>• تثبيت برنامج حماية موثوق وتحديثه المستمر.</div>
+      <div>• تفعيل الجدار الناري (Firewall) لمراقبة الشبكة.</div>
+      <div>• التحديث الدوري لنظام التشغيل والبرمجيات.</div>
+      <div>• الحذر من الروابط والرسائل والمرفقات المشبوهة.</div>
+      <div>• التحميل من مصادر ومواقع رسمية موثوقة فقط.</div>
+      <div>• استخدام كلمات مرور قوية وصعبة التخمين.</div>
+      <div>• النسخ الاحتياطي الدوري (Backup) للملفات المهمة.</div>
+      <div>• تجميد النظام (Deep Freeze) في حواسيب القاعات.</div>
+    </div>
+  </div>
+
+  <!-- تذييل الصفحة -->
+  <div style="border-top: 1px solid #1a3300; padding-top: 4px; font-size: 9px; text-align: center; color: #475569; font-weight: 700;">
+    منصة معرفة تك — ثانوية الأمير عبد القادر (سيدي قادة) — إعداد الأستاذ: شلابي جمال الدين — 2026/2027
+  </div>
+
+</div>
+
+</body>
+</html>

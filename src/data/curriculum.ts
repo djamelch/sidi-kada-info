@@ -123,12 +123,13 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcst-m1-u5',
             unitNumber: 5,
-            title: 'حماية الحاسوب وأمن البيانات',
-            shortDesc: 'مخاطر البرمجيات الخبيثة، جدار الحماية، والنسخ الاحتياطي وتجميد النظام.',
+            title: 'حماية الحاسوب',
+            shortDesc: 'البرامج الضارة (Malware)، أنواع الفيروسات، مضادات البرامج الضارة، وطرق الوقاية وتأمين الأجهزة.',
             slug: '/tcst/m1-u5',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 5
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           },
           {
             id: 'tcst-m1-u6',
@@ -338,12 +339,13 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
           {
             id: 'tcl-m1-u5',
             unitNumber: 5,
-            title: 'حماية البيانات والأمن الرقمي',
-            shortDesc: 'كلمات المرور، الوقاية من الفيروسات، وحماية الخصوصية الشخصية.',
+            title: 'حماية الحاسوب',
+            shortDesc: 'البرامج الضارة، الفيروسات وخصائصها، مضادات البرامج الضارة، وطرق الوقاية وكلمات المرور القوية.',
             slug: '/tcl/m1-u5',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 5
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           },
           {
             id: 'tcl-m1-u6',

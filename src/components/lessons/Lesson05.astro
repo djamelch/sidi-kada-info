@@ -1,0 +1,1104 @@
+---
+/**
+ * الوحدة 5: حماية الحاسوب (Protection de l'ordinateur) — المصدر المعتمد لمحتوى الدرس.
+ * المرجع المعتمد: وثائق الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
+ * «الوحدة 5 حماية الحاسوب مختصر (1).docx» و «مذكرة حماية الحاسوب .docx»
+ *
+ * إعدادات الأستاذ:
+ *  - YOUTUBE_ID: معرّف فيديو الشرح على يوتيوب (اتركه فارغاً إلى أن يجهز الفيديو).
+ *  - HOMEWORK_SOLUTION_PUBLISHED: لنشر أو حجب حل العمل المنزلي.
+ */
+const YOUTUBE_ID = '';
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/memo-05.pdf';
+const pdfDownloadName = 'مذكرة_حماية_الحاسوب_الوحدة_05.pdf';
+
+const studentPdfHref = '/docs/student-05.html';
+const studentPdfDownloadName = 'وثيقة_التلميذ_حماية_الحاسوب.pdf';
+
+const parts = [
+  { id: 'part-student', icon: '🎒', color: 'bg-[#ffe95c]', title: 'وثيقة التلميذ', desc: 'المطبوعة الرسمية للتلميذ (ملخص الدرس المنظم) للطباعة والتعبئة والمراجعة' },
+  { id: 'part-1', icon: '📄', color: 'bg-[#d5f5c2]', title: 'مذكرة الدرس (PDF)', desc: 'المذكرة البيداغوجية الشاملة للأستاذ مع السير المنهجي والوضعية المشكلة' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح مخاطر البرمجيات الضارة وطرق تأمين الحاسوب بالصوت والصورة' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#ffc09f]', title: 'الدرس التفاعلي', desc: 'مستكشف البرامج الضارة + بطاقات أنواع الفيروسات + مصفوفة الحماية' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#f6d0ff]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام حماية الحاسوب ومفاهيم الأمان' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#a8e5e5]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي والتحصيلي مع الإجابات النموذجية المخفية' },
+  { id: 'part-6', icon: '🛡️', color: 'bg-[#ffe95c]', title: 'محاكي الحماية والأمان', desc: 'فاحص الفلاش ديسك ومكافح الفيروسات + اختبار الجدار الناري + قوة كلمة المرور' },
+];
+
+const exercises = [
+  {
+    q: 'ما المقصود بالبرامج الضارة (Malware)؟ وما الغاية التي صُممت من أجلها؟',
+    a: '<strong>البرامج الضارة (Malware):</strong> هي برامج خبيثة صُممت لإلحاق الضرر بالحاسوب، أو سرقة البيانات، أو تعطيل النظام، أو الوصول غير المصرح به إلى الحاسوب وموارده.'
+  },
+  {
+    q: 'اذكر أربعة أنواع رئيسية من البرامج الضارة Malwares مع إعطاء فكرة عن كل نوع.',
+    a: '1. <strong>الفيروسات (Viruses):</strong> برامج طفيلية تلتصق بالملفات والبرامج وتتكاثر عند تشغيلها لإفساد البيانات.<br/>2. <strong>برامج الفدية (Ransomware):</strong> برامج خبيثة تُشفر ملفات المستخدم وتطالبه بدفع فدية مالية لفك التشفير.<br/>3. <strong>برامج التجسس (Spyware):</strong> برمجيات خبيثة تعمل في الخفاء لجمع معلومات المستخدم وسرقة كلمات المرور والبيانات الشخصية.<br/>4. <strong>أحصنة طروادة (Trojans):</strong> برامج تبدو مفيدة وغير ضارة (مثل لعبة أو أداة تفعيل) ولكنها تخفي داخلها كوداً ضاراً يفتح باباً خلفياً لاختراق الجهاز.'
+  },
+  {
+    q: 'ما هو تعريف فيروس الحاسوب (Computer Virus)؟ وما هي أبرز خصائصه؟',
+    a: '<strong>تعريف الفيروس:</strong> هو برنامج صممه مبرمجون ليلحق الضرر بجهاز الحاسوب ونظام التشغيل وما عليه من برامج وبيانات.<br/><strong>خصائصه الأساسية:</strong><br/>• الانتشار والتكاثر.<br/>• القدرة على التخفي عن أعين المستخدم وبرامج الحماية.<br/>• القدرة على تخريب وحذف البيانات وتعطيل النظام.'
+  },
+  {
+    q: 'قارن بين أنواع الفيروسات الثلاثة: فيروس قطاع الإقلاع، فيروسات الملفات، وفيروس الماكرو.',
+    a: '• <strong>فيروس قطاع الإقلاع (Boot Sector Virus):</strong> يستهدف الجزء الحساس في القرص الصلب المسؤول عن إقلاع وتشغيل الجهاز، فيعطل بدء تشغيل نظام التشغيل.<br/>• <strong>فيروسات الملفات (File Infector Virus):</strong> تلتصق بالملفات التنفيذية والبرامج (مثل الملفات ذات الامتداد <span class=\"font-mono font-bold\" dir=\"ltr\">.exe</span> أو <span class=\"font-mono font-bold\" dir=\"ltr\">.com</span>) وتنشط عند تشغيلها.<br/>• <strong>فيروس الماكرو (Macro Virus):</strong> يستهدف ملفات البرامج المكتبية مثل Microsoft Word أو Excel عبر استغلال أكواد الماكرو المدمجة فيها.'
+  },
+  {
+    q: 'ما هو تعريف مضاد البرامج الضارة (Anti-Malware)؟ واذكر أربعة أمثلة شائعة عنه.',
+    a: '<strong>مضاد البرامج الضارة (Anti-Malware):</strong> هو برنامج أمني متطور يهدف إلى حماية الأجهزة الرقمية من جميع أنواع البرمجيات الضارة واكتشافها وعزلها وإزالتها.<br/>• <strong>أمثلة شائعة:</strong> Bitdefender ، Kaspersky ، Norton ، Avast ، بالإضافة إلى برنامج الحماية المدمج في نظام ويندوز Microsoft Defender.'
+  },
+  {
+    q: 'ما هي أهم الإجراءات والخطوات الوقائية لحماية الحاسوب من البرامج الضارة؟',
+    a: '1. تثبيت برنامج حماية موثوق (Anti-malware) وتحديث قواعد بياناته دورياً.<br/>2. تفعيل الجدار الناري (Firewall) لمراقبة حركة الاتصالات بالشبكة.<br/>3. التحديث المستمر لنظام التشغيل والبرمجيات لسد الثغرات الأمنية.<br/>4. الحذر من الروابط المجهولة والرسائل والملفات المشبوهة عبر البريد والإنترنت.<br/>5. تحميل البرامج والملفات من مصادر رسمية وموثوقة فقط وتجنب البرامج المقرصنة.<br/>6. استخدام كلمات مرور قوية وصعبة التخمين.<br/>7. إجراء نسخ احتياطي دوري للبيانات المهمة وفحص وسائط التخزين الخارجية (USB).'
+  },
+  {
+    q: 'وضعية إدماجية: قام زميلك بتوصيل فلاش ديسك بحاسوبه، وفجأة اختفت ملفاته وتحولت جميعها إلى اختصارات (Shortcuts). ما سبب هذه المشكلة؟ وكيف تنصحه بالتصرف؟',
+    a: '• <strong>سبب المشكلة:</strong> إصابة وسيط التخزين ببرمجية خبيثة شائعة تُدعى <strong>Shortcut Virus</strong>، حيث تقوم بإخفاء المجلدات الأصلية وإنشاء اختصارات تحمل نفس الأسماء لتنفيذ الكود الخبيث عند النقر عليها.<br/>• <strong>النصائح والإجراءات:</strong><br/>1. عدم النقر على الاختصارات المشبوهة.<br/>2. إجراء فحص كامل للفلاش ديسك بواسطة مضاد البرامج الضارة.<br/>3. إظهار الملفات المخفية واسترجاعها عبر أمر <span class=\"font-mono font-bold\" dir=\"ltr\">attrib -h -r -s /s /d *.*</span>.<br/>4. تفعيل ميزة الفحص التلقائي لوسائط التخزين الخارجية قبل فتحها.'
+  }
+];
+
+const malwareList = [
+  {
+    name: 'الفيروسات',
+    en: 'Viruses',
+    icon: '🦠',
+    badge: 'طفيلي يتكاثر',
+    color: 'bg-red-100 text-red-900 border-red-300',
+    desc: 'برامج خبيثة تلتصق بالملفات التنفيذية وتتكاثر عند فتح الملف المصاب، مسببة تخريب البيانات وتعطيل البرامج.'
+  },
+  {
+    name: 'برامج الفدية',
+    en: 'Ransomware',
+    icon: '🔒',
+    badge: 'تشفير وابتزاز',
+    color: 'bg-amber-100 text-amber-900 border-amber-300',
+    desc: 'برمجيات خطيرة تقوم بتشفير ملفات المستخدم الشخصية بالكامل وتطالبه بفدية مالية مقابل استرجاع مفتاح التشفير.'
+  },
+  {
+    name: 'برامج التجسس',
+    en: 'Spyware',
+    icon: '🕵️',
+    badge: 'سرقة الخصوصية',
+    color: 'bg-purple-100 text-purple-900 border-purple-300',
+    desc: 'برامج خبيثة تعمل في الخلفية دون علم المستخدم، وتراقب نشاطه وتسجل كلمات مروره وبطاقاته البنكية وترسلها للمخترق.'
+  },
+  {
+    name: 'أحصنة طروادة',
+    en: 'Trojans',
+    icon: '🐴',
+    badge: 'تنكر وخداع',
+    color: 'bg-blue-100 text-blue-900 border-blue-300',
+    desc: 'برامج تتنكر في شكل تطبيقات مفيدة أو ألعاب أو كراكات، وعند تثبيتها تفتح باباً خلفياً سرياً للمخترق للتحكم بالحاسوب.'
+  }
+];
+
+const virusTypes = [
+  {
+    name: 'فيروس قطاع الإقلاع',
+    en: 'Boot Sector Virus',
+    icon: '💾',
+    target: 'يستهدف قطاع الإقلاع في القرص الصلب (Master Boot Record)',
+    impact: 'يمنع نظام التشغيل من الإقلاع والبدء عند تشغيل الحاسوب.',
+    color: 'border-red-400 bg-red-50'
+  },
+  {
+    name: 'فيروسات الملفات',
+    en: 'File Infector Virus',
+    icon: '📁',
+    target: 'يلتصق بالملفات التنفيذية والبرمجية (.exe, .com, .bat)',
+    impact: 'ينشط عند تشغيل البرنامج المصاب وينسخ نفسه إلى بقية البرامج.',
+    color: 'border-amber-400 bg-amber-50'
+  },
+  {
+    name: 'فيروس الماكرو',
+    en: 'Macro Virus',
+    icon: '📝',
+    target: 'يستهدف مستندات البرامج المكتبية مثل Word و Excel',
+    impact: 'يستغل أكواد الماكرو المدمجة لنشر العدوى وتخريب المستندات.',
+    color: 'border-emerald-400 bg-emerald-50'
+  }
+];
+
+const antiMalwareList = [
+  { name: 'Microsoft Defender', desc: 'المضاد المدمج مجاناً مع نظام Windows، يوفر حماية فورية وقوية دون إثقال الجهاز.' },
+  { name: 'Kaspersky', desc: 'من أشهر مضادات الفيروسات العالمية وأقواها في الكشف السحابي والتصدي للهجمات.' },
+  { name: 'Bitdefender', desc: 'محرك أمني متقدم يتميز بمعدلات كشف فائقة وحماية استباقية ضد برمجيات الفدية.' },
+  { name: 'Norton', desc: 'حزمة أمنية متكاملة تقدم جدار حماية قوي وحماية التصفح ومكافحة التجسس.' },
+  { name: 'Avast', desc: 'برنامج حماية واسع الانتشار يوفر دروعاً أمنية متعددة للملفات والبريد والويب.' },
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 5</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#ffe95c] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 5: حماية الحاسوب
+      </h1>
+      <p class="text-sm sm:text-base text-[#1a3300]/80 font-medium">
+        البرامج الضارة (Malware)، أنواع الفيروسات وخصائصها، مضادات البرامج الضارة، وطرق الوقاية وتأمين الأجهزة.
+      </p>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للانتقال المباشر إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <div class="min-w-0">
+                <h3 class="font-bold text-sm sm:text-base text-[#1a3300] group-hover:text-black leading-snug truncate">
+                  {p.title}
+                </h3>
+              </div>
+            </div>
+            <p class="text-xs text-[#1a3300]/70 leading-relaxed">
+              {p.desc}
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ المحتوى الرئيسي ============ -->
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ الجزء: وثيقة التلميذ ============ -->
+  <section id="part-student" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#ffe95c] border border-[#1a3300]/20 flex items-center justify-center text-xl">🎒</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">وثيقة التلميذ (الملخص المنظم المعتمد)</h2>
+          <p class="text-xs text-[#1a3300]/70">المحتوى التعليمي المقرر للتلميذ — للمراجعة والتدوين والمذاكرة</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- نص الملخص الصفي للتلميذ -->
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 sm:p-7 space-y-6">
+      
+      <!-- ترويسة الدرس الصفي -->
+      <div class="p-4 rounded-xl bg-[#ffe95c]/30 border border-[#1a3300]/20 flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-[#1a3300]">
+        <div>ثانوية الأمير عبد القادر – سيدي قادة</div>
+        <div>المجال التعلمي 1: بيئة التعامل مع الحاسوب</div>
+        <div>الأستاذ: شلابي جمال الدين</div>
+        <div>المادة: المعلوماتية (1AS)</div>
+        <div>الوحدة 05: حماية الحاسوب</div>
+        <div>المدة: ساعة واحدة</div>
+      </div>
+
+      <!-- العناصر الستة للدرس -->
+      <div class="space-y-6 text-[#1a3300]">
+        
+        <!-- 1 -->
+        <div class="space-y-2">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">1</span>
+            البرامج الضارة (Malwares):
+          </h3>
+          <p class="text-sm leading-relaxed pr-9 font-medium text-[#1a3300]/90">
+            هي برامج خبيثة صُممت لإلحاق الضرر بالحاسوب، أو سرقة البيانات، أو تعطيل النظام، أو الوصول غير المصرح به إلى الحاسوب.
+          </p>
+        </div>
+
+        <!-- 2 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">2</span>
+            أنواع البرامج الضارة (Malwares):
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-9">
+            {malwareList.map((m) => (
+              <div class="p-3.5 rounded-xl border-2 border-[#1a3300]/15 bg-[#fcfaf5] flex items-start gap-3">
+                <span class="text-2xl">{m.icon}</span>
+                <div>
+                  <div class="font-bold text-sm text-[#1a3300] flex items-center gap-2">
+                    <span>{m.name}</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white border border-[#1a3300]/20 text-[#1a3300]/70" dir="ltr">{m.en}</span>
+                  </div>
+                  <p class="text-xs text-[#1a3300]/80 mt-1 leading-relaxed">{m.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="space-y-2">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">3</span>
+            تعريف الفيروس (Computer Virus) وخصائصه:
+          </h3>
+          <p class="text-sm leading-relaxed pr-9 font-medium text-[#1a3300]/90">
+            هو برنامج صممه مبرمجون محترفون ليلحق الضرر بجهاز الحاسوب ونظام التشغيل وما عليه من برامج وبيانات.
+          </p>
+          <div class="pr-9 pt-1">
+            <div class="p-3 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 space-y-1.5 text-xs">
+              <div class="font-bold text-[#1a3300]">⭐ من أبرز خصائص الفيروسات:</div>
+              <ul class="list-disc list-inside space-y-1 text-[#1a3300]/85 font-medium">
+                <li><strong>الانتشار الذاتي والسريع:</strong> التكاثر ونسخ نفسه داخل الملفات والأقراص.</li>
+                <li><strong>القدرة على التخفي:</strong> التستر وتغيير الامتداد لمنع كشفه.</li>
+                <li><strong>القدرة على تخريب البيانات:</strong> مسح أو تعديل أو إتلاف الملفات ونظام التشغيل.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">4</span>
+            بعض أنواع الفيروسات:
+          </h3>
+          <div class="space-y-2 pr-9">
+            {virusTypes.map((v) => (
+              <div class={`p-3 rounded-xl border-2 ${v.color} flex items-start gap-3 text-xs sm:text-sm`}>
+                <span class="text-xl shrink-0">{v.icon}</span>
+                <div>
+                  <strong class="text-[#1a3300]">{v.name} ({v.en}):</strong>
+                  <span class="text-[#1a3300]/90 mr-1">{v.target} — {v.impact}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="space-y-2">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">5</span>
+            تعريف مضاد البرامج الضارة (Anti-Malware):
+          </h3>
+          <p class="text-sm leading-relaxed pr-9 font-medium text-[#1a3300]/90">
+            هو برنامج أمني متطور يهدف إلى حماية الأجهزة الرقمية من جميع أنواع البرمجيات الضارة واكتشافها وعزلها وإزالتها.
+          </p>
+          <div class="pr-9 pt-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-[#1a3300]">أمثلة شائعة:</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold">Microsoft Defender</span>
+              <span class="px-2.5 py-1 rounded-lg bg-blue-100 text-blue-900 border border-blue-300 text-xs font-bold">Kaspersky</span>
+              <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold">Bitdefender</span>
+              <span class="px-2.5 py-1 rounded-lg bg-yellow-100 text-yellow-900 border border-yellow-300 text-xs font-bold">Norton</span>
+              <span class="px-2.5 py-1 rounded-lg bg-orange-100 text-orange-900 border border-orange-300 text-xs font-bold">Avast</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">6</span>
+            طرق الوقاية من البرامج الضارة:
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pr-9 text-xs sm:text-sm font-medium">
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>🛡️</span>
+              <span><strong>تثبيت برنامج حماية موثوق (Anti-malware)</strong> والحرص على تحديثه دورياً.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>🧱</span>
+              <span><strong>تفعيل الجدار الناري (Firewall)</strong> لمراقبة الاتصالات والشبكة.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>🔄</span>
+              <span><strong>التحديث المستمر للنظام والبرامج</strong> لسد الثغرات الأمنية.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>⚠️</span>
+              <span><strong>الحذر من الروابط والرسائل المشبوهة</strong> في البريد ومواقع الويب.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>📥</span>
+              <span><strong>التحميل من مصادر رسمية وموثوقة</strong> وتجنب البرامج المقرصنة.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>🔑</span>
+              <span><strong>استخدام كلمات مرور قوية</strong> ومعقدة وتغييرها بانتظام.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>💾</span>
+              <span><strong>النسخ الاحتياطي الدوري (Backup)</strong> للملفات على وسائط خارجية.</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-[#fcfaf5] border border-[#1a3300]/15 flex items-center gap-2">
+              <span>❄️</span>
+              <span><strong>برامج تجميد النظام (Deep Freeze)</strong> لحماية حواسيب القاعات المشتركة.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ الجزء 1: مذكرة الدرس للأستاذ ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#d5f5c2] border border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">المذكرة البيداغوجية للأستاذ</h2>
+          <p class="text-xs text-[#1a3300]/70">بطاقة السير المنهجي للحصة، الأهداف التعلمية، والوضعية المشكلة</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- جدول المذكرة الرسمي -->
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 space-y-5 text-xs sm:text-sm">
+      
+      <!-- معلومات الترويسة -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-xl bg-[#fcfaf5] border border-[#1a3300]/15 font-bold text-[#1a3300]">
+        <div><strong>الشعبة:</strong> {streamLabel}</div>
+        <div><strong>المجال:</strong> بيئة التعامل مع الحاسوب</div>
+        <div><strong>المؤسسة:</strong> ثانوية الأمير عبد القادر – سيدي قادة</div>
+        <div><strong>الأستاذ:</strong> شلابي جمال الدين</div>
+        <div><strong>الوحدة 05:</strong> حماية الحاسوب</div>
+        <div><strong>المدة:</strong> 1 ساعة</div>
+      </div>
+
+      <!-- الكفاءة المستهدفة -->
+      <div class="p-3.5 rounded-xl bg-[#ffe95c]/25 border border-[#1a3300]/20">
+        <span class="font-extrabold text-[#1a3300]">الكفاءة المستهدفة:</span>
+        <p class="mt-1 text-[#1a3300]/90 font-medium">أن يتمكن التلميذ من التعرف على مختلف البرامج الضارة والفيروسات وتصنيفها واكتساب مهارات الوقاية منها وتأمين الحاسوب.</p>
+      </div>
+
+      <!-- جدول السير المنهجي -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-right border-collapse border border-[#1a3300]/20 rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-[#ffe95c] text-[#1a3300] font-black">
+              <th class="p-2.5 border border-[#1a3300]/20 w-16 text-center">المدة</th>
+              <th class="p-2.5 border border-[#1a3300]/20">السير المنهجي للدرس</th>
+              <th class="p-2.5 border border-[#1a3300]/20 w-32">الاستراتيجيات</th>
+              <th class="p-2.5 border border-[#1a3300]/20 w-32">الموارد والوسائل</th>
+              <th class="p-2.5 border border-[#1a3300]/20 w-48">التقويم المرحلي</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#1a3300]/15">
+            <tr class="hover:bg-amber-50/50">
+              <td class="p-2.5 border border-[#1a3300]/20 font-bold text-center">10 د</td>
+              <td class="p-2.5 border border-[#1a3300]/20">
+                <strong class="text-[#1a3300] block mb-1">وضعية الانطلاق:</strong>
+                عرض سيناريو واقعي لإصابة حاسوب تلميذ ببرنامج ضار عند توصيل فلاش ديسك، وتحول جميع ملفاته إلى اختصارات (Shortcuts) واختفاء الأصلية.<br/>
+                <strong class="text-red-700">الإشكالية:</strong> ما هو سبب هذه المشكلة في رأيكم؟ وكيف نتصرف لحماية ملفاتنا؟
+              </td>
+              <td class="p-2.5 border border-[#1a3300]/20 font-medium">استراتيجية حل المشكلات + العصف الذهني</td>
+              <td class="p-2.5 border border-[#1a3300]/20">السبورة، المكتسبات القبلية للتلميذ، جهاز العرض إن توفر</td>
+              <td class="p-2.5 border border-[#1a3300]/20 text-[#1a3300]/80">
+                طرح فرضيات من التلاميذ لتفسير الظاهرة وتقديم تجاربهم الشخصية مع وسائط التخزين.
+              </td>
+            </tr>
+            <tr class="hover:bg-emerald-50/50">
+              <td class="p-2.5 border border-[#1a3300]/20 font-bold text-center">40 د</td>
+              <td class="p-2.5 border border-[#1a3300]/20 space-y-1">
+                <strong class="text-[#1a3300] block mb-1">بناء التعلمات:</strong>
+                • مفهوم البرامج الضارة (Malwares).<br/>
+                • أنواع البرامج الضارة (الفيروسات، الفدية، التجسس، طروادة).<br/>
+                • تعريف الفيروس وخصائصه الحيوية.<br/>
+                • دراسة أنواع الفيروسات (الإقلاع، الملفات، الماكرو).<br/>
+                • مفهوم مضاد البرامج الضارة وأمثلته.<br/>
+                • استنتاج منظومة طرق الوقاية وتأمين الأجهزة.
+              </td>
+              <td class="p-2.5 border border-[#1a3300]/20 font-medium">الطريقة الحوارية + الاستنتاج الجماعي</td>
+              <td class="p-2.5 border border-[#1a3300]/20">السبورة، الكتاب المدرسي، جهاز العرض، بطاقات الأنشطة</td>
+              <td class="p-2.5 border border-[#1a3300]/20 text-[#1a3300]/80">
+                • ما المقصود بالبرامج الضارة؟<br/>
+                • ميز بين الفيروس وبرنامج الفدية.<br/>
+                • ما الفرق بين فيروس الإقلاع والملفات؟<br/>
+                • اذكر 3 طرق لحماية جهازك.
+              </td>
+            </tr>
+            <tr class="hover:bg-blue-50/50">
+              <td class="p-2.5 border border-[#1a3300]/20 font-bold text-center">5 د</td>
+              <td class="p-2.5 border border-[#1a3300]/20">
+                <strong class="text-[#1a3300] block mb-1">التقويم التحصيلي والختامي:</strong>
+                حل الإشكالية الانطلاقية وتقديم إرشادات تأمين الفلاش ديسك، وتحديد أعراض الإصابة بالبرمجيات الخبيثة.
+              </td>
+              <td class="p-2.5 border border-[#1a3300]/20 font-medium">التعلم التشاركي + الإجابة الشفهية الموجهة</td>
+              <td class="p-2.5 border border-[#1a3300]/20">المناقشة الصفية وسجل التقييم</td>
+              <td class="p-2.5 border border-[#1a3300]/20 text-[#1a3300]/80">
+                تقديم نصائح لزميل لحماية ملفاته وخطوات التعامل مع الفلاش ديسك المصاب.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ الجزء 2: فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#a8e5e5] border border-[#1a3300]/20 flex items-center justify-center text-xl">🎬</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">فيديو الشرح الموجه</h2>
+          <p class="text-xs text-[#1a3300]/70">شرح مرئي بالصوت والصورة لمفاهيم الأمان والوقاية من الفيروسات</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 sm:p-8 text-center space-y-4">
+      {YOUTUBE_ID ? (
+        <div class="aspect-video w-full rounded-2xl overflow-hidden border-2 border-[#1a3300]/20 shadow-sm">
+          <iframe
+            class="w-full h-full"
+            src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}`}
+            title="فيديو شرح حماية الحاسوب"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ) : (
+        <div class="py-12 px-4 rounded-2xl bg-[#a8e5e5]/20 border-2 border-dashed border-[#1a3300]/25 space-y-3">
+          <span class="text-4xl">🎥</span>
+          <h3 class="font-extrabold text-base sm:text-lg text-[#1a3300]">الفيديو التعليمي الخاص بالوحدة 05 في طور المونتاج النهائي</h3>
+          <p class="text-xs sm:text-sm text-[#1a3300]/75 max-w-md mx-auto">
+            سيتم إدراج فيديو موشن غرافيك عالي الجودة يجسد سيناريو هجمات البرمجيات الضارة وكيفية عمل مضادات الفيروسات فور اعتماده.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ============ الجزء 3: الدرس التفاعلي ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#ffc09f] border border-[#1a3300]/20 flex items-center justify-center text-xl">⚡</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">الدرس التفاعلي والمستكشف الأمني</h2>
+          <p class="text-xs text-[#1a3300]/70">استكشف سلوك التهديدات وقارن بين طرق الإصابة والحماية عبر بطاقات تفاعلية</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- مستكشف البرامج الضارة التفاعلي -->
+    <div class="space-y-4">
+      <h3 class="font-bold text-sm sm:text-base text-[#1a3300] flex items-center gap-2">
+        <span>🔍</span>
+        <span>اضغط على أي تهديد لمعرفة طريقة عمله وكيفية التصدي له:</span>
+      </h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button type="button" class="threat-btn active p-3 rounded-xl border-2 border-[#1a3300] bg-[#ffe95c] font-bold text-xs text-[#1a3300] transition-all text-center flex flex-col items-center gap-1 cursor-pointer" data-target="virus">
+          <span class="text-2xl">🦠</span>
+          <span>الفيروسات (Virus)</span>
+        </button>
+        <button type="button" class="threat-btn p-3 rounded-xl border-2 border-[#1a3300]/20 bg-white font-bold text-xs text-[#1a3300] hover:bg-amber-50 transition-all text-center flex flex-col items-center gap-1 cursor-pointer" data-target="ransom">
+          <span class="text-2xl">🔒</span>
+          <span>برامج الفدية (Ransom)</span>
+        </button>
+        <button type="button" class="threat-btn p-3 rounded-xl border-2 border-[#1a3300]/20 bg-white font-bold text-xs text-[#1a3300] hover:bg-purple-50 transition-all text-center flex flex-col items-center gap-1 cursor-pointer" data-target="spy">
+          <span class="text-2xl">🕵️</span>
+          <span>برامج التجسس (Spyware)</span>
+        </button>
+        <button type="button" class="threat-btn p-3 rounded-xl border-2 border-[#1a3300]/20 bg-white font-bold text-xs text-[#1a3300] hover:bg-blue-50 transition-all text-center flex flex-col items-center gap-1 cursor-pointer" data-target="trojan">
+          <span class="text-2xl">🐴</span>
+          <span>حصان طروادة (Trojan)</span>
+        </button>
+      </div>
+
+      <!-- صندوق تفاصيل التهديد -->
+      <div id="threat-detail-box" class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 space-y-3">
+        <div class="flex items-center justify-between border-b border-[#1a3300]/10 pb-2">
+          <h4 id="threat-title" class="font-display font-extrabold text-base sm:text-lg text-[#1a3300] flex items-center gap-2">
+            <span>🦠</span> الفيروسات (Computer Viruses)
+          </h4>
+          <span id="threat-level" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300">
+            خطورة عالية • تخريب الملفات
+          </span>
+        </div>
+        <p id="threat-mechanism" class="text-xs sm:text-sm text-[#1a3300]/90 leading-relaxed font-medium">
+          <strong>كيف يعمل؟</strong> كود طفيلي يلتصق بملف عائل تنفيذي (مثل برنامج أو لعبة)، وعندما يقوم المستخدم بتشغيل الملف ينشط الفيروس فوراً وينسخ نفسه إلى بقية البرامج والملفات ويقوم بتخريب البيانات.
+        </p>
+        <div class="p-3 rounded-xl bg-[#d5f5c2]/40 border border-[#1a3300]/15 text-xs text-[#1a3300]">
+          <strong class="block mb-1">🛡️ خطة الدفاع والحماية:</strong>
+          <span id="threat-defense">تثبيت مضاد فيروسات حديث، فحص الأقراص الخارجية قبل فتحها، وعدم تحميل كراكات البرامج من مصادر مجهولة.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- مقارنة تفاعلية لأنواع الفيروسات الثلاثة -->
+    <div class="space-y-3 pt-4 border-t border-[#1a3300]/10">
+      <h3 class="font-bold text-sm sm:text-base text-[#1a3300] flex items-center gap-2">
+        <span>🎯</span>
+        <span>مقارنة سلوك أنواع الفيروسات حسب الهدف المستهدف:</span>
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="p-4 rounded-xl bg-white border-2 border-red-200 space-y-2">
+          <div class="text-2xl">💾</div>
+          <div class="font-bold text-xs text-red-900">فيروس قطاع الإقلاع (Boot Sector)</div>
+          <p class="text-xs text-[#1a3300]/80">يستقر في أول قطاع بالقرص الصلب ينطلق منه النظام. النتيجة: الشاشة الزرقاء أو رسالة "No bootable device".</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white border-2 border-amber-200 space-y-2">
+          <div class="text-2xl">📁</div>
+          <div class="font-bold text-xs text-amber-900">فيروسات الملفات (File Infector)</div>
+          <p class="text-xs text-[#1a3300]/80">تهاجم الامتدادات .exe و .com. النتيجة: بطء شديد، تعطل البرامج، وفقدان وظائف نظام التشغيل.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-white border-2 border-emerald-200 space-y-2">
+          <div class="text-2xl">📝</div>
+          <div class="font-bold text-xs text-emerald-900">فيروس الماكرو (Macro Virus)</div>
+          <p class="text-xs text-[#1a3300]/80">يختبئ داخل مستندات Word و Excel. النتيجة: تخريب النصوص، تعديل الجداول تلقائياً، وإرسال نسخ للمخترق.</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============ الجزء 4: الخريطة الذهنية ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#f6d0ff] border border-[#1a3300]/20 flex items-center justify-center text-xl">🧠</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">الخريطة الذهنية الشاملة</h2>
+          <p class="text-xs text-[#1a3300]/70">شجرة المفاهيم البصرية المنظمة لكامل الوحدة التعلمية</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- رسم الخريطة الذهنية بتنسيق جذاب -->
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6">
+      
+      <!-- المركز -->
+      <div class="text-center">
+        <div class="inline-block p-4 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] font-black text-base sm:text-lg text-[#1a3300] shadow-sm">
+          🛡️ حماية الحاسوب (Computer Protection)
+        </div>
+      </div>
+
+      <!-- الفروع الرئيسية الأربعة -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- الفرع 1 -->
+        <div class="p-4 rounded-xl bg-red-50/60 border-2 border-red-200 space-y-2.5">
+          <div class="font-bold text-sm text-red-950 flex items-center gap-2">
+            <span>🦠</span>
+            <span>البرامج الضارة (Malware)</span>
+          </div>
+          <ul class="text-xs text-red-900/90 space-y-1 list-disc list-inside">
+            <li><strong>الفيروسات (Viruses):</strong> التصاق وتكاثر.</li>
+            <li><strong>برامج الفدية (Ransomware):</strong> تشفير وابتزاز.</li>
+            <li><strong>برامج التجسس (Spyware):</strong> مراقبة وسرقة.</li>
+            <li><strong>أحصنة طروادة (Trojans):</strong> تنكر وخداع.</li>
+          </ul>
+        </div>
+
+        <!-- الفرع 2 -->
+        <div class="p-4 rounded-xl bg-amber-50/60 border-2 border-amber-200 space-y-2.5">
+          <div class="font-bold text-sm text-amber-950 flex items-center gap-2">
+            <span>🧬</span>
+            <span>فيروس الحاسوب (Virus)</span>
+          </div>
+          <ul class="text-xs text-amber-900/90 space-y-1 list-disc list-inside">
+            <li><strong>خصائصه:</strong> انتشار ذاتي، تخفي، تخريب.</li>
+            <li><strong>قطاع الإقلاع:</strong> يمنع تشغيل النظام.</li>
+            <li><strong>الملفات التنفيذية:</strong> يلتصق بـ .exe و .com.</li>
+            <li><strong>الماكرو:</strong> يستهدف مستندات Office.</li>
+          </ul>
+        </div>
+
+        <!-- الفرع 3 -->
+        <div class="p-4 rounded-xl bg-emerald-50/60 border-2 border-emerald-200 space-y-2.5">
+          <div class="font-bold text-sm text-emerald-950 flex items-center gap-2">
+            <span>🛡️</span>
+            <span>منظومة الحماية والوقاية</span>
+          </div>
+          <ul class="text-xs text-emerald-900/90 space-y-1 list-disc list-inside">
+            <li><strong>Anti-Malware:</strong> فحص واكتشاف وعزل.</li>
+            <li><strong>الجدار الناري (Firewall):</strong> مراقبة الشبكة.</li>
+            <li><strong>التحديث المستمر:</strong> لسد الثغرات.</li>
+            <li><strong>النسخ الاحتياطي:</strong> خط الدفاع الأول.</li>
+            <li><strong>تجميد النظام:</strong> Deep Freeze في القاعات.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ الجزء 5: التمارين التقييمية ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-[#a8e5e5] border border-[#1a3300]/20 flex items-center justify-center text-xl">✍️</span>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">التمارين والأنشطة التقييمية</h2>
+          <p class="text-xs text-[#1a3300]/70">اختبر معلوماتك وقس درجة استيعابك للمفاهيم مع الحلول النموذجية</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- قائمة التمارين مع أزرار إظهار وإخفاء الحل -->
+    <div class="space-y-4">
+      {exercises.map((ex, index) => (
+        <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 space-y-3">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-start gap-2.5">
+              <span class="w-6 h-6 shrink-0 rounded-full bg-[#ffe95c] text-[#1a3300] font-black text-xs flex items-center justify-center mt-0.5">
+                {index + 1}
+              </span>
+              <h3 class="font-bold text-sm sm:text-base text-[#1a3300] leading-snug">
+                {ex.q}
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="toggle-answer-btn shrink-0 px-3 py-1.5 rounded-xl bg-[#d5f5c2] border border-[#1a3300]/20 hover:bg-[#ffe95c] font-bold text-xs text-[#1a3300] transition-colors cursor-pointer"
+            >
+              عرض الإجابة
+            </button>
+          </div>
+          <div class="answer-box hidden pt-3 border-t border-[#1a3300]/10 text-xs sm:text-sm text-[#1a3300]/90 leading-relaxed font-medium bg-[#fcfaf5] p-3 rounded-xl border border-[#1a3300]/10" set:html={ex.a}>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ الجزء 6: محاكي الحماية والأمان السيبراني ============ -->
+  <section id="part-6" class="scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-4 border-[#1a3300] p-5 sm:p-10 space-y-8 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🛡️</span>
+        <div>
+          <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-[#1a3300]">محاكي الحماية والأمن الرقمي</h2>
+          <p class="text-xs sm:text-sm text-[#1a3300]/75">تطبيق عملي حي لفحص الفلاش ديسك، مكافحة الفيروسات، تفعيل الجدار الناري، وقياس كلمات المرور</p>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+    </div>
+
+    <!-- نافذة المحاكي الأولى: فاحص الفلاش ديسك (USB Scanner) -->
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/25 overflow-hidden shadow-sm">
+      <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs font-bold font-mono">
+          <span>🛡️</span>
+          <span>Security Scanner v2027 — فاحص وسائط التخزين والأقراص</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">💽</span>
+            <div>
+              <div class="font-bold text-sm text-slate-900">وسيط التخزين المتصل: USB Flash Drive (F:)</div>
+              <div class="text-xs text-slate-600">السعة: 16 GB • نظام الملفات: FAT32 • الحالة: بحاجة للفحص</div>
+            </div>
+          </div>
+          <button id="sim-start-scan-btn" type="button" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+            <span>⚡</span>
+            <span>بدء الفحص الشامل للقرص</span>
+          </button>
+        </div>
+
+        <!-- شريط التقدم للفحص -->
+        <div id="sim-scan-progress-wrap" class="hidden space-y-2">
+          <div class="flex justify-between text-xs font-bold text-slate-700">
+            <span id="sim-scan-status-text">جارٍ فحص قطاعات الذاكرة والملفات التنفيذية...</span>
+            <span id="sim-scan-percentage">0%</span>
+          </div>
+          <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+            <div id="sim-scan-bar" class="h-full bg-blue-600 w-0 transition-all duration-100"></div>
+          </div>
+        </div>
+
+        <!-- جدول ملفات الفلاش ديسك والنتائج -->
+        <div id="sim-files-table-wrap" class="space-y-3">
+          <h4 class="font-bold text-xs text-slate-700">محتويات وسيط التخزين:</h4>
+          <div class="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden text-xs">
+            <div id="file-row-1" class="p-3 bg-white flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span>📁</span>
+                <span class="font-mono font-medium">بحث_التاريخ_والحضارة.docx</span>
+              </div>
+              <span class="file-badge px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">في الانتظار</span>
+            </div>
+            <div id="file-row-2" class="p-3 bg-white flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span>⚠️</span>
+                <span class="font-mono font-medium">صور_الرحلة.lnk (اختصار Shortcut خبيث)</span>
+              </div>
+              <span class="file-badge px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">في الانتظار</span>
+            </div>
+            <div id="file-row-3" class="p-3 bg-white flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span>⚠️</span>
+                <span class="font-mono font-medium">Game_Crack_2026.exe (حصان طروادة)</span>
+              </div>
+              <span class="file-badge px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">في الانتظار</span>
+            </div>
+            <div id="file-row-4" class="p-3 bg-white flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span>📄</span>
+                <span class="font-mono font-medium">جدول_أوقات_القسم.pdf</span>
+              </div>
+              <span class="file-badge px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-bold">في الانتظار</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- أزرار الإجراءات بعد الفحص -->
+        <div id="sim-action-box" class="hidden p-4 rounded-xl bg-red-50 border border-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="text-xs text-red-900 font-bold">
+            🚨 تم العثور على تهديدين خطيرين (Shortcut Virus + Trojan)!
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="sim-clean-btn" type="button" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-colors cursor-pointer">
+              عزل وحذف التهديدات فوراً
+            </button>
+            <button id="sim-recover-btn" type="button" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors cursor-pointer">
+              استرجاع الملفات المخفية
+            </button>
+          </div>
+        </div>
+
+        <div id="sim-result-msg" class="text-xs font-bold text-center min-h-[20px]"></div>
+
+      </div>
+    </div>
+
+    <!-- نافذة المحاكي الثانية: الجدار الناري وقياس كلمة المرور -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      
+      <!-- الجدار الناري (Firewall Live Switch) -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/25 space-y-4">
+        <div class="flex items-center justify-between border-b border-[#1a3300]/10 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🧱</span>
+            <h3 class="font-extrabold text-sm text-[#1a3300]">الجدار الناري (Windows Firewall)</h3>
+          </div>
+          <button id="sim-firewall-toggle" type="button" class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-pointer">
+            مُفعل (Actif)
+          </button>
+        </div>
+        <p class="text-xs text-[#1a3300]/80">
+          يراقب حركة مرور البيانات الواردة والصادرة عبر الشبكة لمنع الاتصالات غير المصرح بها.
+        </p>
+        <div id="sim-firewall-status-card" class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1.5">
+          <div class="font-bold flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+            <span>الحالة: الحاسوب محمي من الهجمات الشبكية</span>
+          </div>
+          <div class="text-[11px] text-emerald-800">تم صد وحجب: <strong id="sim-blocked-count" class="font-mono">14</strong> محاولة اتصال مجهولة اليوم.</div>
+        </div>
+      </div>
+
+      <!-- مقياس قوة كلمة المرور (Password Strength Meter) -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/25 space-y-4">
+        <div class="flex items-center gap-2 border-b border-[#1a3300]/10 pb-3">
+          <span class="text-2xl">🔑</span>
+          <h3 class="font-extrabold text-sm text-[#1a3300]">اختبار قوة كلمة المرور (Password Tester)</h3>
+        </div>
+        <div class="space-y-2">
+          <label for="sim-pass-input" class="text-xs font-bold text-[#1a3300] block">اكتب كلمة مرور لتجربتها:</label>
+          <input
+            id="sim-pass-input"
+            type="text"
+            placeholder="مثال: A1@b2#C3$99"
+            class="w-full px-3 py-2 rounded-xl border-2 border-[#1a3300]/20 font-mono text-xs focus:outline-none focus:border-[#1a3300]"
+          />
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[11px] font-bold">
+            <span>مستوى الأمان:</span>
+            <span id="sim-pass-label" class="text-slate-500">فارغ</span>
+          </div>
+          <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="sim-pass-meter" class="h-full w-0 bg-red-500 transition-all"></div>
+          </div>
+          <div id="sim-pass-time" class="text-[10px] text-slate-500 font-medium">الوقت المقدر لكسرها: —</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ============ السكريبت التفاعلي ============ -->
+<script>
+  // أزرار كشف الإجابات
+  document.querySelectorAll('.toggle-answer-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.rounded-2xl');
+      const box = parent?.querySelector('.answer-box');
+      if (box) {
+        box.classList.toggle('hidden');
+        btn.textContent = box.classList.contains('hidden') ? 'عرض الإجابة' : 'إخفاء الإجابة';
+      }
+    });
+  });
+
+  // مستكشف التهديدات التفاعلي
+  const threatData = {
+    virus: {
+      title: '🦠 الفيروسات (Computer Viruses)',
+      level: 'خطورة عالية • تخريب الملفات',
+      levelCls: 'bg-red-100 text-red-800 border-red-300',
+      mech: 'كود طفيلي يلتصق بملف عائل تنفيذي (.exe)، وينشط بمجرد قيام المستخدم بفتح الملف لينسخ نفسه ويخرب بقية الملفات.',
+      def: 'تثبيت مضاد فيروسات حديث، فحص الفلاش ديسك قبل فتحه، وتجنب فتح الملفات المجهولة أو البرامج المقرصنة.'
+    },
+    ransom: {
+      title: '🔒 برامج الفدية (Ransomware)',
+      level: 'خطورة قصوى • تشفير وابتزاز مالي',
+      levelCls: 'bg-amber-100 text-amber-800 border-amber-300',
+      mech: 'تخترق الحاسوب وتقوم بتشفير ملفات المستندات والصور بقفل تشفير عسكري قوي، وتعرض رسالة تطالب بمبلغ مالي كبير لفك القفل.',
+      def: 'النسخ الاحتياطي الدوري (Backup) على قرص صلب خارجي منفصل هو الحل الجذري والوحيد للتصدي لها.'
+    },
+    spy: {
+      title: '🕵️ برامج التجسس (Spyware)',
+      level: 'خطورة متوسطة إلى عالية • سرقة البيانات',
+      levelCls: 'bg-purple-100 text-purple-800 border-purple-300',
+      mech: 'تعمل بصمت في الخلفية لمراقبة ضغطات المفاتيح (Keylogger) وتصوير الشاشة وسرقة الحسابات والبيانات الشخصية.',
+      def: 'تفعيل الجدار الناري، استخدام برامج مكافحة التجسس، وتجنب الروابط المشبوهة أو تحميل مرفقات بريد مجهولة.'
+    },
+    trojan: {
+      title: '🐴 أحصنة طروادة (Trojans)',
+      level: 'خطورة عالية • فتح أبواب خلفية',
+      levelCls: 'bg-blue-100 text-blue-800 border-blue-300',
+      mech: 'برنامج يبدو مفيداً (كراك، لعبة، أداة تفعيل ويندوز)، لكن عند تثبيته ينفذ كوداً خبيثاً يمنح المخترق تحكماً كاملاً بالجهاز.',
+      def: 'عدم تحميل البرامج والكراكات من مواقع القرصنة، والاعتماد فقط على المتاجر والمواقع الرسمية للمطورين.'
+    }
+  };
+
+  const threatBtns = document.querySelectorAll('.threat-btn');
+  const threatTitle = document.getElementById('threat-title');
+  const threatLevel = document.getElementById('threat-level');
+  const threatMech = document.getElementById('threat-mechanism');
+  const threatDefense = document.getElementById('threat-defense');
+
+  threatBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      threatBtns.forEach(b => {
+        b.classList.remove('active', 'border-[#1a3300]', 'bg-[#ffe95c]');
+        b.classList.add('border-[#1a3300]/20', 'bg-white');
+      });
+      btn.classList.add('active', 'border-[#1a3300]', 'bg-[#ffe95c]');
+      btn.classList.remove('border-[#1a3300]/20', 'bg-white');
+
+      const target = btn.getAttribute('data-target') || 'virus';
+      const info = threatData[target as keyof typeof threatData];
+      if (info && threatTitle && threatLevel && threatMech && threatDefense) {
+        threatTitle.innerHTML = info.title;
+        threatLevel.textContent = info.level;
+        threatLevel.className = `text-[11px] font-bold px-2 py-0.5 rounded-full border ${info.levelCls}`;
+        threatMech.innerHTML = `<strong>كيف يعمل؟</strong> ${info.mech}`;
+        threatDefense.textContent = info.def;
+      }
+    });
+  });
+
+  // محاكي فحص الفلاش ديسك (USB Scanner)
+  const scanBtn = document.getElementById('sim-start-scan-btn');
+  const progressWrap = document.getElementById('sim-scan-progress-wrap');
+  const progressBar = document.getElementById('sim-scan-bar');
+  const percentage = document.getElementById('sim-scan-percentage');
+  const statusText = document.getElementById('sim-scan-status-text');
+  const actionBox = document.getElementById('sim-action-box');
+  const cleanBtn = document.getElementById('sim-clean-btn');
+  const recoverBtn = document.getElementById('sim-recover-btn');
+  const resultMsg = document.getElementById('sim-result-msg');
+
+  scanBtn?.addEventListener('click', () => {
+    if (!progressWrap || !progressBar || !percentage || !statusText) return;
+    progressWrap.classList.remove('hidden');
+    scanBtn.setAttribute('disabled', 'true');
+    scanBtn.classList.add('opacity-50');
+
+    let p = 0;
+    const interval = setInterval(() => {
+      p += 5;
+      progressBar.style.width = p + '%';
+      percentage.textContent = p + '%';
+
+      if (p === 30) {
+        const row1 = document.querySelector('#file-row-1 .file-badge');
+        if (row1) {
+          row1.textContent = 'سليم ✓';
+          row1.className = 'file-badge px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold';
+        }
+      } else if (p === 60) {
+        const row2 = document.querySelector('#file-row-2 .file-badge');
+        if (row2) {
+          row2.textContent = 'مصاب بفيروس ⚠️';
+          row2.className = 'file-badge px-2 py-0.5 rounded bg-red-100 text-red-800 font-bold animate-pulse';
+        }
+      } else if (p === 85) {
+        const row3 = document.querySelector('#file-row-3 .file-badge');
+        if (row3) {
+          row3.textContent = 'حصان طروادة ⚠️';
+          row3.className = 'file-badge px-2 py-0.5 rounded bg-red-100 text-red-800 font-bold animate-pulse';
+        }
+      } else if (p >= 100) {
+        clearInterval(interval);
+        const row4 = document.querySelector('#file-row-4 .file-badge');
+        if (row4) {
+          row4.textContent = 'سليم ✓';
+          row4.className = 'file-badge px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold';
+        }
+        statusText.textContent = 'اكتمل الفحص: تم العثور على ملفات مصابة!';
+        if (actionBox) actionBox.classList.remove('hidden');
+      }
+    }, 100);
+  });
+
+  cleanBtn?.addEventListener('click', () => {
+    const row2 = document.getElementById('file-row-2');
+    const row3 = document.getElementById('file-row-3');
+    if (row2) {
+      row2.innerHTML = '<span class="text-xs text-slate-400 line-through">صور_الرحلة.lnk (تم حذف الاختصار الخبيث)</span><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">تم التطهير</span>';
+    }
+    if (row3) {
+      row3.innerHTML = '<span class="text-xs text-slate-400 line-through">Game_Crack_2026.exe (تم عزل التروجان)</span><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">معزول</span>';
+    }
+    if (resultMsg) {
+      resultMsg.textContent = '🛡️ تم بنجاح تطهير القرص وعزل كافة البرامج الضارة بأمان!';
+      resultMsg.className = 'text-xs font-bold text-center text-emerald-700 min-h-[20px]';
+    }
+    if (cleanBtn) cleanBtn.setAttribute('disabled', 'true');
+  });
+
+  recoverBtn?.addEventListener('click', () => {
+    const row2 = document.getElementById('file-row-2');
+    if (row2) {
+      row2.innerHTML = '<span class="text-xs text-emerald-950 font-bold">📁 صور_الرحلة (مجلد أصلي تم استرجاعه بنجاح عبر attrib)</span><span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 text-[10px] font-bold">مسترجع</span>';
+    }
+    if (resultMsg) {
+      resultMsg.textContent = '✨ تم فك الإخفاء واستعادة كافة مجلداتك وصورك الأصلية بنجاح!';
+      resultMsg.className = 'text-xs font-bold text-center text-blue-700 min-h-[20px]';
+    }
+    if (recoverBtn) recoverBtn.setAttribute('disabled', 'true');
+  });
+
+  // محاكي مفتاح الجدار الناري
+  const fwToggle = document.getElementById('sim-firewall-toggle');
+  const fwCard = document.getElementById('sim-firewall-status-card');
+  let fwActive = true;
+
+  fwToggle?.addEventListener('click', () => {
+    fwActive = !fwActive;
+    if (fwActive) {
+      fwToggle.textContent = 'مُفعل (Actif)';
+      fwToggle.className = 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-emerald-100 text-emerald-800 border border-emerald-300 cursor-pointer';
+      if (fwCard) {
+        fwCard.className = 'p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 space-y-1.5';
+        fwCard.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+            <span>الحالة: الحاسوب محمي من الهجمات الشبكية</span>
+          </div>
+          <div class="text-[11px] text-emerald-800">تم صد وحجب: <strong class="font-mono">14</strong> محاولة اتصال مجهولة اليوم.</div>
+        `;
+      }
+    } else {
+      fwToggle.textContent = 'معطل (Désactivé)';
+      fwToggle.className = 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-red-100 text-red-800 border border-red-300 cursor-pointer';
+      if (fwCard) {
+        fwCard.className = 'p-3.5 rounded-xl bg-red-50 border border-red-300 text-xs text-red-950 space-y-1.5';
+        fwCard.innerHTML = `
+          <div class="font-bold flex items-center gap-1.5 text-red-700">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block animate-pulse"></span>
+            <span>تحذير: الجدار الناري معطل! المنافذ مفتوحة للشبكة</span>
+          </div>
+          <div class="text-[11px] text-red-800">الحاسوب معرض الآن للديدان والاختراق الخارجي المباشر.</div>
+        `;
+      }
+    }
+  });
+
+  // فاحص قوة كلمة المرور
+  const passInput = document.getElementById('sim-pass-input') as HTMLInputElement | null;
+  const passLabel = document.getElementById('sim-pass-label');
+  const passMeter = document.getElementById('sim-pass-meter');
+  const passTime = document.getElementById('sim-pass-time');
+
+  passInput?.addEventListener('input', () => {
+    const val = passInput.value;
+    let score = 0;
+    if (val.length >= 6) score += 20;
+    if (val.length >= 10) score += 20;
+    if (/[0-9]/.test(val)) score += 20;
+    if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score += 20;
+    if (/[^a-zA-Z0-9]/.test(val)) score += 20;
+
+    if (!passMeter || !passLabel || !passTime) return;
+
+    if (val.length === 0) {
+      passMeter.style.width = '0%';
+      passLabel.textContent = 'فارغ';
+      passLabel.className = 'text-slate-500';
+      passTime.textContent = 'الوقت المقدر لكسرها: —';
+    } else if (score <= 40) {
+      passMeter.style.width = '30%';
+      passMeter.className = 'h-full bg-red-500 transition-all';
+      passLabel.textContent = 'ضعيفة جداً ❌';
+      passLabel.className = 'text-red-600 font-bold';
+      passTime.textContent = 'الوقت المقدر لكسرها: بضع ثوانٍ أو دقائق!';
+    } else if (score <= 80) {
+      passMeter.style.width = '65%';
+      passMeter.className = 'h-full bg-amber-500 transition-all';
+      passLabel.textContent = 'متوسطة ⚠️';
+      passLabel.className = 'text-amber-600 font-bold';
+      passTime.textContent = 'الوقت المقدر لكسرها: عدة أسابيع إلى أشهر.';
+    } else {
+      passMeter.style.width = '100%';
+      passMeter.className = 'h-full bg-emerald-500 transition-all';
+      passLabel.textContent = 'قوية جداً وممتازة 🛡️';
+      passLabel.className = 'text-emerald-700 font-bold';
+      passTime.textContent = 'الوقت المقدر لكسرها: مئات إلى آلاف السنين!';
+    }
+  });
+</script>
