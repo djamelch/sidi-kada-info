@@ -2,7 +2,7 @@
 /**
  * الوحدة 5: حماية الحاسوب (Protection de l'ordinateur) — المصدر المعتمد لمحتوى الدرس.
  * المرجع المعتمد: وثيقة الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
- * «الوحدة 5 حماية الحاسوب مختصر (1).docx»
+ * «الوحدة 5 حماية الحاسوب مختصر (1).docx» و «حماية الحاسوب.pdf»
  *
  * إعدادات الأستاذ:
  *  - YOUTUBE_ID: معرّف فيديو الشرح على يوتيوب (اتركه فارغاً إلى أن يجهز الفيديو).
@@ -18,11 +18,11 @@ const { stream } = Astro.props;
 
 const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
 
-const studentPdfHref = '/docs/student-05.html';
-const studentPdfDownloadName = '05- وثيقة الدرس حماية الحاسوب.pdf';
+const pdfHref = '/docs/lesson-05.pdf';
+const pdfDownloadName = '05- وثيقة الدرس حماية الحاسوب.pdf';
 
 const parts = [
-  { id: 'part-1', icon: '📄', color: 'bg-[#ffe95c]', title: 'وثيقة الدرس', desc: 'نص وثيقة الدرس الكاملة المقررة للتلميذ مع إمكانية الطباعة' },
+  { id: 'part-1', icon: '🎒', color: 'bg-[#ffe95c]', title: 'وثيقة الدرس', desc: 'المطبوعة الرسمية للدرس (حماية الحاسوب) للتحميل والطباعة + عارض PDF مدمج' },
   { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح مخاطر البرمجيات الضارة وطرق تأمين الحاسوب بالصوت والصورة' },
   { id: 'part-3', icon: '⚡', color: 'bg-[#ffc09f]', title: 'الدرس التفاعلي', desc: 'مستكشف البرامج الضارة + بطاقات أنواع الفيروسات + مصفوفة الحماية' },
   { id: 'part-4', icon: '🧠', color: 'bg-[#f6d0ff]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام حماية الحاسوب ومفاهيم الأمان' },
@@ -152,28 +152,59 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
       </p>
     </div>
 
+    <!-- شريط التحميل السريع لوثيقة الدرس الرسمية المعتمدة -->
+    <div class="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#ffe95c]/50 via-white to-[#a8e5e5]/40 border-2 border-[#1a3300] shadow-sm">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">جاهز للتحميل والطباعة</span>
+            <h2 class="text-base sm:text-lg font-black text-[#1a3300] flex items-center gap-1.5">
+              <span>📥</span> وثيقة الدرس الرسمية المعتمدة (2026-2027)
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/80 font-medium">
+            متوفرة للتحميل المباشر والقراءة: <strong>وثيقة الدرس (PDF)</strong> كاملة ومنظمة.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+          <a
+            href={pdfHref}
+            download={pdfDownloadName}
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة الدرس الرسمية PDF"
+          >
+            <span>🎒</span> تحميل وثيقة الدرس (PDF)
+          </a>
+          <a
+            href={pdfHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="معاينة وقراءة وثيقة الدرس"
+          >
+            <span>👁</span> معاينة وقراءة وثيقة الدرس
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- فهرس البطاقات -->
     <div id="cards-hub" class="scroll-mt-24 space-y-4">
       <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
         اضغط على أي بطاقة للانتقال المباشر إليها:
       </h2>
       <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {parts.map((p) => (
+        {parts.map((p, i) => (
           <a
             href={`#${p.id}`}
             class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
           >
             <div class="flex items-center gap-3">
               <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
-              <div class="min-w-0">
-                <h3 class="font-bold text-sm sm:text-base text-[#1a3300] group-hover:text-black leading-snug truncate">
-                  {p.title}
-                </h3>
-              </div>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
             </div>
-            <p class="text-xs text-[#1a3300]/70 leading-relaxed">
-              {p.desc}
-            </p>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
           </a>
         ))}
       </div>
@@ -183,31 +214,78 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
 </div>
 
 <!-- ============ المحتوى الرئيسي ============ -->
-<main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
 
-  <!-- ============ الجزء 1: وثيقة الدرس ============ -->
+  <!-- ============ بطاقة وثيقة الدرس (المطبوعة الرسمية + عارض PDF) ============ -->
   <section id="part-1" class={sectionCls}>
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/10 pb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
       <div class="flex items-center gap-3">
-        <span class="w-10 h-10 rounded-xl bg-[#ffe95c] border border-[#1a3300]/20 flex items-center justify-center text-xl">📄</span>
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🎒</span>
         <div>
-          <h2 class="font-display text-xl sm:text-2xl font-bold text-[#1a3300]">وثيقة الدرس (حماية الحاسوب)</h2>
-          <p class="text-xs text-[#1a3300]/70">المحتوى الرسمي الكامل لوثيقة الدرس المقررة للتلميذ</p>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">المطبوعة الرسمية للدرس</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            وثيقة الدرس (حماية الحاسوب)
+          </h2>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <a href={studentPdfHref} target="_blank" class="px-3 py-1.5 rounded-xl bg-[#d5f5c2] border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors flex items-center gap-1.5">
-          <span>🖨️</span>
-          <span>طباعة وثيقة الدرس (A4)</span>
-        </a>
-        <a href="#cards-hub" class={backLink}>فهرس البطاقات ↑</a>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- بطاقة معلومات وتحميل وثيقة الدرس -->
+    <div class="p-5 sm:p-6 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm space-y-4">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-[#ffe95c] text-[#1a3300] border border-[#1a3300]/30 shadow-xs">05- وثيقة الدرس حماية الحاسوب.pdf</span>
+            <span class="text-xs text-neutral-500 font-bold bg-neutral-100 px-2 py-0.5 rounded-md">240 KB</span>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/85 font-medium leading-relaxed">
+            المطبوعة الرسمية المعتمدة لطلاب السنة الأولى ثانوي؛ تتضمن مفهوم البرامج الضارة وأنواعها، تعريف الفيروس وخصائصه وأنواعه، ومضادات البرامج الضارة وطرق الوقاية وتأمين الأجهزة.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto shrink-0">
+          <a
+            href={pdfHref}
+            download={pdfDownloadName}
+            class="flex-1 sm:flex-none py-3 px-5 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة الدرس الأصلية بصيغة PDF"
+          >
+            <span>⬇</span> تحميل وثيقة الدرس (PDF)
+          </a>
+          <a
+            href={pdfHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-3 px-5 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/30 text-[#1a3300] text-sm font-bold flex items-center justify-center gap-2"
+            title="معاينة وقراءة الوثيقة في نافذة جديدة"
+          >
+            <span>👁</span> معاينة وقراءة وثيقة الدرس (PDF)
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- بطاقة نص الدرس المعتمد -->
+    <!-- عارض PDF مدمج ومباشر لوثيقة الدرس -->
+    <div class="rounded-2xl border-2 border-[#1a3300]/25 overflow-hidden bg-white shadow-sm space-y-0">
+      <div class="p-3 bg-[#1a3300] text-[#fcfaf5] flex items-center justify-between text-xs font-bold">
+        <span class="flex items-center gap-2">
+          <span>📄</span> معاينة مباشرة للملف: «05- وثيقة الدرس حماية الحاسوب.pdf»
+        </span>
+        <a href={pdfHref} target="_blank" rel="noopener" class="text-[#ffe95c] hover:underline flex items-center gap-1 font-mono">
+          <span>عرض ملء الشاشة</span> ↗
+        </a>
+      </div>
+      <iframe
+        src={`${pdfHref}#toolbar=1&navpanes=0`}
+        class="w-full h-[720px] bg-neutral-50 border-0"
+        title="عارض وثيقة الدرس PDF"
+      ></iframe>
+    </div>
+
+    <!-- نص وثيقة الدرس المنسق والمطابق للأصل -->
     <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 sm:p-7 space-y-6">
       
-      <!-- ترويسة الدرس -->
+      <!-- ترويسة الدرس الصفي -->
       <div class="p-4 rounded-xl bg-[#ffe95c]/30 border border-[#1a3300]/20 flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-[#1a3300]">
         <div>ثانوية الأمير عبد القادر – سيدي قادة</div>
         <div>المجال التعلمي 1: بيئة التعامل مع الحاسوب</div>
@@ -217,7 +295,7 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
         <div>المدة: ساعة واحدة</div>
       </div>
 
-      <!-- العناصر الستة للدرس كما وضعها الأستاذ -->
+      <!-- العناصر الستة لوثيقة الدرس كما وضعها الأستاذ -->
       <div class="space-y-6 text-[#1a3300]">
         
         <!-- 1 -->
@@ -755,7 +833,7 @@ const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
 
   </section>
 
-</main>
+</div>
 
 <!-- ============ السكريبت التفاعلي ============ -->
 <script>
