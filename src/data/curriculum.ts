@@ -138,8 +138,9 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
             shortDesc: 'مكونات الشبكة، أصنافها وطوبولوجياتها، ومشاركة الملفات والطابعات.',
             slug: '/tcst/m1-u6',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 7
+            status: 'available',
+            estimatedMinutes: 7,
+            hasSimulator: true
           }
         ]
       },
@@ -354,8 +355,9 @@ export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
             shortDesc: 'أصناف الشبكات، مشاركة الطابعات والملفات بين الأجهزة.',
             slug: '/tcl/m1-u6',
             term: 1,
-            status: 'planned',
-            estimatedMinutes: 6
+            status: 'available',
+            estimatedMinutes: 6,
+            hasSimulator: true
           }
         ]
       },

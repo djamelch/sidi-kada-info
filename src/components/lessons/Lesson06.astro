@@ -1,0 +1,1083 @@
+---
+/**
+ * الوحدة 6: الشبكة المحلية ومشاركة الموارد (Réseau Local - LAN)
+ * المرجع المعتمد: وثائق الأستاذ شلابي جمال الدين (ثانوية الأمير عبد القادر – سيدي قادة)
+ * «06- الشبكة المحلية.docx» و «مذكرة الشبكة الدرس النظري.docx» و «مذكرة الشبكة المحلية التطبيقية .docx»
+ */
+const YOUTUBE_ID = '';
+const HOMEWORK_SOLUTION_PUBLISHED = false;
+
+interface Props {
+  stream: 'tcst' | 'tcl';
+}
+const { stream } = Astro.props;
+
+const streamLabel = stream === 'tcst' ? 'جذع مشترك علوم وتكنولوجيا' : 'جذع مشترك آداب';
+
+const pdfHref = '/docs/lesson-06.pdf';
+const pdfDownloadName = '06- وثيقة الدرس الشبكة المحلية.pdf';
+
+const parts = [
+  { id: 'part-1', icon: '🎒', color: 'bg-[#ffe95c]', title: 'وثيقة الدرس', desc: 'المطبوعة الرسمية للدرس (الشبكة المحلية) للتحميل والطباعة + عارض PDF مدمج' },
+  { id: 'part-2', icon: '🎬', color: 'bg-[#a8e5e5]', title: 'فيديو الشرح', desc: 'شرح مبسط ومصور لمفاهيم الشبكة المحلية، أجهزتها وطرق الربط' },
+  { id: 'part-3', icon: '⚡', color: 'bg-[#ffc09f]', title: 'الدرس التفاعلي', desc: 'مفهوم الشبكة + بطاقات تصنيف الشبكات + المكونات المادية والمقارنة + خطوات المشاركة' },
+  { id: 'part-4', icon: '🧠', color: 'bg-[#f6d0ff]', title: 'الخريطة الذهنية', desc: 'مخطط بصري منظم يجمع كل أقسام شبكات الحاسوب وطوبولوجياتها' },
+  { id: 'part-5', icon: '✍️', color: 'bg-[#a8e5e5]', title: 'التمارين التقييمية', desc: 'أسئلة التقويم المرحلي والتحصيلي مع الإجابات النموذجية المخفية' },
+  { id: 'part-6', icon: '🌐', color: 'bg-[#ffe95c]', title: 'محاكي الشبكة المحلية', desc: 'محاكي الطوبولوجيات + تجربة إرسال الحزم (Hub vs Switch) + محاكي إعداد IP والمشاركة' },
+];
+
+const exercises = [
+  {
+    q: 'ما هو تعريف شبكة الحاسوب (Computer Network)؟ وما هي الغاية الأساسية من إنشائها؟',
+    a: '<strong>تعريف شبكة الحاسوب:</strong> هي مجموعة من أجهزة الحاسوب (جهازان على الأقل) ووسائط الاتصال مرتبطة ببعضها البعض.<br/><strong>الغاية منها:</strong> التواصل الفعال، تبادل المعلومات والبيانات، والمشاركة في الموارد البرمجية والمادية (مثل الطابعات ومساحات التخزين والإنترنت) دون الحاجة لوسائط نقل خارجية.'
+  },
+  {
+    q: 'صنّف شبكات الحاسوب حسب الامتداد الجغرافي (Étendue Géographique) مع شرح موجز لكل نوع.',
+    a: '1. <strong>الشبكة المحلية (LAN - Local Area Network):</strong> تمتد في نطاق جغرافي ضيق ومحدود (مخبر الإعلام الآلي، مكتب، قاعة تدريس أو منزل).<br/>2. <strong>الشبكة الإقليمية/الحضرية (MAN - Metropolitan Area Network):</strong> تغطي مساحة جغرافية متوسطة كالمدينة، الحرم الجامعي، أو مجموعة مبانٍ متجاورة.<br/>3. <strong>الشبكة الواسعة (WAN - Wide Area Network):</strong> تمتد عبر مساحات شاسعة جداً لتربط بين المدن والدول والقارات، وأشهر وأكبر مثال عليها شبكة الإنترنت العالمية.'
+  },
+  {
+    q: 'قارن بين شبكة الخادم والزبون (Client/Server) وشبكة الند للند (Peer-to-Peer).',
+    a: '• <strong>شبكة الخادم والزبون (Client/Server):</strong> تحتوي على حاسوب مركزي قوي بمواصفات عالية يسمى «الخادم» (Server) يدير الصلاحيات ويقدم الخدمات، وبقية الحواسيب تسمى «زبائن» (Clients) تطلب الخدمات منه.<br/>• <strong>شبكة الند للند (Peer-to-Peer - P2P):</strong> جميع الأجهزة متكافئة ومتساوية في الخصائص التقنية والصلاحيات، بحيث يمكن لكل جهاز أن يكون خادماً وزبوناً في آن واحد دون إدارة مركزية.'
+  },
+  {
+    q: 'قارن بين الموزع (Hub) والمحول (Switch) موضحاً أيهما أفضل للشبكة ولماذا؟',
+    a: '• <strong>الموزع (Hub):</strong> جهاز بث غير ذكي؛ عند استلامه حزمة بيانات من حاسوب، يقوم بإرسالها (Broadcast) إلى <em>كافة</em> أجهزة الشبكة في آن واحد، فيقبلها الحاسوب المعني فقط ويتجاهلها الباقون، مما يسبب بطئاً وتصادم البيانات.<br/>• <strong>المحول (Switch):</strong> جهاز ذكي يحفظ عناوين الأجهزة (MAC Addresses)، ويرسل البيانات <em>مباشرة للجهاز الهدف المعني فقط</em> دون إزعاج باقي الأجهزة.<br/>• <strong>الأفضل:</strong> المحول (Switch) هو الأفضل لأنه يمنع تصادم البيانات ويوفر سرعة وكفاءة وأماناً أعلى بكثير.'
+  },
+  {
+    q: 'ما هي الطوبولوجيات الثلاث الشهيرة لربط الشبكات؟ وما ميزة طوبولوجيا النجمة (Star Topology)؟',
+    a: '1. <strong>طوبولوجيا الباص (التشكيل الخطي - Bus):</strong> تتصل الحواسيب بخط ناقل مشترك واحد.<br/>2. <strong>طوبولوجيا الحلقة (Ring):</strong> تتصل الأجهزة في حلقة مغلقة بحيث يمر المسار من جهاز لآخر.<br/>3. <strong>طوبولوجيا النجمة (Star):</strong> تتصل جميع الأجهزة بنقطة توصيل مركزية (Hub أو Switch).<br/>• <strong>ميزة طوبولوجيا النجمة:</strong> سهولة الصيانة والتوسيع، وفي حال انقطاع كابل أو تعطل أحد الحواسيب فإن بقية الشبكة تستمر في العمل بشكل طبيعي.'
+  },
+  {
+    q: 'اذكر باختصار الخطوات اللازمة لمشاركة مجلد (Folder Sharing) على شبكة محلية في نظام ويندوز.',
+    a: '1. النقر بالزر الأيمن للفأرة على المجلد المراد مشاركته واختيار <strong>خصائص (Propriétés)</strong>.<br/>2. الانتقال إلى تبويب <strong>مشاركة (Partage)</strong> والنقر على <strong>مشاركة متقدمة (Partage avancé)</strong> أو <em>مشاركة</em>.<br/>3. تفعيل خيار <strong>مشاركة هذا المجلد (Partager ce dossier)</strong> وتحديد أذونات الوصول (قراءة / قراءة وكتابة).<br/>4. التأكيد بالنقر على <strong>تطبيق (Appliquer)</strong> ثم <strong>موافق (OK)</strong>؛ فتظهر أيقونة المشاركة (رمز شخصين) أسفل المجلد.'
+  },
+  {
+    q: 'وضعية إدماجية: في مخبر الإعلام الآلي بثانويتكم، توجد 12 جهاز حاسوب وطابعة واحدة فقط. يشتكي التلاميذ من إضاعة الوقت في نقل بحوثهم بالفلاش ديسك لطباعتها. اقترح حلاً تقنياً لهذه المشكلة مع ذكر المتطلبات.',
+    a: '• <strong>الحل التقني المقترح:</strong> ربط حواسيب المخبر في <strong>شبكة محلية (LAN) بطوبولوجيا النجمة (Star Topology)</strong> وتفعيل خاصية <strong>مشاركة الطابعة (Printer Sharing)</strong>.<br/>• <strong>المتطلبات المادية والبرمجية:</strong><br/>1. محول شبكة مركزي (Switch) ذو 16 منفذاً على الأقل.<br/>2. بطاقة شبكة (NIC) وكابل شبكة (RJ45) لكل حاسوب مربوط بالمحول.<br/>3. توصيل الطابعة بالحاسوب الرئيسي (حاسوب الأستاذ) وتثبيت تعريفها.<br/>4. توحيد اسم مجموعة العمل (Workgroup) وضبط عناوين IP متسقة (مثل 192.168.1.X).<br/>5. تفعيل «مشاركة الطابعة» عبر لوحة التحكم ليتمكن جميع التلاميذ من إرسال مستنداتهم للطباعة فوراً من أماكنهم.'
+  }
+];
+
+const networkClassifications = [
+  {
+    title: '1. حسب وسيلة الربط',
+    sub: 'Support de transmission',
+    icon: '🔌',
+    color: 'bg-blue-50 border-blue-300 text-blue-950',
+    items: [
+      { name: 'شبكات سلكية (Filaire)', desc: 'تستخدم كابلات مادية مثل الكابل المزدوج الملتوي (Twisted Pair / RJ45) أو كابلات الألياف البصرية (Fibre optique).' },
+      { name: 'شبكات لاسلكية (Sans fil / Wi-Fi)', desc: 'تعتمد على الأمواج الكهرومغناطيسية والراديوية للربط بين الأجهزة دون أسلاك، مما يوفر مرونة وسهولة في التنقل.' }
+    ]
+  },
+  {
+    title: '2. حسب الامتداد الجغرافي',
+    sub: 'Étendue géographique',
+    icon: '🗺️',
+    color: 'bg-emerald-50 border-emerald-300 text-emerald-950',
+    items: [
+      { name: 'شبكة محلية (LAN)', desc: 'نطاق ضيق محدود بمساحة محددة (مخبر المدرسة، قاعة، منزل، أو مكتب إداري).' },
+      { name: 'شبكة إقليمية (MAN)', desc: 'تمتد عبر مدينة واحدة أو تجمع من المباني مثل الحرم الجامعي (Campus).' },
+      { name: 'شبكة موسعة (WAN)', desc: 'تمتد على مستوى دول وقارات كاملة، وأكبرها وأشهرها شبكة الإنترنت.' }
+    ]
+  },
+  {
+    title: '3. حسب العلاقة الوظيفية',
+    sub: 'Relation fonctionnelle',
+    icon: '👥',
+    color: 'bg-purple-50 border-purple-300 text-purple-950',
+    items: [
+      { name: 'خادم وزبون (Client / Server)', desc: 'حاسوب خادم مركزي ذو قدرات فائقة يقدم الخدمات ويدير الحماية، وحواسيب زبائن تطلب منه الموارد.' },
+      { name: 'الند للند (Peer to Peer - P2P)', desc: 'حواسيب متكافئة في الخصائص والصلاحيات؛ كل جهاز يمكن أن يعمل كخادم وزبون في الوقت نفسه.' }
+    ]
+  },
+  {
+    title: '4. حسب طوبولوجيا الربط',
+    sub: 'Topologie du réseau',
+    icon: '🕸️',
+    color: 'bg-amber-50 border-amber-300 text-amber-950',
+    items: [
+      { name: 'طوبولوجيا النجمة (Star)', desc: 'كل جهاز متصل مباشرة بوحدة مركزية (Switch / Hub). هي الأكثر استخداماً وموثوقية.' },
+      { name: 'طوبولوجيا الخطي / الباص (Bus)', desc: 'تتصل جميع الأجهزة بناقل اتصال محوري واحد مشترك. عطل الكابل يعطل كامل الشبكة.' },
+      { name: 'طوبولوجيا الحلقة (Ring)', desc: 'كل جهاز متصل بالجهاز الذي يليه بشكل حلقة مغلقة تسير فيها البيانات في اتجاه موحد.' }
+    ]
+  }
+];
+
+const hardwareComponents = [
+  {
+    name: 'حاسوبان على الأقل',
+    en: 'Postes de travail (PC)',
+    icon: '💻',
+    desc: 'الأجهزة المراد ربطها لتبادل البيانات، ويشترط وجود بطاقة شبكة فعالة في كل حاسوب.'
+  },
+  {
+    name: 'بطاقة الشبكة',
+    en: 'Carte Réseau (NIC)',
+    icon: '🎴',
+    desc: 'لوحة إلكترونية تتيح للحاسوب تحويل البيانات الرقمية إلى إشارات تنتقل عبر وسائط الربط.'
+  },
+  {
+    name: 'كابلات التوصيل ووصلة RJ45',
+    en: 'Câbles RJ45 & Connecteurs',
+    icon: '🧵',
+    desc: 'الكابلات المزدوجة الملتوية (Twisted Pair) المزودة برؤوس وموصلات معيارية RJ-45 للتوصيل.'
+  },
+  {
+    name: 'المحول (Switch)',
+    en: 'Commutateur Réseau',
+    icon: '🔀',
+    desc: 'الجهاز المركزي الذكي الأهم؛ يوجه حزم البيانات بدقة للجهاز المستهدف فقط استناداً لعنوان MAC.'
+  },
+  {
+    name: 'الموزع (Hub)',
+    en: 'Concentrateur Réseau',
+    icon: '📻',
+    desc: 'جهاز ربط بسيط يكرر الإشارة الواردة ويرسلها لجميع الأجهزة دون تمييز، ويستخدم في الشبكات البسيطة.'
+  },
+  {
+    name: 'الموجه (Routeur)',
+    en: 'Routeur Réseau',
+    icon: '📡',
+    desc: 'جهاز متقدم يقوم بتوجيه حزم البيانات وربط الشبكة المحلية بالشبكات الخارجية وشبكة الإنترنت.'
+  }
+];
+
+const backLink = 'px-3 py-1.5 rounded-xl bg-white border border-[#1a3300]/20 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors self-start sm:self-auto';
+const sectionCls = 'scroll-mt-24 rounded-3xl bg-[#fcfaf5] border-2 border-[#1a3300]/20 p-5 sm:p-8 space-y-6 shadow-sm';
+const boxCls = 'p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15';
+---
+
+<!-- ============ رأس الدرس ============ -->
+<div class="bg-[#fcfaf5] border-b border-[#1a3300]/15 pt-8 pb-10">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+    <nav class="flex flex-wrap items-center gap-2 text-xs text-[#1a3300]/70 font-medium mb-4">
+      <a href="/" class="hover:underline">الرئيسية</a>
+      <span>/</span>
+      <a href={`/${stream}`} class="hover:underline">{streamLabel}</a>
+      <span>/</span>
+      <span class="text-[#1a3300] font-bold">الوحدة 6</span>
+    </nav>
+
+    <div class="space-y-3 mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#ffe95c] border border-[#1a3300]/20 text-xs font-black text-[#1a3300]">
+        المجال التعلمي 1: بيئة التعامل مع الحاسوب
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-[#1a3300] leading-tight">
+        الوحدة 6: الشبكة المحلية ومشاركة الموارد
+      </h1>
+      <p class="text-sm sm:text-base text-[#1a3300]/80 font-medium">
+        مفهوم شبكة الحاسوب، أصناف الشبكات وطوبولوجياتها، المكونات المادية والمقارنة بين Hub و Switch، وإعداد الشبكة ومشاركة الملفات والطابعات.
+      </p>
+    </div>
+
+    <!-- شريط التحميل السريع لوثيقة الدرس الرسمية المعتمدة -->
+    <div class="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#ffe95c]/50 via-white to-[#a8e5e5]/40 border-2 border-[#1a3300] shadow-sm">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">جاهز للتحميل والطباعة</span>
+            <h2 class="text-base sm:text-lg font-black text-[#1a3300] flex items-center gap-1.5">
+              <span>📥</span> وثيقة الدرس الرسمية المعتمدة (2026-2027)
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/80 font-medium">
+            متوفرة للتحميل المباشر والقراءة: <strong>وثيقة الدرس (PDF)</strong> كاملة ومنسقة للطباعة.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+          <a
+            href={pdfHref}
+            download={pdfDownloadName}
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة الدرس الرسمية PDF"
+          >
+            <span>🎒</span> تحميل وثيقة الدرس (PDF)
+          </a>
+          <a
+            href={pdfHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-2.5 px-4 rounded-xl bg-[#1a3300] hover:bg-[#254700] text-[#fcfaf5] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="معاينة وقراءة وثيقة الدرس"
+          >
+            <span>👁</span> معاينة وقراءة وثيقة الدرس
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- فهرس البطاقات -->
+    <div id="cards-hub" class="scroll-mt-24 space-y-4">
+      <h2 class="text-base sm:text-lg font-extrabold text-[#1a3300]">
+        اضغط على أي بطاقة للانتقال المباشر إليها:
+      </h2>
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {parts.map((p, i) => (
+          <a
+            href={`#${p.id}`}
+            class="group flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/20 hover:border-[#1a3300] hover:-translate-y-0.5 transition-all shadow-xs"
+          >
+            <div class="flex items-center gap-3">
+              <span class={`w-11 h-11 shrink-0 rounded-xl ${p.color} border border-[#1a3300]/20 flex items-center justify-center text-2xl`}>{p.icon}</span>
+              <span class="text-xs font-bold text-[#1a3300]/50">{i + 1}</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#1a3300]">{p.title}</h3>
+            <p class="text-[11px] sm:text-xs text-[#1a3300]/70 leading-relaxed hidden sm:block">{p.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ المحتوى الرئيسي ============ -->
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+  <!-- ============ بطاقة وثيقة الدرس (المطبوعة الرسمية + عارض PDF) ============ -->
+  <section id="part-1" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🎒</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">المطبوعة الرسمية للدرس</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            وثيقة الدرس (الشبكة المحلية)
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- بطاقة معلومات وتحميل وثيقة الدرس -->
+    <div class="p-5 sm:p-6 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm space-y-4">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-[#ffe95c] text-[#1a3300] border border-[#1a3300]/30 shadow-xs">06- الشبكة المحلية.pdf</span>
+            <span class="text-xs text-neutral-500 font-bold bg-neutral-100 px-2 py-0.5 rounded-md">582 KB</span>
+          </div>
+          <p class="text-xs sm:text-sm text-[#1a3300]/85 font-medium leading-relaxed">
+            المطبوعة الرسمية المعتمدة لطلاب السنة الأولى ثانوي؛ تتضمن تعريف الشبكة، تصنيف الشبكات (وسيلة الربط، الامتداد الجغرافي، العلاقة الوظيفية، طوبولوجيا الربط)، المكونات المادية للشبكة، وإعداد الشبكة ومشاركة المجلدات والطابعات.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto shrink-0">
+          <a
+            href={pdfHref}
+            download={pdfDownloadName}
+            class="flex-1 sm:flex-none py-3 px-5 rounded-xl bg-[#ffe95c] hover:bg-[#ebd344] border-2 border-[#1a3300] text-[#1a3300] text-sm font-black flex items-center justify-center gap-2 shadow-xs transition-transform hover:-translate-y-0.5"
+            title="تحميل وثيقة الدرس الأصلية بصيغة PDF"
+          >
+            <span>⬇</span> تحميل وثيقة الدرس (PDF)
+          </a>
+          <a
+            href={pdfHref}
+            target="_blank"
+            rel="noopener"
+            class="flex-1 sm:flex-none py-3 px-5 rounded-xl bg-white hover:bg-[#f5f0e6] border-2 border-[#1a3300]/30 text-[#1a3300] text-sm font-bold flex items-center justify-center gap-2"
+            title="معاينة وقراءة الوثيقة في نافذة جديدة"
+          >
+            <span>👁</span> معاينة وقراءة وثيقة الدرس (PDF)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- عارض PDF مدمج ومباشر لوثيقة الدرس -->
+    <div class="rounded-2xl border-2 border-[#1a3300]/25 overflow-hidden bg-white shadow-sm space-y-0">
+      <div class="p-3 bg-[#1a3300] text-[#fcfaf5] flex items-center justify-between text-xs font-bold">
+        <span class="flex items-center gap-2">
+          <span>📄</span> معاينة مباشرة للملف: «06- وثيقة الدرس الشبكة المحلية.pdf»
+        </span>
+        <a href={pdfHref} target="_blank" rel="noopener" class="text-[#ffe95c] hover:underline flex items-center gap-1 font-mono">
+          <span>عرض ملء الشاشة</span> ↗
+        </a>
+      </div>
+      <iframe
+        src={`${pdfHref}#toolbar=1&navpanes=0`}
+        class="w-full h-[720px] bg-neutral-50 border-0"
+        title="عارض وثيقة الدرس PDF"
+      ></iframe>
+    </div>
+
+    <!-- نص وثيقة الدرس المنسق والمطابق للأصل -->
+    <div class="rounded-2xl bg-white border-2 border-[#1a3300]/20 p-5 sm:p-7 space-y-6">
+      
+      <!-- ترويسة الدرس الصفي -->
+      <div class="p-4 rounded-xl bg-[#ffe95c]/30 border border-[#1a3300]/20 flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-[#1a3300]">
+        <div>ثانوية الأمير عبد القادر – سيدي قادة</div>
+        <div>المجال التعلمي 1: بيئة التعامل مع الحاسوب</div>
+        <div>الأستاذ: شلابي جمال الدين</div>
+        <div>المادة: المعلوماتية (1AS)</div>
+        <div>الوحدة 06: الشبكة المحلية</div>
+        <div>المدة: ساعتان (نظري + تطبيقي)</div>
+      </div>
+
+      <!-- محتوى الوثيقة كما كتبها الأستاذ -->
+      <div class="space-y-6 text-[#1a3300]">
+        
+        <!-- 1 -->
+        <div class="space-y-2">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">1</span>
+            تعريف الشبكة (Définition du réseau):
+          </h3>
+          <p class="text-sm leading-relaxed pr-9 font-medium text-[#1a3300]/90">
+            هي مجموعة أجهزة حاسوب مرتبطة ببعضها البعض بغرض التواصل وتبادل المعلومات والموارد.
+          </p>
+        </div>
+
+        <!-- 2 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">2</span>
+            تصنيف الشبكات:
+          </h3>
+          <p class="text-sm pr-9 text-[#1a3300]/80">تصنف الشبكات حسب أربعة معايير رئيسية:</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-9">
+            {networkClassifications.map((cat) => (
+              <div class={`p-4 rounded-xl border-2 ${cat.color} space-y-2`}>
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">{cat.icon}</span>
+                  <div>
+                    <h4 class="font-black text-sm">{cat.title}</h4>
+                    <span class="text-[11px] opacity-75 font-mono" dir="ltr">{cat.sub}</span>
+                  </div>
+                </div>
+                <div class="space-y-2 text-xs pt-1">
+                  {cat.items.map((item) => (
+                    <div class="bg-white/80 p-2.5 rounded-lg border border-black/10">
+                      <div class="font-extrabold text-[#1a3300] mb-0.5">• {item.name}:</div>
+                      <div class="text-[#1a3300]/80 leading-relaxed">{item.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">3</span>
+            المكونات المادية للشبكة (طوبولوجيا النجمة):
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pr-9">
+            {hardwareComponents.map((hw) => (
+              <div class="p-3.5 rounded-xl border-2 border-[#1a3300]/15 bg-[#fcfaf5] flex flex-col justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-2xl">{hw.icon}</span>
+                  <div>
+                    <h4 class="font-bold text-xs text-[#1a3300]">{hw.name}</h4>
+                    <span class="text-[10px] text-[#1a3300]/60 font-mono" dir="ltr">{hw.en}</span>
+                  </div>
+                </div>
+                <p class="text-[11px] text-[#1a3300]/80 leading-relaxed">{hw.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <!-- ملاحظة الموزع مقابل المحول -->
+          <div class="mr-9 p-4 rounded-xl bg-amber-50 border-2 border-amber-300 text-xs text-amber-950 space-y-1">
+            <div class="font-extrabold flex items-center gap-1.5 text-sm">
+              <span>⚠️</span>
+              <span>ملاحظة هامة (الفرق بين الموزع Hub والمحول Switch):</span>
+            </div>
+            <p class="leading-relaxed">
+              الموزع <strong>Hub</strong> يرسل العريضة (المعلومة) إلى كامل أجهزة الشبكة ويتم استقبالها من طرف الجهاز المعني فقط (بث عشوائي). أما المحول <strong>Switch</strong> فيرسلها إلى الجهاز المعني مباشرة فقط، مما يوفر سرعة وأماناً ويمنع التصادم.
+            </p>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 text-[#1a3300]">
+            <span class="w-7 h-7 rounded-lg bg-[#ffe95c] text-[#1a3300] flex items-center justify-center text-sm font-black">4</span>
+            إعداد الشبكة واستغلال الموارد المشتركة:
+          </h3>
+          <div class="pr-9 space-y-3 text-xs text-[#1a3300]/90">
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-sm text-[#1a3300]">أ. إعداد اسم الحاسوب ومجموعة العمل:</div>
+              <p>ننقر بالزر الأيمن على <strong>Ordinateur (الكمبيوتر)</strong> من سطح المكتب &larr; خصائص (Propriétés) &larr; تعديل اسم الجهاز واسم مجموعة العمل (Workgroup).</p>
+              <div class="font-mono bg-white p-2 rounded border border-slate-200 text-[#1a3300] text-[11px]">
+                💡 ملاحظة: يجب اختيار نفس اسم مجموعة العمل (Workgroup) لكافة الحواسب للتعرف على بعضها، ونفتح أيقونة Réseau للاطلاع على الأجهزة المتصلة.
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-sm text-[#1a3300]">ب. المشاركة (Partage / Sharing):</div>
+              <p>المشاركة هي إعطاء الحق لأعضاء الشبكة باستغلال الأقراص، المجلدات، الطابعات، والبرامج.</p>
+              <ul class="list-disc list-inside space-y-1 font-medium pr-2">
+                <li><strong>المشاركة في الأقراص والمجلدات:</strong> النقر بالزر الأيمن على المجلد &larr; Propriétés &larr; Partage &larr; تحديد صلاحيات الوصول، فتظهر علامة المشاركة على الوسيط (صورة شخصين أو يد).</li>
+                <li><strong>المشاركة في الطابعة:</strong> من لوحة التحكم &larr; الأجهزة والطابعات (Périphériques et imprimantes) &larr; النقر باليمين على الطابعة &larr; خصائص الطابعة &larr; تبويب المشاركة &larr; تحديد (Partager cette imprimante).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============ بطاقة فيديو الشرح ============ -->
+  <section id="part-2" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🎬</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">الشرح المرئي</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            فيديو الشرح التفاعلي
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    {YOUTUBE_ID ? (
+      <div class="rounded-2xl border-2 border-[#1a3300]/25 overflow-hidden bg-black aspect-video shadow-sm">
+        <iframe
+          src={`https://www.youtube.com/embed/${YOUTUBE_ID}`}
+          class="w-full h-full border-0"
+          title="شرح درس الشبكة المحلية"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    ) : (
+      <div class="p-8 sm:p-12 rounded-2xl bg-[#fcfaf5] border-2 border-dashed border-[#1a3300]/30 text-center space-y-4">
+        <div class="w-16 h-16 rounded-full bg-[#a8e5e5] border-2 border-[#1a3300] flex items-center justify-center text-3xl mx-auto shadow-xs">
+          📽️
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-extrabold text-lg text-[#1a3300]">فيديو الشرح في طور التسجيل والمونتاج</h3>
+          <p class="text-xs sm:text-sm text-[#1a3300]/70 max-w-md mx-auto">
+            سيتم إدراج فيديو الأستاذ لشرح الدرس النظري والتطبيقي فور اعتماده رسمياً. يمكنك في الوقت الحالي متابعة وثيقة الدرس واستخدام المحاكي التفاعلي بالأسفل.
+          </p>
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- ============ بطاقة الدرس التفاعلي ============ -->
+  <section id="part-3" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffc09f] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">⚡</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">الشرح المفاهيمي المعمق</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            الدرس التفاعلي وبطاقات الاستكشاف
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- مقارنة تفاعلية بين Hub و Switch -->
+    <div class={boxCls + " space-y-4"}>
+      <div class="flex items-center gap-2 text-[#1a3300]">
+        <span class="text-2xl">⚖️</span>
+        <h3 class="font-extrabold text-base">مقارنة فنية: الموزع (Hub) مقابل المحول (Switch)</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-right border-collapse">
+          <thead>
+            <tr class="bg-[#1a3300] text-[#fcfaf5]">
+              <th class="p-3 rounded-tr-xl font-bold">وجه المقارنة</th>
+              <th class="p-3 font-bold bg-[#cb5521]">الموزع (Hub) 📻</th>
+              <th class="p-3 rounded-tl-xl font-bold bg-[#1a8844]">المحول (Switch) 🔀</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-800">طريقة توزيع البيانات</td>
+              <td class="p-3 text-red-900 bg-red-50/50">يرسل الحزمة لجميع المنافذ بلا استثناء (Broadcast)</td>
+              <td class="p-3 text-emerald-900 bg-emerald-50/50">يرسل الحزمة للجهاز الهدف المعني فقط (Unicast)</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-800">الذكاء والعنونة</td>
+              <td class="p-3">غير ذكي، لا يعرف عناوين الأجهزة (MAC Address)</td>
+              <td class="p-3">ذكي، يحتفظ بجدول عناوين MAC لكل منفذ</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-800">التصادم والازدحام (Collisions)</td>
+              <td class="p-3 text-red-700">احتمال تصادم البيانات عالي جداً مع زيادة الأجهزة</td>
+              <td class="p-3 text-emerald-700">يمنع التصادم تماماً عبر مسارات مستقلة لكل جهاز</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-800">أمان البيانات والخصوصية</td>
+              <td class="p-3">منخفض، يمكن لأي حاسوب التلصص على الحزم</td>
+              <td class="p-3">عالي، لا يستلم الحزمة إلا المستقبل المحدد</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-800">الاستخدام الحديث</td>
+              <td class="p-3">أصبح نادراً وقديم الطراز</td>
+              <td class="p-3 font-bold text-emerald-800">المعيار الأساسي لجميع شبكات LAN ومخابر الإعلام الآلي</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- بطاقات طوبولوجيا الربط الثلاث -->
+    <div class="space-y-4">
+      <h3 class="font-extrabold text-base text-[#1a3300] flex items-center gap-2">
+        <span>🕸️</span> طوبولوجيات الربط الثلاث (Topologies de réseau):
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Star -->
+        <div class="p-5 rounded-2xl bg-white border-2 border-emerald-400 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-3xl">⭐</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">الأكثر استخداماً</span>
+          </div>
+          <h4 class="font-black text-sm text-[#1a3300]">طوبولوجيا النجمة (Star)</h4>
+          <p class="text-xs text-[#1a3300]/80 leading-relaxed">
+            تتصل كل الحواسيب بكابل مستقل نحو نقطة ربط مركزية (Switch). إذا تعطل جهاز أو كابل لا تتأثر باقي الأجهزة أبداً.
+          </p>
+          <div class="pt-2 border-t border-slate-100 text-[11px] text-emerald-700 font-bold">
+            ✓ سهولة تحديد الأعطال وإضافة حواسيب جديدة
+          </div>
+        </div>
+
+        <!-- Bus -->
+        <div class="p-5 rounded-2xl bg-white border-2 border-amber-400 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-3xl">🚌</span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">تشكيل خطي</span>
+          </div>
+          <h4 class="font-black text-sm text-[#1a3300]">طوبولوجيا الخطي / الباص (Bus)</h4>
+          <p class="text-xs text-[#1a3300]/80 leading-relaxed">
+            ترتبط الأجهزة كلها بخط محوري رئيسي واحد مشترك. توفر في استهلاك الكابلات لكن عطل الخط الرئيسي يوقف الشبكة كاملة.
+          </p>
+          <div class="pt-2 border-t border-slate-100 text-[11px] text-amber-700 font-bold">
+            ⚠️ صعوبة عزل الأعطال وبطء عند كثرة النقل
+          </div>
+        </div>
+
+        <!-- Ring -->
+        <div class="p-5 rounded-2xl bg-white border-2 border-purple-400 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-3xl">🔄</span>
+            <span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-black">حلقة مغلقة</span>
+          </div>
+          <h4 class="font-black text-sm text-[#1a3300]">طوبولوجيا الحلقة (Ring)</h4>
+          <p class="text-xs text-[#1a3300]/80 leading-relaxed">
+            يصل كابل كل جهاز بالحاسوب المجاور له حتى يعود للأول مشكلاً دائرة مغلقة تسير فيها البيانات في اتجاه عقارب الساعة.
+          </p>
+          <div class="pt-2 border-t border-slate-100 text-[11px] text-purple-700 font-bold">
+            ⚠️ انقطاع الحلقة في أي نقطة يعطل الشبكة
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============ بطاقة الخريطة الذهنية ============ -->
+  <section id="part-4" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#f6d0ff] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🧠</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">المخطط الشامل</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            الخريطة الذهنية للشبكات المحلية
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- مخطط بصري هيكلي -->
+    <div class="p-6 rounded-2xl bg-white border-2 border-[#1a3300]/20 space-y-6">
+      
+      <div class="text-center">
+        <div class="inline-block px-6 py-3 rounded-2xl bg-[#1a3300] text-[#fcfaf5] text-base font-black shadow-sm">
+          🌐 شبكة الحاسوب (Computer Network)
+        </div>
+        <p class="text-xs text-[#1a3300]/70 mt-1 font-medium">مجموعة أجهزة مرتبطة للتواصل وتبادل البيانات والموارد</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="p-4 rounded-xl bg-blue-50 border-2 border-blue-200 text-xs space-y-2">
+          <div class="font-extrabold text-blue-900 text-sm">1. وسيلة الربط</div>
+          <ul class="list-disc list-inside space-y-1 text-blue-800">
+            <li>سلكية (Filaire): كابل RJ45، ألياف بصرية</li>
+            <li>لاسلكية (Sans fil): أمواج Wi-Fi</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-emerald-50 border-2 border-emerald-200 text-xs space-y-2">
+          <div class="font-extrabold text-emerald-900 text-sm">2. الامتداد الجغرافي</div>
+          <ul class="list-disc list-inside space-y-1 text-emerald-800">
+            <li>LAN: محلية (مخبر، منزل، مكتب)</li>
+            <li>MAN: إقليمية (مدينة، جامعة)</li>
+            <li>WAN: موسعة عالمية (الإنترنت)</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-purple-50 border-2 border-purple-200 text-xs space-y-2">
+          <div class="font-extrabold text-purple-900 text-sm">3. العلاقة الوظيفية</div>
+          <ul class="list-disc list-inside space-y-1 text-purple-800">
+            <li>خادم وزبون (Client/Server)</li>
+            <li>الند للند (Peer to Peer - P2P)</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl bg-amber-50 border-2 border-amber-200 text-xs space-y-2">
+          <div class="font-extrabold text-amber-900 text-sm">4. طوبولوجيا الربط</div>
+          <ul class="list-disc list-inside space-y-1 text-amber-800">
+            <li>النجمة (Star): Switch مركزي</li>
+            <li>الخطي (Bus): كابل ناقل موحد</li>
+            <li>الحلقي (Ring): حلقة مغلقة</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="p-4 rounded-xl bg-[#ffe95c]/30 border-2 border-[#1a3300]/20 flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-[#1a3300] font-bold">
+          <span>🛠️</span>
+          <span>العتاد المادي الأساسي:</span>
+          <span class="font-normal">حواسيب + بطاقات شبكة (NIC) + كابلات RJ-45 + محول (Switch) + موجه (Router).</span>
+        </div>
+        <div class="flex items-center gap-2 text-[#1a3300] font-bold">
+          <span>🤝</span>
+          <span>أهداف المشاركة:</span>
+          <span class="font-normal">مشاركة المجلدات + الطابعات + الوصول للإنترنت.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ بطاقة التمارين والتقويم ============ -->
+  <section id="part-5" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#a8e5e5] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">✍️</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">التقويم والتحصيل</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            التمارين والأنشطة التقييمية
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <div class="space-y-4">
+      <p class="text-xs sm:text-sm text-[#1a3300]/80 font-medium">
+        اختبر فهمك لمفاهيم الشبكة المحلية عبر الإجابة عن الأسئلة ثم الضغط على زر «عرض الإجابة» للمقارنة:
+      </p>
+
+      <div class="space-y-3">
+        {exercises.map((ex, idx) => (
+          <div class="p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#1a3300]/15 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-2.5">
+                <span class="w-6 h-6 shrink-0 rounded-full bg-[#ffe95c] border border-[#1a3300]/30 text-[#1a3300] text-xs font-black flex items-center justify-center">
+                  {idx + 1}
+                </span>
+                <h4 class="font-extrabold text-xs sm:text-sm text-[#1a3300] leading-snug">
+                  {ex.q}
+                </h4>
+              </div>
+              <button
+                type="button"
+                class="toggle-answer-btn shrink-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#ffe95c] text-xs font-bold text-[#1a3300] transition-colors cursor-pointer"
+              >
+                عرض الإجابة
+              </button>
+            </div>
+            <div class="answer-box hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs sm:text-sm text-emerald-950 leading-relaxed">
+              <div class="font-bold text-emerald-900 mb-1">الإجابة النموذجية:</div>
+              <div set:html={ex.a}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ بطاقة محاكي الشبكة المحلية التفاعلي ============ -->
+  <section id="part-6" class={sectionCls}>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#1a3300]/15 pb-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-12 rounded-2xl bg-[#ffe95c] border-2 border-[#1a3300] flex items-center justify-center text-2xl shadow-xs">🌐</span>
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-black">المختبر الافتراضي</span>
+          <h2 class="text-xl sm:text-2xl font-display font-extrabold text-[#1a3300]">
+            محاكي الشبكة المحلية ومشاركة الموارد (LAN Lab)
+          </h2>
+        </div>
+      </div>
+      <a href="#cards-hub" class={backLink}>↑ رجوع إلى البطاقات</a>
+    </div>
+
+    <!-- نافذة المحاكي الأولى: تجربة طوبولوجيا الربط وإرسال الحزم -->
+    <div class="p-5 sm:p-7 rounded-2xl bg-white border-2 border-[#1a3300] shadow-sm space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h3 class="font-extrabold text-sm sm:text-base text-[#1a3300] flex items-center gap-2">
+            <span>📡</span> محاكي تدفق البيانات (Packet Ping Simulator)
+          </h3>
+          <p class="text-xs text-[#1a3300]/70">
+            جرّب إرسال حزمة بيانات بين حواسيب الشبكة وشاهد الفرق العملي بين الموزع (Hub) والمحول (Switch).
+          </p>
+        </div>
+
+        <!-- اختيار نوع الجهاز المركزي -->
+        <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+          <span class="text-xs font-bold text-slate-700 px-2">الجهاز المركزي:</span>
+          <button id="mode-switch-btn" type="button" class="px-3 py-1 rounded-lg text-xs font-black transition-all bg-[#1a3300] text-[#fcfaf5] shadow-xs cursor-pointer">
+            محول (Switch) 🔀
+          </button>
+          <button id="mode-hub-btn" type="button" class="px-3 py-1 rounded-lg text-xs font-black transition-all text-slate-600 hover:text-black cursor-pointer">
+            موزع (Hub) 📻
+          </button>
+        </div>
+      </div>
+
+      <!-- لوحة التحكم في الإرسال -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#fcfaf5] p-4 rounded-xl border border-slate-200 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">الحاسوب المرسل:</label>
+          <select id="sim-sender-select" class="w-full p-2 rounded-lg border border-slate-300 bg-white font-bold">
+            <option value="1">حاسوب 01 (192.168.1.10)</option>
+            <option value="2">حاسوب 02 (192.168.1.11)</option>
+            <option value="3">حاسوب 03 (192.168.1.12)</option>
+            <option value="4">حاسوب 04 (192.168.1.13)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">الحاسوب الهدف (المستقبل):</label>
+          <select id="sim-target-select" class="w-full p-2 rounded-lg border border-slate-300 bg-white font-bold">
+            <option value="3" selected>حاسوب 03 (192.168.1.12)</option>
+            <option value="1">حاسوب 01 (192.168.1.10)</option>
+            <option value="2">حاسوب 02 (192.168.1.11)</option>
+            <option value="4">حاسوب 04 (192.168.1.13)</option>
+          </select>
+        </div>
+
+        <div class="flex items-end">
+          <button id="sim-send-packet-btn" type="button" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🚀</span> إرسال حزمة البيانات (Ping)
+          </button>
+        </div>
+      </div>
+
+      <!-- العرض البصري التفاعلي للأجهزة والربط -->
+      <div class="relative bg-slate-900 rounded-2xl p-6 sm:p-10 overflow-hidden min-h-[300px] flex items-center justify-center">
+        
+        <!-- خطوط الاتصال الشبكية -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <!-- كابلات من المركز إلى الحواسيب الأربعة -->
+          <line id="cable-1" x1="50%" y1="50%" x2="20%" y2="25%" stroke="#475569" stroke-width="3" stroke-dasharray="5,5" />
+          <line id="cable-2" x1="50%" y1="50%" x2="80%" y2="25%" stroke="#475569" stroke-width="3" stroke-dasharray="5,5" />
+          <line id="cable-3" x1="50%" y1="50%" x2="20%" y2="75%" stroke="#475569" stroke-width="3" stroke-dasharray="5,5" />
+          <line id="cable-4" x1="50%" y1="50%" x2="80%" y2="75%" stroke="#475569" stroke-width="3" stroke-dasharray="5,5" />
+        </svg>
+
+        <!-- الجهاز المركزي (Switch أو Hub) -->
+        <div id="central-node" class="relative z-10 w-28 h-20 rounded-2xl bg-emerald-500 border-2 border-white flex flex-col items-center justify-center text-white shadow-xl transition-all">
+          <span id="central-icon" class="text-2xl">🔀</span>
+          <span id="central-title" class="font-black text-xs mt-0.5">Switch</span>
+          <span class="text-[9px] opacity-80 font-mono">100/1000 Mbps</span>
+        </div>
+
+        <!-- حاسوب 1 (أعلى يسار) -->
+        <div id="pc-box-1" class="absolute top-4 left-4 sm:left-12 z-10 p-3 rounded-xl bg-slate-800 border-2 border-slate-600 text-white text-center transition-all">
+          <div class="text-2xl">💻</div>
+          <div class="font-bold text-xs mt-1">حاسوب 01</div>
+          <div class="text-[9px] text-slate-400 font-mono">.1.10</div>
+          <span id="pc-status-1" class="hidden mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold"></span>
+        </div>
+
+        <!-- حاسوب 2 (أعلى يمين) -->
+        <div id="pc-box-2" class="absolute top-4 right-4 sm:right-12 z-10 p-3 rounded-xl bg-slate-800 border-2 border-slate-600 text-white text-center transition-all">
+          <div class="text-2xl">💻</div>
+          <div class="font-bold text-xs mt-1">حاسوب 02</div>
+          <div class="text-[9px] text-slate-400 font-mono">.1.11</div>
+          <span id="pc-status-2" class="hidden mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold"></span>
+        </div>
+
+        <!-- حاسوب 3 (أسفل يسار) -->
+        <div id="pc-box-3" class="absolute bottom-4 left-4 sm:left-12 z-10 p-3 rounded-xl bg-slate-800 border-2 border-slate-600 text-white text-center transition-all">
+          <div class="text-2xl">💻</div>
+          <div class="font-bold text-xs mt-1">حاسوب 03</div>
+          <div class="text-[9px] text-slate-400 font-mono">.1.12</div>
+          <span id="pc-status-3" class="hidden mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold"></span>
+        </div>
+
+        <!-- حاسوب 4 (أسفل يمين) -->
+        <div id="pc-box-4" class="absolute bottom-4 right-4 sm:right-12 z-10 p-3 rounded-xl bg-slate-800 border-2 border-slate-600 text-white text-center transition-all">
+          <div class="text-2xl">💻</div>
+          <div class="font-bold text-xs mt-1">حاسوب 04</div>
+          <div class="text-[9px] text-slate-400 font-mono">.1.13</div>
+          <span id="pc-status-4" class="hidden mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold"></span>
+        </div>
+
+      </div>
+
+      <!-- سجل تدفق الحزم (Live Log) -->
+      <div class="p-3.5 rounded-xl bg-slate-900 font-mono text-xs text-emerald-400 space-y-1">
+        <div class="text-slate-400 text-[11px] font-sans font-bold flex items-center justify-between">
+          <span>سجل نشاط الحزم (Packet Trace):</span>
+          <span id="packet-counter" class="text-slate-500 font-mono">جاهز للإرسال</span>
+        </div>
+        <div id="packet-log-text" class="text-[11px] leading-relaxed">
+          [System Ready] تم تفعيل طوبولوجيا النجمة بمحول ذكي (Switch). اختر المرسل والمستقبل واضغط «إرسال».
+        </div>
+      </div>
+
+    </div>
+
+    <!-- نافذة المحاكي الثانية: إعداد الشبكة ومشاركة المجلدات والطابعات -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      
+      <!-- محاكي مشاركة مجلد عبر الشبكة -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/25 space-y-4">
+        <div class="flex items-center justify-between border-b border-[#1a3300]/10 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📁</span>
+            <h3 class="font-extrabold text-sm text-[#1a3300]">مشاركة مجلد (Folder Sharing)</h3>
+          </div>
+          <span id="folder-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
+            غير مشترك 🔒
+          </span>
+        </div>
+        <p class="text-xs text-[#1a3300]/80">
+          مجلد أبحاث التلاميذ على الحاسوب الرئيسي. جرب تفعيل ميزة المشاركة ليتمكن زملاؤك من تصفحه عبر الشبكة.
+        </p>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span id="folder-icon" class="text-2xl">📁</span>
+              <div>
+                <div class="font-bold text-xs text-slate-800">مجلد: أبحاث_المعلوماتية_2026</div>
+                <div id="folder-path" class="text-[10px] text-slate-500 font-mono">C:\Users\Student\Documents</div>
+              </div>
+            </div>
+            <button id="toggle-share-folder-btn" type="button" class="px-3 py-1.5 rounded-lg bg-[#ffe95c] hover:bg-[#ebd344] text-[#1a3300] font-black text-xs transition-colors border border-[#1a3300]/30 shadow-xs cursor-pointer">
+              تفعيل المشاركة (Partager)
+            </button>
+          </div>
+          <div id="shared-network-box" class="hidden p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900 space-y-1">
+            <div class="font-bold flex items-center gap-1">
+              <span>👥</span> تم نشر المجلد بنجاح على الشبكة!
+            </div>
+            <div class="font-mono text-[10px] text-emerald-800" dir="ltr">\\PC-01\أبحاث_المعلوماتية_2026 (صلاحية: قراءة وكتابة)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- محاكي مشاركة الطابعة والطباعة عن بعد -->
+      <div class="p-5 rounded-2xl bg-white border-2 border-[#1a3300]/25 space-y-4">
+        <div class="flex items-center justify-between border-b border-[#1a3300]/10 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🖨️</span>
+            <h3 class="font-extrabold text-sm text-[#1a3300]">مشاركة الطابعة (Network Printer)</h3>
+          </div>
+          <span id="printer-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            طابعة مشتركة جاهزة
+          </span>
+        </div>
+        <p class="text-xs text-[#1a3300]/80">
+          طابعة HP LaserJet موصولة بالحاسوب 01، ومشاركة عبر الشبكة مع كافة أجهزة المخبر.
+        </p>
+
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🖨️</span>
+              <div>
+                <div class="font-bold text-xs text-slate-800">HP LaserJet Pro M404n</div>
+                <div class="text-[10px] text-slate-500 font-mono">Shared on: \\PC-01\HP_LaserJet</div>
+              </div>
+            </div>
+            <button id="send-print-job-btn" type="button" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs transition-colors shadow-xs cursor-pointer">
+              إرسال أمر طباعة 🖨️
+            </button>
+          </div>
+          <div id="print-job-status" class="text-[11px] font-bold text-slate-600 min-h-[18px]">
+            الحالة: جاهزة لاستقبال مستندات التلاميذ من أي حاسوب في المخبر.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- ============ السكريبت التفاعلي ============ -->
+<script>
+  // أزرار كشف الإجابات للتمارين
+  document.querySelectorAll('.toggle-answer-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.rounded-2xl');
+      const box = parent?.querySelector('.answer-box');
+      if (box) {
+        box.classList.toggle('hidden');
+        btn.textContent = box.classList.contains('hidden') ? 'عرض الإجابة' : 'إخفاء الإجابة';
+      }
+    });
+  });
+
+  // محاكي الشبكة المحلية (Ping & Packet Delivery)
+  let currentCentralDevice = 'switch'; // 'switch' or 'hub'
+
+  const modeSwitchBtn = document.getElementById('mode-switch-btn');
+  const modeHubBtn = document.getElementById('mode-hub-btn');
+  const centralNode = document.getElementById('central-node');
+  const centralIcon = document.getElementById('central-icon');
+  const centralTitle = document.getElementById('central-title');
+  const packetLogText = document.getElementById('packet-log-text');
+  const sendPacketBtn = document.getElementById('sim-send-packet-btn');
+  const senderSelect = document.getElementById('sim-sender-select') as HTMLSelectElement | null;
+  const targetSelect = document.getElementById('sim-target-select') as HTMLSelectElement | null;
+
+  modeSwitchBtn?.addEventListener('click', () => {
+    currentCentralDevice = 'switch';
+    modeSwitchBtn.className = 'px-3 py-1 rounded-lg text-xs font-black transition-all bg-[#1a3300] text-[#fcfaf5] shadow-xs cursor-pointer';
+    if (modeHubBtn) modeHubBtn.className = 'px-3 py-1 rounded-lg text-xs font-black transition-all text-slate-600 hover:text-black cursor-pointer';
+    if (centralNode) centralNode.className = 'relative z-10 w-28 h-20 rounded-2xl bg-emerald-500 border-2 border-white flex flex-col items-center justify-center text-white shadow-xl transition-all';
+    if (centralIcon) centralIcon.textContent = '🔀';
+    if (centralTitle) centralTitle.textContent = 'Switch';
+    if (packetLogText) packetLogText.innerHTML = '[Mode Changed] تم التبديل إلى المحول الذكي (Switch). الحزم ستصل حصراً للحاسوب المستهدف دون إزعاج البقية.';
+  });
+
+  modeHubBtn?.addEventListener('click', () => {
+    currentCentralDevice = 'hub';
+    modeHubBtn.className = 'px-3 py-1 rounded-lg text-xs font-black transition-all bg-amber-500 text-white shadow-xs cursor-pointer';
+    if (modeSwitchBtn) modeSwitchBtn.className = 'px-3 py-1 rounded-lg text-xs font-black transition-all text-slate-600 hover:text-black cursor-pointer';
+    if (centralNode) centralNode.className = 'relative z-10 w-28 h-20 rounded-2xl bg-amber-500 border-2 border-white flex flex-col items-center justify-center text-white shadow-xl transition-all';
+    if (centralIcon) centralIcon.textContent = '📻';
+    if (centralTitle) centralTitle.textContent = 'Hub';
+    if (packetLogText) packetLogText.innerHTML = '[Mode Changed] تم التبديل إلى الموزع (Hub). سيتم إرسال نسخة من الحزمة (Broadcast) لكل حواسيب الشبكة!';
+  });
+
+  sendPacketBtn?.addEventListener('click', () => {
+    const sender = senderSelect?.value || '1';
+    const target = targetSelect?.value || '3';
+
+    if (sender === target) {
+      if (packetLogText) packetLogText.innerHTML = '<span class="text-amber-400">⚠️ تنبيه: لا يمكن أن يكون الحاسوب المرسل هو نفسه الحاسوب المستقبل! اختر جهازين مختلفين.</span>';
+      return;
+    }
+
+    // Reset status badges
+    for (let i = 1; i <= 4; i++) {
+      const b = document.getElementById(`pc-status-${i}`);
+      const cable = document.getElementById(`cable-${i}`);
+      if (b) {
+        b.className = 'hidden mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold';
+        b.textContent = '';
+      }
+      if (cable) cable.setAttribute('stroke', '#475569');
+    }
+
+    const senderBox = document.getElementById(`pc-status-${sender}`);
+    if (senderBox) {
+      senderBox.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold bg-blue-500 text-white';
+      senderBox.textContent = 'مرسل 📤';
+    }
+    const senderCable = document.getElementById(`cable-${sender}`);
+    if (senderCable) senderCable.setAttribute('stroke', '#3b82f6');
+
+    if (packetLogText) {
+      packetLogText.innerHTML = `[Step 1] خرجت الحزمة من الحاسوب ${sender} نحو الجهاز المركزي...`;
+    }
+
+    setTimeout(() => {
+      if (currentCentralDevice === 'switch') {
+        // Switch behavior: target only
+        const targetBox = document.getElementById(`pc-status-${target}`);
+        const targetCable = document.getElementById(`cable-${target}`);
+        if (targetBox) {
+          targetBox.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500 text-white';
+          targetBox.textContent = 'مستقبل ناجح ✅';
+        }
+        if (targetCable) targetCable.setAttribute('stroke', '#10b981');
+
+        if (packetLogText) {
+          packetLogText.innerHTML = `[Switch Done] قرأ الـ Switch عنوان MAC للحاسوب ${target}، وأرسل الحزمة له حصراً. زمن الاستجابة: 1ms (بدون أي تصادم أو إزعاج لبقية الحواسيب).`;
+        }
+      } else {
+        // Hub behavior: broadcast to all others
+        for (let i = 1; i <= 4; i++) {
+          if (String(i) !== sender) {
+            const cable = document.getElementById(`cable-${i}`);
+            const badge = document.getElementById(`pc-status-${i}`);
+            if (cable) cable.setAttribute('stroke', '#f59e0b');
+            if (badge) {
+              if (String(i) === target) {
+                badge.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-500 text-white';
+                badge.textContent = 'مستقبل معني ✅';
+              } else {
+                badge.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold bg-red-800 text-white';
+                badge.textContent = 'تجاهل الحزمة ❌';
+              }
+            }
+          }
+        }
+        if (packetLogText) {
+          packetLogText.innerHTML = `[Hub Broadcast] قام الـ Hub ببث الحزمة لكافة المنافذ! الحاسوب ${target} قبلها وتجاهلت بقية الحواسيب الحزمة، مما أدى لاستهلاك غير ضروري لموارد الشبكة.`;
+        }
+      }
+    }, 600);
+  });
+
+  // محاكي مشاركة المجلد
+  const toggleShareBtn = document.getElementById('toggle-share-folder-btn');
+  const folderStatusBadge = document.getElementById('folder-status-badge');
+  const sharedNetworkBox = document.getElementById('shared-network-box');
+  const folderIcon = document.getElementById('folder-icon');
+
+  let isFolderShared = false;
+  toggleShareBtn?.addEventListener('click', () => {
+    isFolderShared = !isFolderShared;
+    if (isFolderShared) {
+      if (toggleShareBtn) toggleShareBtn.textContent = 'إلغاء المشاركة';
+      if (folderStatusBadge) {
+        folderStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+        folderStatusBadge.textContent = 'مجلد مشترك 👥';
+      }
+      if (sharedNetworkBox) sharedNetworkBox.classList.remove('hidden');
+      if (folderIcon) folderIcon.textContent = '📂👥';
+    } else {
+      if (toggleShareBtn) toggleShareBtn.textContent = 'تفعيل المشاركة (Partager)';
+      if (folderStatusBadge) {
+        folderStatusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300';
+        folderStatusBadge.textContent = 'غير مشترك 🔒';
+      }
+      if (sharedNetworkBox) sharedNetworkBox.classList.add('hidden');
+      if (folderIcon) folderIcon.textContent = '📁';
+    }
+  });
+
+  // محاكي أمر الطباعة عبر الشبكة
+  const sendPrintBtn = document.getElementById('send-print-job-btn');
+  const printJobStatus = document.getElementById('print-job-status');
+
+  sendPrintBtn?.addEventListener('click', () => {
+    if (printJobStatus) {
+      printJobStatus.innerHTML = '<span class="text-blue-600 animate-pulse">⏳ جارٍ إرسال المستند عبر الشبكة إلى طابعة \\\\PC-01\\HP_LaserJet...</span>';
+      setTimeout(() => {
+        printJobStatus.innerHTML = '<span class="text-emerald-700 font-bold">✅ تم استلام أمر الطباعة بنجاح من الحاسوب 02 وبدأت عملية الطباعة!</span>';
+      }, 1200);
+    }
+  });
+</script>
