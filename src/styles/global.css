@@ -433,6 +433,64 @@ body {
   display: inline-block;
 }
 
+/* ============================================================ */
+/* PROFESSIONAL MARQUEE TICKER & GHAMAZ BEACON ANIMATIONS      */
+/* ============================================================ */
+
+@keyframes tickerScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: tickerScroll 28s linear infinite;
+  will-change: transform;
+}
+
+.ticker-container:hover .ticker-track,
+.ticker-container:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes ghamaz-flash {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 1px rgba(255, 233, 92, 0.4));
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 7px rgba(255, 233, 92, 0.9));
+  }
+}
+
+.ghamaz-badge {
+  animation: ghamaz-flash 1.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes ghamaz-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+}
+
+.ghamaz-dot {
+  animation: ghamaz-pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Print Utilities */
 @media print {
   @page {

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { ACADEMIC_INFO } from '../data/curriculum';
+import { ACADEMIC_INFO, DEFAULT_ANNOUNCEMENT } from '../data/curriculum';
 import AtmosphericBackground from '../components/AtmosphericBackground.astro';
 
 interface Props {
@@ -63,7 +63,11 @@ const {
   </div>
 
   <!-- Dynamic Teacher Global Alert / Exam Mode Bar (Controlled via Admin Dashboard) -->
-  <div id="student-global-alert" class="hidden no-print relative z-25 transition-all duration-300"></div>
+  <div 
+    id="student-global-alert" 
+    data-default={JSON.stringify(DEFAULT_ANNOUNCEMENT)} 
+    class="hidden no-print relative z-40 transition-all duration-300"
+  ></div>
 
   <!-- Say Briefly Floating Top Navigation Bar (Student-Safe: NO ADMIN BUTTONS) -->
   <header class="sticky top-3 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full no-print">
@@ -199,14 +203,20 @@ const {
         const examMode = localStorage.getItem('maerifa_exam_mode') === 'true';
         if (examMode) {
           document.body.classList.add('exam-mode-active');
-          alertEl.className = 'bg-[#ffe95c] border-b-2 border-[#1a3300]/25 text-[#1a3300] px-4 py-2.5 text-xs font-bold shadow-xs';
+          alertEl.className = 'w-full bg-[#1a3300] border-b-2 border-[#ffe95c]/50 text-[#fcfaf5] text-xs font-bold shadow-md relative z-40';
           alertEl.innerHTML = `
-            <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded-md bg-[#1a3300] text-[#fcfaf5] font-mono text-[10px] font-black uppercase tracking-wider">EXAM / PROCTOR MODE</span>
-                <span>🔒 <strong>وضع الفروض والامتحانات مفعّل:</strong> تم حجب الحلول النموذجية للمساعدة على التركيز والتقييم الفعلي داخل الحصة.</span>
+            <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="relative flex h-3 w-3 items-center justify-center">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ffe95c] opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ffe95c]"></span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#ffe95c] text-[#1a3300] font-mono text-[10px] font-black uppercase tracking-wider">
+                  EXAM / PROCTOR MODE
+                </span>
+                <span class="font-bold text-xs sm:text-sm">🔒 وضع الفروض والامتحانات مفعّل: تم حجب الحلول النموذجية للمساعدة على التركيز والتقييم الفعلي داخل الحصة.</span>
               </div>
-              <span class="text-[11px] text-[#1a3300]/70 font-mono hidden sm:inline">ثانوية الأمير عبد القادر</span>
+              <span class="text-[11px] text-[#ffe95c] font-mono hidden md:inline font-bold">ثانوية الأمير عبد القادر</span>
             </div>
           `;
           alertEl.classList.remove('hidden');
@@ -215,40 +225,143 @@ const {
           document.body.classList.remove('exam-mode-active');
         }
 
+        let alertData = null;
         const rawAlert = localStorage.getItem('maerifa_global_alert');
         if (rawAlert) {
-          const alertData = JSON.parse(rawAlert);
-          if (alertData && alertData.enabled && alertData.message) {
-            const typeThemes: Record<string, { bg: string; icon: string; label: string }> = {
-              info: { bg: 'bg-[#a8e5e5]', icon: '🔔', label: 'إعلان من الأستاذ' },
-              warning: { bg: 'bg-[#ffe95c]', icon: '⚠️', label: 'تنبيه بيداغوجي' },
-              exam: { bg: 'bg-[#ffc09f]', icon: '📝', label: 'موعد فرض أو اختبار' },
-              success: { bg: 'bg-[#d5f5c2]', icon: '🏆', label: 'تشجيع وتكريم' }
-            };
-            const theme = typeThemes[alertData.type] || typeThemes.info;
-            alertEl.className = `${theme.bg} border-b border-[#1a3300]/20 text-[#1a3300] px-4 py-2 text-xs font-bold shadow-xs`;
-            alertEl.innerHTML = `
-              <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-sm">${theme.icon}</span>
-                  <span class="inline-block px-2 py-0.5 rounded-full bg-white/70 border border-[#1a3300]/15 font-black text-[10px] text-[#1a3300]">
-                    ${alertData.badgeLabel || theme.label}
-                  </span>
-                  <span class="font-bold text-xs">${alertData.message}</span>
-                </div>
-                ${alertData.link ? `<a href="${alertData.link}" class="px-3 py-1 rounded-full bg-[#1a3300] text-[#fcfaf5] text-[11px] font-bold hover:bg-[#254700] transition-colors inline-flex items-center gap-1 shadow-2xs"><span>تفاصيل أكثر</span><span>←</span></a>` : ''}
-              </div>
-            `;
-            alertEl.classList.remove('hidden');
-            return;
-          }
+          alertData = JSON.parse(rawAlert);
+        } else if (alertEl.dataset.default) {
+          alertData = JSON.parse(alertEl.dataset.default);
         }
+
+        if (alertData && alertData.enabled && alertData.message) {
+          const typeThemes: Record<string, {
+            barClass: string;
+            badgeBg: string;
+            badgeText: string;
+            beaconColor: string;
+            pingColor: string;
+            bulletColor: string;
+            buttonClass: string;
+            icon: string;
+            label: string;
+          }> = {
+            exam: {
+              barClass: 'bg-gradient-to-r from-[#7c2d12] via-[#9a3412] to-[#cb5521] border-b-2 border-[#ea580c]/50 text-white shadow-md',
+              badgeBg: 'bg-[#ffe95c]',
+              badgeText: 'text-[#1a3300]',
+              beaconColor: 'bg-amber-400',
+              pingColor: 'bg-amber-300',
+              bulletColor: 'text-[#ffe95c]',
+              buttonClass: 'bg-[#ffe95c] hover:bg-[#ffd93d] text-[#1a3300]',
+              icon: '📝',
+              label: 'موعد فرض أو تقويم'
+            },
+            warning: {
+              barClass: 'bg-gradient-to-r from-[#713f12] via-[#854d0e] to-[#a16207] border-b-2 border-[#ca8a04]/50 text-white shadow-md',
+              badgeBg: 'bg-[#ffe95c]',
+              badgeText: 'text-[#1a3300]',
+              beaconColor: 'bg-yellow-400',
+              pingColor: 'bg-yellow-300',
+              bulletColor: 'text-[#ffe95c]',
+              buttonClass: 'bg-white hover:bg-amber-100 text-[#713f12]',
+              icon: '⚠️',
+              label: 'تنبيه بيداغوجي هام'
+            },
+            info: {
+              barClass: 'bg-gradient-to-r from-[#064e3b] via-[#065f46] to-[#047857] border-b-2 border-[#10b981]/50 text-white shadow-md',
+              badgeBg: 'bg-[#d5f5c2]',
+              badgeText: 'text-[#1a3300]',
+              beaconColor: 'bg-emerald-400',
+              pingColor: 'bg-emerald-300',
+              bulletColor: 'text-[#a8e5e5]',
+              buttonClass: 'bg-[#d5f5c2] hover:bg-[#bbf7d0] text-[#1a3300]',
+              icon: '🔔',
+              label: 'إعلان من الأستاذ'
+            },
+            success: {
+              barClass: 'bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] border-b-2 border-[#60a5fa]/50 text-white shadow-md',
+              badgeBg: 'bg-[#a8e5e5]',
+              badgeText: 'text-[#1a3300]',
+              beaconColor: 'bg-cyan-300',
+              pingColor: 'bg-cyan-200',
+              bulletColor: 'text-[#a8e5e5]',
+              buttonClass: 'bg-[#a8e5e5] hover:bg-[#92dada] text-[#1a3300]',
+              icon: '🏆',
+              label: 'تشجيع وتكريم'
+            }
+          };
+
+          const theme = typeThemes[alertData.type] || typeThemes.exam;
+          alertEl.className = `w-full ${theme.barClass} text-xs font-bold transition-all py-2 px-3 sm:px-6 relative z-40`;
+          
+          alertEl.innerHTML = `
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-hidden">
+              
+              <!-- Pinned Right Section: Ghamaz Beacon & Badge -->
+              <div class="shrink-0 flex items-center gap-2 z-10 select-none">
+                <span class="relative flex h-3 w-3 items-center justify-center">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${theme.pingColor} opacity-80"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 ${theme.beaconColor} shadow-xs"></span>
+                </span>
+
+                <span class="ghamaz-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${theme.badgeBg} ${theme.badgeText} font-black text-[11px] sm:text-xs shadow-2xs border border-white/20">
+                  <span class="text-xs sm:text-sm">${theme.icon}</span>
+                  <span class="tracking-wide">${alertData.badgeLabel || theme.label}</span>
+                </span>
+
+                <span class="opacity-30 hidden sm:inline text-white/50">|</span>
+              </div>
+
+              <!-- Center Section: Smooth Moving Ticker Track (نص متحرك انسيابي) -->
+              <div class="flex-1 min-w-0 overflow-hidden relative ticker-container cursor-pointer py-0.5" dir="ltr" title="مرر المؤشر أو المس لإيقاف الحركة">
+                <div class="ticker-track flex items-center whitespace-nowrap">
+                  
+                  <div class="flex items-center gap-6 sm:gap-10 shrink-0 px-4" dir="rtl">
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${alertData.message}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${alertData.message}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                  </div>
+
+                  <div class="flex items-center gap-6 sm:gap-10 shrink-0 px-4" dir="rtl" aria-hidden="true">
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${alertData.message}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${alertData.message}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Pinned Left Section: Optional Link Button -->
+              ${alertData.link ? `
+                <div class="shrink-0 flex items-center gap-2 z-10">
+                  <a href="${alertData.link}" class="px-3 py-1 rounded-xl ${theme.buttonClass} text-[11px] font-black transition-all shadow-2xs hover:scale-105 active:scale-95 inline-flex items-center gap-1">
+                    <span>تفاصيل</span>
+                    <span class="font-mono">←</span>
+                  </a>
+                </div>
+              ` : ''}
+
+            </div>
+          `;
+          alertEl.classList.remove('hidden');
+          return;
+        }
+
         alertEl.classList.add('hidden');
       } catch (e) {
         console.error(e);
       }
     }
     syncGlobalTeacherAlerts();
+
+    // Listen for storage updates across tabs
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'maerifa_global_alert' || e.key === 'maerifa_exam_mode') {
+        syncGlobalTeacherAlerts();
+      }
+    });
   </script>
 </body>
 </html>

@@ -391,10 +391,10 @@ const CLASSES_CONFIG = [
                     تصنيف الإعلان:
                   </label>
                   <select id="announcement-type-select" class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]">
-                    <option value="info">🔔 إعلان عام ومعلومات (أزرق سماوي)</option>
+                    <option value="exam">📝 موعد فرض أو تقويم (برتقالي دافئ / تيراكوتا)</option>
                     <option value="warning">⚠️ تنبيه بيداغوجي هام (أصفر مميز)</option>
-                    <option value="exam">📝 موعد فرض أو تقويم (برتقالي دافئ)</option>
-                    <option value="success">🏆 تشجيع وتهنئة بالتميز (أخضر نعناعي)</option>
+                    <option value="info">🔔 إعلان عام ومعلومات (أخضر غابي أنيق)</option>
+                    <option value="success">🏆 تشجيع وتهنئة بالتميز (أزرق ملكي)</option>
                   </select>
                 </div>
 
@@ -405,7 +405,7 @@ const CLASSES_CONFIG = [
                   <input 
                     type="text" 
                     id="announcement-badge-input" 
-                    placeholder="مثال: تنبيه لجميع الأقسام" 
+                    placeholder="مثال: تذكير بالفرض الأول" 
                     class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-bold text-[#1a3300] outline-hidden focus:border-[#1a3300]"
                   />
                 </div>
@@ -413,7 +413,7 @@ const CLASSES_CONFIG = [
 
               <div>
                 <label class="block font-mono text-[11px] font-bold text-[#1a3300]/80 mb-1">
-                  نص الإعلان الذي سيظهر للتلاميذ في رأس الصفحة:
+                  نص الإعلان الذي سيظهر للتلاميذ في الشريط المتحرك:
                 </label>
                 <textarea 
                   id="announcement-text-input" 
@@ -427,16 +427,16 @@ const CLASSES_CONFIG = [
               <div>
                 <div class="text-[11px] font-mono text-[#1a3300]/60 mb-2 font-bold">قوالب جاهزة سريعة بنقرة واحدة:</div>
                 <div class="flex flex-wrap gap-2">
-                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تذكير: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لكل أقسام الجذع المشترك.">
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تذكير هام: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لجميع أقسام الجذع المشترك — يرجى مراجعة دروس المجال الأول والاستعداد الجيد." data-type="exam" data-badge="تذكير بالفرض الأول">
                     📝 تذكير بالفرض الأول
                   </button>
-                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="يرجى إحضار كراس المادة وأقلام التظليل لإنجاز النشاط التفاعلي خلال الحصة القادمة.">
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="يرجى إحضار كراس المادة وأقلام التظليل لإنجاز النشاط التفاعلي خلال الحصة القادمة." data-type="warning" data-badge="أدوات الحصة">
                     📓 إحضار الكراس
                   </button>
-                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تم رفع بطاقة الأنشطة الخاصة بالدرس الجديد، يمكنكم مطالعتها ومحاولة حل الوضعية.">
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تم رفع بطاقة الأنشطة الخاصة بالدرس الجديد، يمكنكم مطالعتها ومحاولة حل الوضعية." data-type="info" data-badge="وثائق جديدة">
                     📄 رفع بطاقة الأنشطة
                   </button>
-                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تحية تقدير وتشجيع للتلاميذ المتميزين في حل أنشطة وتطبيقات الوحدة السابقة!">
+                  <button type="button" class="btn-snippet px-2.5 py-1 rounded-lg bg-[#f2eee3] hover:bg-[#ffe95c] border border-[#1a3300]/15 text-[11px] font-bold text-[#1a3300] transition-colors" data-snippet="تحية تقدير وتشجيع للتلاميذ المتميزين في حل أنشطة وتطبيقات الوحدة السابقة!" data-type="success" data-badge="لوحة الشرف">
                     🏆 تشجيع المتفوقين
                   </button>
                 </div>
@@ -449,22 +449,19 @@ const CLASSES_CONFIG = [
                 <input 
                   type="text" 
                   id="announcement-link-input" 
-                  placeholder="مثال: /tcst/m1-u1 أو رابط خارجي" 
+                  placeholder="مثال: /tcst أو /tcl أو رابط خارجي" 
                   class="w-full bg-[#fcfaf5] border-2 border-[#1a3300]/20 rounded-xl px-3.5 py-2 text-xs font-mono text-[#1a3300] outline-hidden focus:border-[#1a3300]"
                 />
               </div>
 
               <!-- Live Preview Widget -->
               <div class="mt-4 pt-4 border-t border-[#1a3300]/10">
-                <div class="font-mono text-[11px] font-bold text-[#1a3300]/60 mb-2">معاينة حية للإعلان كما يظهر للتلاميذ:</div>
-                <div id="announcement-live-preview" class="rounded-2xl border border-[#1a3300]/20 p-3.5 bg-[#a8e5e5] text-xs font-bold text-[#1a3300] shadow-xs">
-                  <div class="flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-2">
-                      <span id="preview-badge-icon">🔔</span>
-                      <span id="preview-badge-text" class="px-2 py-0.5 rounded-full bg-white/70 text-[10px] font-black">إعلان من الأستاذ</span>
-                      <span id="preview-message-text" class="font-bold">أدخل نص الإعلان للمعاينة...</span>
-                    </div>
-                  </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="font-mono text-[11px] font-bold text-[#1a3300]/60">معاينة حية للشريط كما يظهر للتلاميذ (نص متحرك + غماز تنبيهي):</div>
+                  <span class="text-[10px] text-[#1a3300]/60 font-mono hidden sm:inline">مرر المؤشر لإيقاف الحركة</span>
+                </div>
+                <div id="announcement-live-preview" class="rounded-2xl overflow-hidden shadow-xs border-2 transition-all">
+                  <!-- Generated dynamically by updatePreview() -->
                 </div>
               </div>
 
@@ -1825,46 +1822,139 @@ const CLASSES_CONFIG = [
 
       // Live Preview Elements
       const previewBox = document.getElementById('announcement-live-preview');
-      const previewIcon = document.getElementById('preview-badge-icon');
-      const previewBadge = document.getElementById('preview-badge-text');
-      const previewMsg = document.getElementById('preview-message-text');
-
       const snippetBtns = document.querySelectorAll('.btn-snippet');
 
-      // Load saved state
+      // Load saved state or default
       try {
         const saved = JSON.parse(localStorage.getItem(ALERT_KEY) || 'null');
-        if (saved) {
-          if (toggleCheck) toggleCheck.checked = Boolean(saved.enabled);
-          if (toggleLabel) toggleLabel.textContent = saved.enabled ? 'مفعّل ونشط' : 'معطل';
-          if (typeSelect) typeSelect.value = saved.type || 'info';
-          if (badgeInput) badgeInput.value = saved.badgeLabel || '';
-          if (textInput) textInput.value = saved.message || '';
-          if (linkInput) linkInput.value = saved.link || '';
-        }
+        const alertData = saved || {
+          enabled: true,
+          type: 'exam',
+          badgeLabel: 'تذكير بالفرض الأول',
+          message: 'تذكير هام: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لجميع أقسام الجذع المشترك — يرجى مراجعة دروس المجال الأول والاستعداد الجيد.',
+          link: '/tcst'
+        };
+        if (toggleCheck) toggleCheck.checked = Boolean(alertData.enabled);
+        if (toggleLabel) toggleLabel.textContent = alertData.enabled ? 'مفعّل ونشط' : 'معطل';
+        if (typeSelect) typeSelect.value = alertData.type || 'exam';
+        if (badgeInput) badgeInput.value = alertData.badgeLabel || 'تذكير بالفرض الأول';
+        if (textInput) textInput.value = alertData.message || '';
+        if (linkInput) linkInput.value = alertData.link || '/tcst';
       } catch (e) {
         console.error(e);
       }
 
       function updatePreview() {
-        const type = typeSelect ? typeSelect.value : 'info';
-        const msg = textInput ? textInput.value.trim() : '';
+        const type = typeSelect ? typeSelect.value : 'exam';
+        const msg = textInput ? textInput.value.trim() : 'تذكير هام: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لجميع أقسام الجذع المشترك';
         const badge = badgeInput ? badgeInput.value.trim() : '';
+        const link = linkInput ? linkInput.value.trim() : '';
 
-        const typeMap: Record<string, { bg: string; icon: string; defaultLabel: string }> = {
-          info: { bg: 'bg-[#a8e5e5]', icon: '🔔', defaultLabel: 'إعلان من الأستاذ' },
-          warning: { bg: 'bg-[#ffe95c]', icon: '⚠️', defaultLabel: 'تنبيه بيداغوجي' },
-          exam: { bg: 'bg-[#ffc09f]', icon: '📝', defaultLabel: 'موعد فرض أو اختبار' },
-          success: { bg: 'bg-[#d5f5c2]', icon: '🏆', defaultLabel: 'تشجيع وتكريم' }
+        const typeThemes: Record<string, {
+          barClass: string;
+          badgeBg: string;
+          badgeText: string;
+          beaconColor: string;
+          pingColor: string;
+          bulletColor: string;
+          buttonClass: string;
+          icon: string;
+          label: string;
+        }> = {
+          exam: {
+            barClass: 'bg-gradient-to-r from-[#7c2d12] via-[#9a3412] to-[#cb5521] border-[#ea580c]/50 text-white shadow-md',
+            badgeBg: 'bg-[#ffe95c]',
+            badgeText: 'text-[#1a3300]',
+            beaconColor: 'bg-amber-400',
+            pingColor: 'bg-amber-300',
+            bulletColor: 'text-[#ffe95c]',
+            buttonClass: 'bg-[#ffe95c] text-[#1a3300]',
+            icon: '📝',
+            label: 'موعد فرض أو تقويم'
+          },
+          warning: {
+            barClass: 'bg-gradient-to-r from-[#713f12] via-[#854d0e] to-[#a16207] border-[#ca8a04]/50 text-white shadow-md',
+            badgeBg: 'bg-[#ffe95c]',
+            badgeText: 'text-[#1a3300]',
+            beaconColor: 'bg-yellow-400',
+            pingColor: 'bg-yellow-300',
+            bulletColor: 'text-[#ffe95c]',
+            buttonClass: 'bg-white text-[#713f12]',
+            icon: '⚠️',
+            label: 'تنبيه بيداغوجي هام'
+          },
+          info: {
+            barClass: 'bg-gradient-to-r from-[#064e3b] via-[#065f46] to-[#047857] border-[#10b981]/50 text-white shadow-md',
+            badgeBg: 'bg-[#d5f5c2]',
+            badgeText: 'text-[#1a3300]',
+            beaconColor: 'bg-emerald-400',
+            pingColor: 'bg-emerald-300',
+            bulletColor: 'text-[#a8e5e5]',
+            buttonClass: 'bg-[#d5f5c2] text-[#1a3300]',
+            icon: '🔔',
+            label: 'إعلان من الأستاذ'
+          },
+          success: {
+            barClass: 'bg-gradient-to-r from-[#1e3a8a] via-[#1d4ed8] to-[#2563eb] border-[#60a5fa]/50 text-white shadow-md',
+            badgeBg: 'bg-[#a8e5e5]',
+            badgeText: 'text-[#1a3300]',
+            beaconColor: 'bg-cyan-300',
+            pingColor: 'bg-cyan-200',
+            bulletColor: 'text-[#a8e5e5]',
+            buttonClass: 'bg-[#a8e5e5] text-[#1a3300]',
+            icon: '🏆',
+            label: 'تشجيع وتكريم'
+          }
         };
 
-        const config = typeMap[type] || typeMap.info;
+        const theme = typeThemes[type] || typeThemes.exam;
+        const currentMsg = msg || 'أدخل نص الإعلان للمعاينة الحية...';
+        const currentBadge = badge || theme.label;
+
         if (previewBox) {
-          previewBox.className = `rounded-2xl border-2 border-[#1a3300]/20 p-3.5 ${config.bg} text-xs font-bold text-[#1a3300] shadow-xs`;
+          previewBox.className = `rounded-2xl border-2 ${theme.barClass} p-3 text-xs font-bold shadow-xs overflow-hidden`;
+          previewBox.innerHTML = `
+            <div class="flex items-center justify-between gap-3 overflow-hidden">
+              <div class="shrink-0 flex items-center gap-2 select-none">
+                <span class="relative flex h-3 w-3 items-center justify-center">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${theme.pingColor} opacity-80"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 ${theme.beaconColor} shadow-xs"></span>
+                </span>
+                <span class="ghamaz-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${theme.badgeBg} ${theme.badgeText} font-black text-[10px] sm:text-[11px] shadow-2xs border border-white/20">
+                  <span>${theme.icon}</span>
+                  <span>${currentBadge}</span>
+                </span>
+                <span class="opacity-30 hidden sm:inline text-white/50">|</span>
+              </div>
+
+              <div class="flex-1 min-w-0 overflow-hidden relative ticker-container cursor-pointer py-0.5" dir="ltr" title="مرر المؤشر لإيقاف الحركة">
+                <div class="ticker-track flex items-center whitespace-nowrap">
+                  <div class="flex items-center gap-6 sm:gap-10 shrink-0 px-4" dir="rtl">
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${currentMsg}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${currentMsg}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                  </div>
+                  <div class="flex items-center gap-6 sm:gap-10 shrink-0 px-4" dir="rtl" aria-hidden="true">
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${currentMsg}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                    <span class="text-xs sm:text-sm font-extrabold text-white tracking-wide">${currentMsg}</span>
+                    <span class="${theme.bulletColor} text-xs opacity-75 font-mono">✦✦✦</span>
+                  </div>
+                </div>
+              </div>
+
+              ${link ? `
+                <div class="shrink-0 hidden sm:flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-xl ${theme.buttonClass} text-[10px] font-black inline-flex items-center gap-1">
+                    <span>تفاصيل</span>
+                    <span>←</span>
+                  </span>
+                </div>
+              ` : ''}
+            </div>
+          `;
         }
-        if (previewIcon) previewIcon.textContent = config.icon;
-        if (previewBadge) previewBadge.textContent = badge || config.defaultLabel;
-        if (previewMsg) previewMsg.textContent = msg || 'أدخل نص الإعلان للمعاينة الحية...';
       }
 
       toggleCheck?.addEventListener('change', () => {
@@ -1874,14 +1964,19 @@ const CLASSES_CONFIG = [
       typeSelect?.addEventListener('change', updatePreview);
       badgeInput?.addEventListener('input', updatePreview);
       textInput?.addEventListener('input', updatePreview);
+      linkInput?.addEventListener('input', updatePreview);
 
       snippetBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const text = (btn as HTMLElement).dataset.snippet;
+          const snippetType = (btn as HTMLElement).dataset.type;
+          const snippetBadge = (btn as HTMLElement).dataset.badge;
           if (textInput && text) {
             textInput.value = text;
+            if (snippetType && typeSelect) typeSelect.value = snippetType;
+            if (snippetBadge && badgeInput) badgeInput.value = snippetBadge;
             updatePreview();
-            showToast('تم إدراج القالب الجاهز');
+            showToast('تم إدراج القالب الجاهز وضبط الإعدادات');
           }
         });
       });
@@ -1889,9 +1984,9 @@ const CLASSES_CONFIG = [
       saveBtn?.addEventListener('click', () => {
         const alertData = {
           enabled: toggleCheck ? toggleCheck.checked : true,
-          type: typeSelect ? typeSelect.value : 'info',
-          badgeLabel: badgeInput ? badgeInput.value.trim() : '',
-          message: textInput ? textInput.value.trim() : '',
+          type: typeSelect ? typeSelect.value : 'exam',
+          badgeLabel: badgeInput ? badgeInput.value.trim() : 'تذكير بالفرض الأول',
+          message: textInput ? textInput.value.trim() : 'تذكير: الفرض الأول لمادة المعلوماتية مبرمج للأسبوع القادم',
           link: linkInput ? linkInput.value.trim() : ''
         };
 
@@ -1901,7 +1996,7 @@ const CLASSES_CONFIG = [
 
         localStorage.setItem(ALERT_KEY, JSON.stringify(alertData));
         initKPIs();
-        showToast('تم حفظ ونشر الإعلان العام فوراً للطلاب');
+        showToast('تم حفظ ونشر الشريط المتحرك فوراً للطلاب');
       });
 
       clearBtn?.addEventListener('click', () => {

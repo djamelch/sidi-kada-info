@@ -50,6 +50,22 @@ export const ACADEMIC_INFO = {
   siteUrl: 'https://chalabi-info.vercel.app'
 };
 
+export interface AnnouncementData {
+  enabled: boolean;
+  type: 'exam' | 'warning' | 'info' | 'success';
+  badgeLabel: string;
+  message: string;
+  link?: string;
+}
+
+export const DEFAULT_ANNOUNCEMENT: AnnouncementData = {
+  enabled: true,
+  type: 'exam',
+  badgeLabel: 'تذكير بالفرض الأول',
+  message: 'تذكير هام: الفرض المحروس الأول لمادة المعلوماتية مبرمج للأسبوع القادم لجميع أقسام الجذع المشترك — يرجى مراجعة دروس المجال الأول والاستعداد الجيد.',
+  link: '/tcst'
+};
+
 export const STREAMS_DATA: Record<'tcst' | 'tcl', Stream> = {
   tcst: {
     id: 'tcst',
